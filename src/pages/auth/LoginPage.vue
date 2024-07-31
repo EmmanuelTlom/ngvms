@@ -7,13 +7,14 @@
             <h4 class="section_header">Welcome to NGVMS.</h4>
             <p class="section_paraText">Login to access your account</p>
             <div class="auth q-mt-lg">
-              <form @submit.prevent="submit" id="form">
+              <form @submit.prevent="send" id="form">
                 <div class="input-box active-grey">
                   <label class="input-label">Email</label>
                   <input
-                    v-model="data.email"
+                    v-model="form.email"
                     required
                     type="text"
+                    autocomplete="username"
                     class="input-1"
                   />
                 </div>
@@ -21,9 +22,10 @@
                   <label class="input-label">Password</label>
                   <div class="row items-center justify-between no-wrap">
                     <input
-                      v-model="data.password"
-                      :type="togglePassword ? 'password' : 'text'"
+                      v-model="form.password"
                       class="input-1"
+                      autocomplete="current-password"
+                      :type="togglePassword ? 'password' : 'text'"
                     />
                     <q-btn @click="togglePassword = !togglePassword" flat>
                       <i class="fa-regular fa-eye-slash"></i>
@@ -44,11 +46,11 @@
 
                 <div class="submit_btn row justify-center q-mt-lg q-mb-lg">
                   <q-btn
+                    flat
                     no-caps
                     no-wrap
-                    :loading="loading"
                     type="submit"
-                    flat
+                    :loading="loading"
                     class="full-width bg-secondary review_small bold text-white"
                   >
                     Login
@@ -69,231 +71,42 @@
             </div>
           </div>
           <div class="right">
-            <!-- <div class="row justify-center">
-              <h4 class="section_maintext small">
-                Convert your <br />
-                airtime to cash
-              </h4>
-              <p class="section_subtext">
-                With NGVMS you can convert your <br />
-                airtime to cash, pay bills and more.
-              </p>
-              <a href=""><img src="../assets/badge1.svg" alt="" /></a>
-              <a href=""><img src="../assets/badge2.svg" alt="" /></a>
-            </div> -->
             <img src="/images/auth.jpeg" alt="" />
           </div>
         </div>
       </div>
     </section>
+    {{ error.errors }}
   </div>
-  <q-dialog v-model="verifyEmailDialog" persistent>
-    <q-card
-      style="max-width: 547px; gap: 1rem"
-      class="column verifyDialogCard no-wrap text-center justify-center items-center"
-    >
-      <div class="top_modal">
-        <img
-          style="width: 100px; height: 100px"
-          src="/images/mail.png"
-          alt=""
-        />
-        <h5 class="verifyMainText q-my-md">
-          Verify your <br />
-          email address
-        </h5>
-
-        <p class="review_small text-center">
-          You're almost there! We sent an email to {{ data.email }} Just click
-          on the link in that email to complete your signup.
-        </p>
-        <p class="review_small text-center q-mt-md">
-          If you don't see it, you may need to check your spam folder.
-        </p>
-      </div>
-      <div class="auth">
-        <div
-          class="justify-center otp_wrap"
-          style="display: flex; flex-direction: row; gap: 0.5rem"
-        >
-          <v-otp-input
-            ref="otpInput"
-            v-model:value="bindRef"
-            input-classes="otp-input"
-            separator=" "
-            :num-inputs="6"
-            :should-auto-focus="true"
-            input-type="letter-numeric"
-            :conditionalClass="['one', 'two', 'three', 'four', 'five', 'six']"
-            :placeholder="['', '', '', '']"
-            @on-change="handleOnChange"
-            @on-complete="handleOnComplete"
-          />
-        </div>
-      </div>
-      <div class="row verifyBtn justify-center">
-        <q-btn
-          @click="verifyEmail"
-          no-wrap
-          no-caps
-          :loading="loadingVerify"
-          flat
-          class="text-white bg-secondary"
-        >
-          Verify your email address
-        </q-btn>
-      </div>
-      <div>
-        <q-btn
-          @click="resendEmailOtp"
-          no-wrap
-          no-caps
-          :loading="loadingVerifyOtp"
-          flat
-          class="text-black bg-grey-3"
-        >
-          Resend OTP
-        </q-btn>
-      </div>
-
-      <q-btn
-        @click="verifyEmailDialog = false"
-        class="closeBtn"
-        flat
-        no-caps
-        no-wrap
-      >
-        <img src="/images/closeBtn.svg" alt="" />
-      </q-btn>
-    </q-card>
-  </q-dialog>
 </template>
 
-<script setup>
-import { Notify } from 'quasar';
-import { api } from 'src/boot/axios';
+<script setup lang="ts">
+import { useForm } from 'alova/client';
+import { login } from 'src/data/userRequests';
+import { reboot } from 'src/utils/proccessor';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-let router = useRouter();
-let loading = ref(false);
-let togglePassword = ref(true);
-let data = ref({});
-let loadingVerify = ref(false);
-let loadingVerifyOtp = ref(false);
-let verifyEmailDialog = ref(false);
-let bindRef = ref('');
-let code = ref('');
-const handleOnComplete = (value) => {
-  // console.log("OTP completed: ", value);
-  code.value = value;
-};
 
-const handleOnChange = () => {
-  // console.log("OTP changed: ", value);
-};
-const submit = () => {
+const router = useRouter();
+const togglePassword = ref(true);
+
+const { send, form, error, loading, onSuccess } = useForm(login, {
+  store: true,
+  initialForm: {
+    email: '',
+    password: '',
+    remember: false,
+  },
+  resetAfterSubmitting: true,
+});
+
+onSuccess(() => {
   loading.value = true;
-  api
-    .post('/api/v1/users/login', {
-      ...data.value,
-      platform: 'web',
-    })
-    .then(() => {
-      loading.value = false;
-      Notify.create({
-        message: 'Successful',
-        position: 'top',
-        color: 'green',
-      });
-      router.replace({
-        name: 'user.dashboard',
-      });
-    })
-    .catch(({ response }) => {
-      loading.value = false;
-      Notify.create({
-        message: response.data.message
-          ? response.data.message
-          : 'An error ocurred',
-        position: 'top',
-        color: 'red-7',
-      });
-      if (response.data.message === 'Error: Account Not Verified.') {
-        {
-          verifyEmailDialog.value = true;
-        }
-      }
-    });
-};
-
-const verifyEmail = () => {
-  loadingVerify.value = true;
-  api
-    .put('/api/v1/users/verify', {
-      email: data.value.email
-        ? data.value.email
-        : 'emmanuelchukwuemeka908@gmail.com',
-      code: code.value,
-    })
-    .then((response) => {
-      console.log(response);
-      loadingVerify.value = false;
-      Notify.create({
-        message: 'Successful',
-        position: 'bottom',
-        color: 'green',
-      });
-      Notify.create({
-        message: 'Please login',
-        position: 'top',
-        color: 'green',
-        timeout: 30002,
-        actions: [{ icon: 'close', color: 'white' }],
-      });
-
-      // store.setUserDetails(response.data);
-      verifyEmailDialog.value = false;
-      // router.replace({
-      //   name: "user.dashboard",
-      // });
-    })
-    .catch(({ response }) => {
-      loadingVerify.value = false;
-      Notify.create({
-        message: response.data.message
-          ? response.data.message
-          : 'An error ocurred',
-        position: 'top',
-        color: 'red-7',
-      });
-    });
-};
-const resendEmailOtp = () => {
-  loadingVerifyOtp.value = true;
-  api
-    .put('/api/v1/users/resend-verification-code', {
-      email: data.value.email,
-    })
-    .then((response) => {
-      console.log(response);
-      loadingVerifyOtp.value = false;
-      Notify.create({
-        message: 'Successful',
-        position: 'top',
-        color: 'green',
-      });
-    })
-    .catch(({ response }) => {
-      loadingVerifyOtp.value = false;
-      Notify.create({
-        message: response.data.message
-          ? response.data.message
-          : 'An error ocurred',
-        position: 'top',
-        color: 'red-7',
-      });
-    });
-};
+  reboot().then(() => {
+    loading.value = false;
+    router.replace({ name: 'user.dashboard' });
+  });
+});
 </script>
 
 <style lang="scss" scoped></style>

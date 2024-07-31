@@ -10,7 +10,6 @@
       :filter="filter"
       :loading="loading"
       v-model:pagination="pagination"
-      @request="onRequest"
     >
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -134,13 +133,6 @@ export default {
         save: [],
       },
     };
-  },
-
-  mounted() {
-    this.onRequest({
-      pagination: this.pagination,
-      filter: undefined,
-    });
   },
   methods: {
     refreshPage() {},

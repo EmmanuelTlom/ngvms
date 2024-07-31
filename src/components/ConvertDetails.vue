@@ -10,7 +10,6 @@
       :grid="mode == 'grid'"
       :filter="filter"
       :loading="loading"
-      @request="onRequest"
     >
       <template v-slot:body-cell-user="props">
         <q-td :props="props">
@@ -155,37 +154,6 @@ export default {
         save: [],
       },
     };
-  },
-
-  mounted() {
-    this.onRequest({
-      pagination: this.pagination,
-      filter: undefined,
-    });
-  },
-  methods: {
-    onRequest() {
-      // this.loading = true;
-      // const url = `admin/all-health-personnel`;
-      // this.curl = url;
-      // api
-      //   .get(url)
-      //   .then(({ data }) => {
-      //     console.log(data);
-      //     this.loading = false;
-      //     this.rows = data.user
-      //       .map((data, index) => ({
-      //         ...data,
-      //         idd: index + 1,
-      //       }))
-      //       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      //       .splice(0, 5);
-      //   })
-      //   .catch(() => {
-      //     this.loading = false;
-      //     this.rows = [];
-      //   });
-    },
   },
 };
 </script>

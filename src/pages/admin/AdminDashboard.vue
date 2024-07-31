@@ -18,8 +18,6 @@ import ChartCompVue from 'src/components/ChartComp.vue';
 import ConversionCompVue from 'src/components/ConversionComp.vue';
 import DashBoardCardsVue from 'src/components/DashBoardCards.vue';
 
-// import LatestUsersVue from "src/components/LatestUsers.vue";
-
 let statsArr = [
   {
     name: 'Total Users',

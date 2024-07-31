@@ -1,5 +1,5 @@
 <template>
-  <div :class="data.classStyle" class="dash_card">
+  <div class="dash_card">
     <div class="row justify-between no-wrap">
       <div>
         <p class="card_text">{{ data.name }}</p>
@@ -29,7 +29,16 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+let data = {
+  name: 'Total Users',
+  numbers: '40,689',
+  icon: '/images/users.svg',
+  data: '8.5% Up from yesterday',
+  icontype: 'up',
+  classStyle: 'total',
+};
+</script>
 
 <style lang="scss" scoped>
 .dash_card {

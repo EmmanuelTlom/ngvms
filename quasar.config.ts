@@ -5,7 +5,7 @@
 
 import { configure } from 'quasar/wrappers';
 
-export default configure((/* ctx */) => {
+export default configure((ctx) => {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -55,7 +55,9 @@ export default configure((/* ctx */) => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf (viteConf) {
+        viteConf.envPrefix = 'v_'
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
@@ -78,7 +80,7 @@ export default configure((/* ctx */) => {
     devServer: {
       // https: true
       open: true, // opens browser window automatically
-      port: 9001,
+      port: ctx.modeName === 'ssr' ? 9101 : 9001
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

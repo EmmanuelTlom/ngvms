@@ -10,7 +10,6 @@
       :filter="filter"
       :loading="loading"
       v-model:pagination="pagination"
-      @request="onRequest"
     >
       <template v-slot:body-cell-fullname="props">
         <q-td :props="props">
@@ -160,17 +159,9 @@ export default {
         } else {
           this.title = this.$router.currentRoute.value.params.id;
         }
-        this.onRequest();
       },
       immediate: true,
     },
-  },
-
-  mounted() {
-    this.onRequest({
-      pagination: this.pagination,
-      filter: undefined,
-    });
   },
   methods: {
     refreshPage() {
