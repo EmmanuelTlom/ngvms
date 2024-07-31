@@ -5,9 +5,9 @@
         <div class="grid order">
           <div class="left">
             <h4 class="section_header">Welcome to NGVMS.</h4>
-            <p class="section_paraText">
+            <!-- <p class="section_paraText">
               Login to access your travelwise account
-            </p>
+            </p> -->
             <div class="auth q-mt-lg">
               <div
                 class="justify-center otp_wrap"
