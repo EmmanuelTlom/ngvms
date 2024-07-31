@@ -1,5 +1,5 @@
 <template>
-  <div class="dash_card">
+  <div class="dash_card" :class="data.classStyle">
     <div class="row justify-between no-wrap">
       <div>
         <p class="card_text">{{ data.name }}</p>
@@ -29,15 +29,17 @@
   </div>
 </template>
 
-<script setup>
-let data = {
-  name: 'Total Users',
-  numbers: '40,689',
-  icon: '/images/users.svg',
-  data: '8.5% Up from yesterday',
-  icontype: 'up',
-  classStyle: 'total',
-};
+<script setup lang="ts">
+let data = defineModel<{
+  name: string;
+  numbers: number;
+  icon: string;
+  data: string;
+  icontype: 'up' | 'down';
+  classStyle: 'total' | 'veri' | 'convert' | 'pending';
+}>('data', {
+  default: {},
+});
 </script>
 
 <style lang="scss" scoped>

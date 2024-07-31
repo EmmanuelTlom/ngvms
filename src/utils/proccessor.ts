@@ -7,23 +7,6 @@ import { alova } from 'src/boot/alova';
 import { invalidateCache } from 'alova';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 
-/**
- * @description Read env variables from .env file and modify based on current environment
- */
-export const readEnv = (env: string = 'baseURL', skipDev: boolean = false): string => {
-  if (import.meta.env.PROD || import.meta.env.v_ENVIRONMENT === 'production' || skipDev) {
-    // Production
-    return import.meta.env[`v_${env}`];
-  } else {
-    // Development
-    if (import.meta.env[`v_dev.${env}`]) {
-      return import.meta.env[`v_dev.${env}`];
-    } else {
-      return readEnv(env, true)
-    }
-  }
-};
-
 export const refreshUser = (router?: Router) => {
   return new Promise<User>(async (resolve) => {
     const boot = useBootstrapStore();
@@ -32,7 +15,7 @@ export const refreshUser = (router?: Router) => {
     }
 
     alova
-      .Get<ResponseBody<User>>('account', {
+      .Get<ResponseBody<User>>('v1/account', {
         params: { with: 'permissions,earnings' },
       })
       .send()
@@ -65,10 +48,10 @@ export const reboot = (done?: () => void, router?: Router, reloadUser: boolean |
     error?: Record<string, string>
   }>((resolve) => {
     const boot = useBootstrapStore();
-    const alova_ = alova.Get<ResponseBody<Initialize>>('initialize');
-    alova_.meta = { noContentType: true };
+    const method = alova.Get<ResponseBody<Initialize>>('v1/initialize');
+    method.meta = { noContentType: true };
 
-    alova_
+    method
       .send()
       .then(async ({ data }) => {
         typeof done === 'function' && done();

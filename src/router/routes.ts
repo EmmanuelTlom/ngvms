@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+import { logoutRequest } from 'src/data/userRequests';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -14,6 +15,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/auth',
+    meta: { requireGuest: true },
     component: () => import('layouts/AuthLayout.vue'),
     children: [
       {
@@ -31,43 +33,49 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/auth/ForgotPassword.vue'),
         name: 'forgot.password',
       },
+      {
+        meta: { requireGuest: false, requireAuth: true },
+        path: '/user/logout',
+        component: () => import('pages/auth/LoginPage.vue'),
+        name: 'logout',
+        beforeEnter: async () => {
+          logoutRequest().send();
+          return { name: 'login' };
+        },
+      },
     ],
   },
   {
     path: '/user',
+    meta: { requireAuth: true },
     component: () => import('layouts/UserDashboardLayout.vue'),
     children: [
       {
-        path: '/user/dashboard',
+        path: 'dashboard',
         component: () => import('pages/user/UserDashboard.vue'),
         name: 'user.dashboard',
       },
       {
-        path: '/user/add-data',
+        path: 'add-data/:data_id?',
         component: () => import('pages/user/AddData.vue'),
         name: 'user.add.data',
       },
       {
-        path: '/user/history',
+        path: 'history',
         component: () => import('pages/user/HistoryPage.vue'),
         name: 'user.history',
       },
 
       {
-        path: '/profile',
+        path: 'profile',
         component: () => import('pages/user/ProfilePage.vue'),
         name: 'user.profile',
-      },
-
-      {
-        path: '/user/logout',
-        component: () => import('pages/auth/LoginPage.vue'),
-        name: 'logout',
       },
     ],
   },
   {
     path: '/admin',
+    meta: { requireAuth: true, requireAdmin: true, },
     component: () => import('layouts/AdminDashboardLayout.vue'),
     children: [
       {
@@ -174,11 +182,6 @@ const routes: RouteRecordRaw[] = [
         path: '/admin/dispute/:id',
         component: () => import('pages/admin/DisputeDetail.vue'),
         name: 'dispute.detail',
-      },
-      {
-        path: '/admin/logout',
-        component: () => import('pages/admin/auth/LoginPage.vue'),
-        name: 'logout',
       },
     ],
   },

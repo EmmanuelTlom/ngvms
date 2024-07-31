@@ -1,4 +1,4 @@
-import { Configuration, PriviPerm, PriviRole, User } from 'repository/models';
+import { Configuration, Everything, PriviPerm, PriviRole, User } from 'repository/models';
 import { defineStore } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
 
@@ -19,12 +19,16 @@ export const useBootstrapStore = defineStore('bootstrap', {
         reg_form: {},
         componentPaths: {},
       },
+      everything: <Everything>{}
     },
   }),
 
   getters: {
     getCache (state) {
       return state;
+    },
+    everything (state) {
+      return state.app.everything;
     }
   },
 
@@ -50,6 +54,9 @@ export const useBootstrapStore = defineStore('bootstrap', {
     },
     setInitialized () {
       this.initialized = true;
+    },
+    setEverything (everything: Everything) {
+      this.app.everything = everything;
     },
     clearAuth () {
       return new Promise<boolean>((resolve) => {

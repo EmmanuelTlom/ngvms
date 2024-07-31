@@ -1,15 +1,15 @@
 import { AlovaAxiosRequestConfig, axiosRequestAdapter } from '@alova/adapter-axios';
 import { AlovaGenerics, Method, createAlova } from 'alova';
 import { AxiosError, AxiosResponse, AxiosResponseHeaders } from 'axios';
+import { GenericResponse, ResponseBody, User } from 'repository/models';
 
-import { GenericResponse } from 'repository/models';
 import { RouteLocationNormalized } from 'vue-router';
 import VueHook from 'alova/vue';
 import { boot } from 'quasar/wrappers';
 import { createClientTokenAuthentication } from 'alova/client';
 import fetchAdapter from 'alova/fetch';
 import { notify } from 'src/utils/helpers';
-import { readEnv } from 'src/utils/proccessor';
+import { readEnv } from 'src/utils/helpers';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 
 // declare module '@vue/runtime-core' {
@@ -18,8 +18,6 @@ import { useBootstrapStore } from 'src/stores/bootstrap-store';
 //     // $api: AxiosInstance; 906 569 8152
 //   }
 // }
-
-const baseURL = readEnv('baseURL');
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type ResponseMethod =
@@ -40,11 +38,17 @@ const { onAuthRequired, onResponseRefreshToken } = createClientTokenAuthenticati
       await boot.clearAuth().then(() => {
         boot.redirectTo({ name: 'auth.login' } as RouteLocationNormalized);
       });
-    }
+    },
   },
   assignToken: method => {
     const boot = useBootstrapStore();
     method.config.headers.Authorization = 'Bearer ' + boot.token;
+  },
+  login (response, method) {
+    method.promise?.then((data: ResponseBody<User>) => {
+      const boot = useBootstrapStore();
+      boot.saveAuthUser(data.data, data.token)
+    })
   },
   async logout () {
     await useBootstrapStore().clearAuth()
@@ -80,19 +84,11 @@ const responded = async (
   method: ResponseMethod,
   useAxios: boolean = false
 ) => {
-  const json = isAxios(useAxios, response)
+  const json = (isAxios(useAxios, response)
     ? await response.data
-    : await response.clone().json();
+    : await response.clone().json()) as unknown as ResponseBody;
 
   return new Promise((resolve, reject) => {
-    if (typeof json.response !== 'undefined' && !json.data) {
-      json.data = json.response;
-      if (Array.isArray(json.data) && json.data.length === 0) {
-        json.data = {};
-      }
-      delete json.response;
-    }
-
     if (response.status >= 400) {
       const message = (json.message || response.statusText || 'Unknown error') as string;
       if (![422, 401, 403].includes(response.status)) {
@@ -104,30 +100,50 @@ const responded = async (
           {},
           ...Object.keys(json.errors).map((e) => {
             return {
-              [e]: Array.isArray(json.errors[e])
+              [e]: Array.isArray(json?.errors?.[e])
                 ? json.errors[e][0]
-                : json.errors[e],
+                : json.errors?.[e],
             };
           }),
         );
       }
       reject(json);
+    } else {
+      resolve(json)
     }
   });
 };
 
+const beforeRequest = (method: ResponseMethod, withCredentials?: boolean) => {
+  // Set headers
+  method.config.headers['Access-Control-Allow-Credentials'] = 'true'
+  method.config.headers['X-Requested-With'] = 'XMLHttpRequest'
+  method.config.headers['Accept'] = 'application/json'
+
+  if (withCredentials) {
+    method.config.headers.withCredentials = 'true'
+  }
+
+  const noContentType = !method.meta?.noContentType && method.config.headers['Content-Type'] !== 'multipart/form-data'
+  if (noContentType) {
+    method.config.headers['Content-Type'] = 'application/json; charset=utf-8';
+  }
+}
+
 // 1. Create an alova instance
 const alova = createAlova({
-  baseURL,
+  baseURL: readEnv('baseURL'),
   responded: onResponseRefreshToken(responded),
   statesHook: VueHook,
+  beforeRequest: onAuthRequired((method) => beforeRequest(method)),
   requestAdapter: fetchAdapter()
 });
 
 // 2. Create an alova instance for axios
 const axios = createAlova({
-  baseURL,
+  baseURL: readEnv('baseURL'),
   statesHook: VueHook,
+  beforeRequest: onAuthRequiredAxios((method) => beforeRequest(method, true)),
   requestAdapter: axiosRequestAdapter(),
   responded: onResponseRefreshTokenAxios({
     onSuccess (
@@ -176,26 +192,6 @@ const axios = createAlova({
 export default boot(async ({ app, router }) => {
   const boot = useBootstrapStore();
 
-  const beforeRequest = (method: ResponseMethod, withCredentials?: boolean) => {
-    // Set headers
-    method.config.headers['Access-Control-Allow-Credentials'] = 'true'
-    method.config.headers['X-Requested-With'] = 'XMLHttpRequest'
-    method.config.headers['Accept'] = 'application/json'
-
-    if (withCredentials) {
-      method.config.headers.withCredentials = 'true'
-    }
-
-    if (
-      !method.meta?.noContentType &&
-      method.config.headers['Content-Type'] !== 'multipart/form-data'
-    ) {
-      method.config.headers['Content-Type'] = 'application/json; charset=utf-8';
-    }
-  }
-
-  alova.options.beforeRequest = onAuthRequired((method) => beforeRequest(method))
-  axios.options.beforeRequest = onAuthRequiredAxios((method) => beforeRequest(method, true))
   app.config.globalProperties.$alova = alova;
 
   router.beforeResolve(async (to) => {

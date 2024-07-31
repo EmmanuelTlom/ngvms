@@ -18,6 +18,10 @@
                     class="input-1"
                   />
                 </div>
+                <span class="error-message" v-if="errors.email">
+                  {{ errors.email }}
+                </span>
+
                 <div class="input-box last active-grey">
                   <label class="input-label">Password</label>
                   <div class="row items-center justify-between no-wrap">
@@ -32,6 +36,9 @@
                     </q-btn>
                   </div>
                 </div>
+                <span class="error-message" v-if="errors.password">
+                  {{ errors.password }}
+                </span>
 
                 <div class="row items-center justify-end">
                   <div>
@@ -76,21 +83,24 @@
         </div>
       </div>
     </section>
-    {{ error.errors }}
   </div>
 </template>
 
 <script setup lang="ts">
 import { useForm } from 'alova/client';
-import { login } from 'src/data/userRequests';
+import { RequestErrors } from 'app/repository/models';
+import { loginRequest } from 'src/data/userRequests';
 import { reboot } from 'src/utils/proccessor';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+const errors = computed(
+  () => (error.value as unknown as RequestErrors)?.errors || {},
+);
 const router = useRouter();
 const togglePassword = ref(true);
 
-const { send, form, error, loading, onSuccess } = useForm(login, {
+const { send, form, error, loading, onSuccess } = useForm(loginRequest, {
   store: true,
   initialForm: {
     email: '',

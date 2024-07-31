@@ -14,6 +14,9 @@ export type Partial<X> = {
 }
 
 export type GenericData = Record<string, string | number | boolean | Record<string, string>>
+export type RequestErrors = {
+  errors: GenericData
+}
 
 export type GenericResponse<X> = {
   data: ResponseBody<X>,
@@ -64,6 +67,38 @@ export type Initialize = {
   configuration: Configuration;
 };
 
+export type Dashboard = {
+  everything?: Everything,
+  filling_outlets: number,
+  filling_outlets_inc: number,
+  conversion_centers: number,
+  conversion_centers_inc: number,
+  certificate_centers: number
+  certificate_centers_inc: number
+  storage_dealerships: number,
+  storage_dealerships_inc: number,
+  verification_centers: number,
+  verification_centers_inc: number,
+  financial_service_providers: number,
+  financial_service_providers_inc: number,
+}
+
+export type EverythingData = {
+  id: number;
+  name: string;
+  updatedAt?: string;
+  createdAt?: string;
+};
+
+export type Everything = {
+  filling_outlets: EverythingData[],
+  conversion_centers: EverythingData[],
+  certificate_centers: EverythingData[],
+  storage_dealerships: EverythingData[],
+  verification_centers: EverythingData[],
+  financial_service_providers: EverythingData[],
+};
+
 export type Configuration = {
   app_name: string,
   app_email: string,
@@ -100,6 +135,7 @@ export interface User {
   fullname: string;
   verifying: string;
   userData: {
+    ip: string,
     settings: {
       notifications: {
         email: boolean
@@ -110,6 +146,32 @@ export interface User {
   phoneVerifiedAt: string;
   updatedAt: string;
   createdAt: string;
+}
+export interface Vehicle {
+  id: number;
+  name: string;
+  user?: User;
+  imageUrl: string;
+  identifier: string;
+  fillingOutlet?: EverythingData;
+  conversionCenter?: EverythingData;
+  storageDealership?: EverythingData;
+  certificateCenter?: EverythingData;
+  verificationCenter?: EverythingData;
+  financialServiceProvider?: EverythingData;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface VehicleForm {
+  image?: File;
+  identifier: string;
+  filling_outlet_id: number;
+  conversion_center_id: number;
+  storage_dealership_id: number;
+  certificate_center_id: number;
+  verification_center_id: number;
+  financial_service_provider_id: number;
 }
 
 export type NavigationLink = {

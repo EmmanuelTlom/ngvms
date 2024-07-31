@@ -27,7 +27,10 @@
                 </router-link>
               </li>
               <li>
-                <router-link class="review_small bold" to="">
+                <router-link
+                  class="review_small bold"
+                  :to="{ name: 'user.history' }"
+                >
                   Edit Data
                 </router-link>
               </li>
@@ -105,7 +108,11 @@
                 </div>
               </q-menu>
             </q-btn>
-            <div style="gap: 1rem" class="row userarea no-wrap items-center">
+            <router-link
+              style="gap: 1rem"
+              class="row userarea no-wrap items-center"
+              :to="{ name: 'user.profile' }"
+            >
               <img
                 style="
                   width: 40px;
@@ -113,15 +120,13 @@
                   border-radius: 48px;
                   object-fit: cover;
                 "
-                :src="userData.photoUrl"
-                :alt="userData.username"
+                :src="user.imageUrl"
+                :alt="user.username"
               />
-              <router-link :to="{ name: 'user.profile' }">
-                <p class="review_small bold">
-                  {{ userData.username }}
-                </p></router-link
-              >
-            </div>
+              <p class="review_small bold">
+                {{ user.fullname }}
+              </p>
+            </router-link>
           </div>
 
           <div class="toggle_btn">
@@ -200,9 +205,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { userData } from 'src/data/dummy';
-let notifMenu = ref(false);
+import { computed, ref } from 'vue';
+import { useBootstrapStore } from 'src/stores/bootstrap-store';
+
+const user = computed(() => useBootstrapStore().user);
+const notifMenu = ref(false);
 const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {

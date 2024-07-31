@@ -39,6 +39,19 @@ section {
   padding: 12rem 0;
 }
 
+.error-message {
+  margin-bottom: 25px;
+  font-size: 80%;
+  display: block;
+  color: $negative;
+}
+
+.input-box {
+  &:has(+ .error-message) {
+    margin-bottom: 2px !important;
+  }
+}
+
 .authlayout {
   .loginPage {
     padding: 0;

@@ -626,6 +626,23 @@ const helpers = {
     const set = new Set();
     return array.filter(i => !set.has(i[prop]) && set.add(i[prop]));
   },
+  /**
+   * @description Read env variables from .env file and modify based on current environment
+   */
+  readEnv (env: string = 'baseURL', skipDev: boolean = false): string {
+
+    if (import.meta.env.PROD || import.meta.env.v_ENVIRONMENT === 'production' || skipDev) {
+      // Production
+      return import.meta.env[`v_${env}`];
+    } else {
+      // Development
+      if (import.meta.env[`v_dev.${env}`]) {
+        return import.meta.env[`v_dev.${env}`];
+      } else {
+        return helpers.readEnv(env, true)
+      }
+    }
+  }
 };
 
 export default helpers
@@ -635,6 +652,7 @@ export const doter = helpers.doter
 export const money = helpers.money
 export const intStr = helpers.intStr
 export const notify = helpers.notify
+export const readEnv = helpers.readEnv
 export const subString = helpers.subString
 export const currentUrl = helpers.currentUrl
 export const formatBytes = helpers.formatBytes

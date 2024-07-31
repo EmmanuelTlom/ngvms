@@ -1,15 +1,13 @@
 <template>
   <div class="q-mt-md container">
     <q-table
-      :rows="rows"
-      :hide-header="mode === 'grid'"
-      :columns="columns"
+      hide-pagination
       title="History"
       class="sort_tables coupon"
       row-key="id"
-      :grid="mode == 'grid'"
-      :filter="filter"
+      :rows="data"
       :loading="loading"
+      :columns="columns"
       v-model:pagination="pagination"
     >
       <template v-slot:body-cell-status="props">
@@ -19,6 +17,48 @@
           >
             {{ props.row.status }}
           </span>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-id="props">
+        <q-td :props="props" v-intersection="onIntersction">
+          <span>
+            {{ props.key }}
+          </span>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <div class="flex no-wrap q-gutter-x-sm">
+            <q-btn
+              dense
+              color="primary"
+              :icon="
+                date.getDateDiff(
+                  new Date(),
+                  new Date(props.row.createdAt),
+                  'hours',
+                ) > 24
+                  ? 'fas fa-expand'
+                  : 'edit'
+              "
+              :to="{ name: 'user.add.data', params: { data_id: props.value } }"
+            />
+            <ContentRemover
+              dense
+              base-url="/v1/user/vehicles"
+              :disable="
+                date.getDateDiff(
+                  new Date(),
+                  new Date(props.row.createdAt),
+                  'hours',
+                ) > 24
+              "
+              :id="props.value"
+              :list="(() => data as unknown as GenericData[])()"
+            />
+          </div>
         </q-td>
       </template>
 
@@ -38,43 +78,91 @@
   </div>
 </template>
 
-<script>
-import { exportFile } from 'quasar';
-// import { api } from "src/boot/axios";
-const columns = [
+<script setup lang="ts">
+import { usePagination } from 'alova/client';
+import { GenericData } from 'app/repository/models';
+import { date, QTableProps } from 'quasar';
+import ContentRemover from 'src/components/utilities/ContentRemover.vue';
+import { vehiclesRequest } from 'src/data/serviceRequests';
+import { ref } from 'vue';
+
+const pagination = ref({
+  rowsPerPage: 30,
+});
+
+const onIntersction = (e: IntersectionObserverEntry): boolean => {
+  if (loading.value || isLastPage.value || !e.isIntersecting) return false;
+
+  page.value++;
+  return true;
+};
+const { data, page, loading, isLastPage, onSuccess } = usePagination(
+  (page, limit) =>
+    vehiclesRequest({
+      page,
+      limit,
+      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,certificateCenter,verificationCenter',
+    }),
   {
-    name: 'fullname',
+    append: true,
+    total: (e) => e.meta?.total,
+    initialData: { data: [] },
+    initialPageSize: 30,
+  },
+);
+
+onSuccess(({ data }) => {
+  pagination.value.rowsPerPage = data.meta?.total as number;
+});
+
+const columns: QTableProps['columns'] = [
+  {
+    name: 'id',
     required: true,
-    label: 'Coupons Name',
+    label: 'S/N',
     align: 'left',
-    field: 'fullname',
+    field: 'id',
     sortable: true,
   },
   {
-    name: 'type',
+    name: 'identifier',
     required: true,
-    label: 'Type',
+    label: 'Identifier',
     align: 'left',
-    field: 'type',
+    field: 'identifier',
+    sortable: true,
+  },
+  {
+    name: 'verification_center_id',
+    required: true,
+    label: 'Verification Center',
+    align: 'left',
+    field: (row) => row.verificationCenter.name,
+    sortable: true,
+  },
+  {
+    name: 'storage_dealership_id',
+    required: true,
+    label: 'Kit & Storage Dealership',
+    align: 'left',
+    field: (row) => row.storageDealership.name,
     sortable: true,
   },
 
   {
-    name: 'gift',
+    name: 'financial_service_provider_id',
     required: true,
-    label: 'Gift',
+    label: 'Financial Service Providers',
     align: 'center',
-    field: 'gift',
-    // field: (row, index) => console.log(row, index),
+    field: (row) => row.financialServiceProvider.name,
     sortable: true,
   },
   {
-    name: 'created_by',
+    name: 'filling_outlet_id',
     required: true,
-    label: 'Created By',
+    label: 'Filling Outlet',
     align: 'left',
-    field: 'created_by',
-    // field: (row, index) => console.log(row, index),
+    field: (row) => row.fillingOutlet.name,
     sortable: true,
   },
   {
@@ -82,142 +170,34 @@ const columns = [
     required: true,
     label: 'Date',
     align: 'left',
-    field: 'date',
-    // field: (row, index) => console.log(row, index),
+    field: (row) => row.conversionCenter.name,
     sortable: true,
   },
   {
-    name: 'expiration',
+    name: 'certificate_center_id',
     required: true,
-    label: 'Expiration',
+    label: 'NMDPRA',
     align: 'left',
-    field: 'expiration',
-    // field: (row, index) => console.log(row, index),
+    field: (row) => row.certificateCenter.name,
     sortable: true,
   },
   {
-    name: 'status',
+    name: 'createdAt',
     required: true,
-    label: 'Status',
+    label: 'Added On',
     align: 'left',
-    field: 'status',
-    // field: (row, index) => console.log(row, index),
+    field: (row) => date.formatDate(row.createdAt, 'DD MMM YYYY'),
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    required: true,
+    label: 'Actions',
+    align: 'left',
+    field: 'id',
     sortable: true,
   },
 ];
-function wrapCsvValue(val, formatFn) {
-  let formatted = formatFn !== void 0 ? formatFn(val) : val;
-  formatted =
-    formatted === void 0 || formatted === null ? '' : String(formatted);
-  formatted = formatted.split('"').join('""');
-  return `"${formatted}"`;
-}
-export default {
-  data() {
-    return {
-      columns,
-      title: '',
-      showCities: false,
-      cities: [],
-      guaPreview: '',
-      preview: '',
-      selected: [],
-      organizations: [],
-      states: [],
-      rows: [],
-      errors: {},
-      viewData: {},
-      data: {},
-      image: null,
-      viewDialog: false,
-      create_memberDialog: false,
-      editstate: false,
-      pagination: {
-        sortBy: 'id',
-        descending: false,
-        page: 1,
-        rowsPerPage: 10,
-      },
-      filter: '',
-      curl: '',
-      separator: '',
-      mode: 'list',
-      role: 'personels',
-      editId: '',
-      loading: false,
-      loaders: {
-        delete: false,
-        category: false,
-        deleteBtn: [],
-        save: [],
-      },
-    };
-  },
-  watch: {
-    '$route.params.id': {
-      handler() {
-        // console.log(to, from);
-        if (this.$router.currentRoute.value.params.id === 'all') {
-          // console.log(this.$router.currentRoute.value.params.id);
-          this.title = 'All personnel';
-        } else {
-          this.title = this.$router.currentRoute.value.params.id;
-        }
-      },
-      immediate: true,
-    },
-  },
-  methods: {
-    refreshPage() {
-      if (this.curl !== '') {
-        this.loading = true;
-        this.$api
-          .get(this.curl)
-          .then(({ data }) => {
-            this.loading = false;
-            this.rows = data.user.map((data, index) => ({
-              ...data,
-              idd: index + 1,
-            }));
-            // console.log(data);
-          })
-          .catch(() => {
-            // console.log(response);
-            this.loading = false;
-            this.rows = [];
-          });
-      }
-    },
-
-    exportTable() {
-      // naive encoding to csv format
-      const content = [this.columns.map((col) => wrapCsvValue(col.label))]
-        .concat(
-          this.rows.map((row) =>
-            this.columns
-              .map((col) =>
-                wrapCsvValue(
-                  typeof col.field === 'function'
-                    ? col.field(row)
-                    : row[col.field === void 0 ? col.name : col.field],
-                  col.format,
-                ),
-              )
-              .join(','),
-          ),
-        )
-        .join('\r\n');
-      const status = exportFile('Members', content, 'text/csv');
-      if (status !== true) {
-        this.$q.notify({
-          message: 'Browser denied file download...',
-          color: 'negative',
-          icon: 'warning',
-        });
-      }
-    },
-  },
-};
 </script>
 
 <style scoped>
