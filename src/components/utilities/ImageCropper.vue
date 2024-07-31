@@ -52,6 +52,8 @@
         <q-card-actions class="flex justify-center full-width">
           <q-btn
             dense
+            no-wrap
+            no-caps
             @click="exec(btn)"
             :color="
               buttons[btn]?.color ?? locales.modal[btn]?.color ?? 'primary'
