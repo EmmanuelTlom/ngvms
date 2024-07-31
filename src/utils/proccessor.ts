@@ -1,8 +1,6 @@
 import { Configuration, Initialize, PriviPerm, ResponseBody, User } from 'repository/models';
 import { RouteLocationNormalized, Router } from 'vue-router';
 
-import { Cookies } from 'quasar';
-import { QSsrContext } from '@quasar/app-vite';
 import { alova } from 'src/boot/alova';
 import { invalidateCache } from 'alova';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
@@ -80,7 +78,6 @@ export const authValidator = (
   { to, from }: { to: RouteLocationNormalized, from?: RouteLocationNormalized },
   router: Router,
   usr?: User,
-  ssrContext?: QSsrContext | null
 ) => {
   if (!to) {
     return false
@@ -91,15 +88,10 @@ export const authValidator = (
 
   const user = usr ? usr : boot.user;
 
-  if (ssrContext) {
-    const cookies = Cookies.parseSSR(ssrContext)
-    boot.token = cookies.get('token')
-  }
-
   // Check if user is logged in when requesting a page that requires authentication
   if (!boot.token && (to.meta.requireAuth || to.meta.requireAdmin)) {
     // Redirect to Login if login required
-    return router.replace({ name: 'auth.login' });
+    return router.replace({ name: 'login' });
   } else if (boot.token) {
     const config = boot.configuration;
 
@@ -116,7 +108,7 @@ export const authValidator = (
         user?.id &&
         !to.meta.requireCode &&
         !isVerified &&
-        to.name !== 'auth.logout'
+        to.name !== 'logout'
       ) {
         const type = user.verifying || 'email';
         if (!user.emailVerifiedAt && config.verify_email && to.name) {
@@ -137,16 +129,17 @@ export const authValidator = (
     };
 
     // Redirect to the appropriate dashboard based on user role and verification status
+
     if (to.meta.requireGuest) {
       if (user.roles?.length || user.permissions?.length) {
         return router.replace({ name: 'admin.dashboard' });
       }
 
       if (isVerified || !needVerify) {
-        if (to.name == 'auth.register' && from?.query.reference) {
+        if (to.name == 'register' && from?.query.reference) {
           return true
         }
-        return router.replace({ name: 'studio.home' });
+        return router.replace({ name: 'user.dashboard' });
       } else {
         return pushVerification();
       }

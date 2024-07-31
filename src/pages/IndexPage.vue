@@ -27,15 +27,21 @@
               class="hero_btns row justify-center items-center no-wrap"
             >
               <q-btn
-                :to="{ name: 'login' }"
-                class="started full-width"
                 flat
                 no-caps
                 no-wrap
+                class="started full-width"
+                :to="{ name: 'login' }"
               >
                 Login
               </q-btn>
-              <q-btn class="watch full-width bg-grey-3" flat no-wrap no-caps>
+              <q-btn
+                flat
+                no-wrap
+                no-caps
+                class="watch full-width bg-grey-3"
+                :to="{ name: 'register' }"
+              >
                 Sign up
               </q-btn>
             </div>
