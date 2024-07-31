@@ -146,11 +146,9 @@
     >
       <!-- drawer content -->
       <q-scroll-area class="fit">
-        <div class="logo q-pa-md row no-wrap items-center">
-          <img src="../assets/evector.svg" alt="" />
-          <img src="../assets/logo.svg" alt="" />
+        <div class="logo row items-center">
+          <img src="/images/logo.svg" alt="" />
         </div>
-
         <q-list padding class="menu-list">
           <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>
             <q-item-section avatar>
