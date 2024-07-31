@@ -27,7 +27,10 @@
                 </router-link>
               </li>
               <li>
-                <router-link class="review_small bold" to="">
+                <router-link
+                  class="review_small bold"
+                  :to="{ name: 'user.history' }"
+                >
                   Edit Data
                 </router-link>
               </li>
@@ -105,7 +108,11 @@
                 </div>
               </q-menu>
             </q-btn>
-            <div style="gap: 1rem" class="row userarea no-wrap items-center">
+            <router-link
+              style="gap: 1rem"
+              class="row userarea no-wrap items-center"
+              :to="{ name: 'user.profile' }"
+            >
               <img
                 style="
                   width: 40px;
@@ -113,23 +120,13 @@
                   border-radius: 48px;
                   object-fit: cover;
                 "
-                :src="
-                  store.userdetails.photoUrl
-                    ? store.userdetails.photoUrl
-                    : '/images/avatar.png'
-                "
-                :alt="store.userdetails.username"
+                :src="user.imageUrl"
+                :alt="user.username"
               />
-              <router-link :to="{ name: 'user.profile' }">
-                <p class="review_small bold">
-                  {{
-                    store.userdetails.username
-                      ? store.userdetails.username
-                      : "Adam Kelvin"
-                  }}
-                </p></router-link
-              >
-            </div>
+              <p class="review_small bold">
+                {{ user.fullname }}
+              </p>
+            </router-link>
           </div>
 
           <div class="toggle_btn">
@@ -208,10 +205,11 @@
 </template>
 
 <script setup>
-import { useMyAuthStore } from "src/stores/auth";
-import { ref } from "vue";
-let store = useMyAuthStore();
-let notifMenu = ref(false);
+import { computed, ref } from 'vue';
+import { useBootstrapStore } from 'src/stores/bootstrap-store';
+
+const user = computed(() => useBootstrapStore().user);
+const notifMenu = ref(false);
 const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {

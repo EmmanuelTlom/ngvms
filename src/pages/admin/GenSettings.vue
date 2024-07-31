@@ -113,15 +113,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 let data = ref({
   profile_image: null,
-  site_name: "NGVMS",
-  copy_right: "All rights Reserved@NGVMS",
-  seo_title: "NGVMS converts all your excess airtime to cash.",
-  seo_desc: "NGVMS is an airtime to cash and data sales company.",
-  seo_keywords: "CEO",
+  site_name: 'NGVMS',
+  copy_right: 'All rights Reserved@NGVMS',
+  seo_title: 'NGVMS converts all your excess airtime to cash.',
+  seo_desc: 'NGVMS is an airtime to cash and data sales company.',
+  seo_keywords: 'CEO',
 });
 let profile_imageValue = ref(null);
 const setFile = (props) => {

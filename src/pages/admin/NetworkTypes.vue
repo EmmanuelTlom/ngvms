@@ -21,10 +21,7 @@
 </template>
 
 <script setup>
-import NetworkTypeTableVue from "src/components/NetworkTypeTable.vue";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-let router = useRouter();
+import NetworkTypeTableVue from 'src/components/NetworkTypeTable.vue';
 </script>
 
 <style lang="scss" scoped>

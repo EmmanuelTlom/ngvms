@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import ConversionTaskTableVue from "src/components/ConversionTaskTable.vue";
+import ConversionTaskTableVue from 'src/components/ConversionTaskTable.vue';
 </script>
 
 <style lang="scss" scoped></style>

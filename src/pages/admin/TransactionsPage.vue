@@ -102,8 +102,8 @@
 </template>
 
 <script setup>
-import TransactionTableVue from "src/components/TransactionTable.vue";
-import { computed, ref } from "vue";
+import TransactionTableVue from 'src/components/TransactionTable.vue';
+import { ref } from 'vue';
 
 let data = ref({});
 
@@ -117,11 +117,6 @@ let orderStatus = ref({
   completed: true,
   decline: true,
   processing: false,
-});
-const selection = computed(() => {
-  return Object.keys(chipsData)
-    .filter((type) => chipsData[type] === true)
-    .join(", ");
 });
 </script>
 

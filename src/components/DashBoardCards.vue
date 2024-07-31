@@ -1,5 +1,5 @@
 <template>
-  <div :class="data.classStyle" class="dash_card">
+  <div class="dash_card" :class="data.classStyle">
     <div class="row justify-between no-wrap">
       <div>
         <p class="card_text">{{ data.name }}</p>
@@ -29,9 +29,16 @@
   </div>
 </template>
 
-<script setup>
-let props = defineProps({
-  data: Object,
+<script setup lang="ts">
+let data = defineModel<{
+  name: string;
+  numbers: number;
+  icon: string;
+  data: string;
+  icontype: 'up' | 'down';
+  classStyle: 'total' | 'veri' | 'convert' | 'pending';
+}>('data', {
+  default: {},
 });
 </script>
 
@@ -43,7 +50,7 @@ let props = defineProps({
   border-radius: 8px;
 }
 .card_text {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -57,7 +64,7 @@ let props = defineProps({
 }
 
 .card_bigtext {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 22px;
   line-height: 38px;
   letter-spacing: 1px;

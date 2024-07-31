@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import VueApexCharts from "vue3-apexcharts";
+import VueApexCharts from 'vue3-apexcharts';
 export default {
   components: {
     apexchart: VueApexCharts,
@@ -37,43 +37,43 @@ export default {
     return {
       series: [
         {
-          name: "Sales Details",
+          name: 'Sales Details',
           data: [31, 40, 28, 51, 42, 90, 100],
         },
       ],
       seriesLine: [
         {
-          name: "Sales Details",
+          name: 'Sales Details',
           data: [31, 40, 28, 51, 42, 90, 100],
         },
       ],
       chartOptionsLine: {
         chart: {
-          id: "chart1",
+          id: 'chart1',
           height: 130,
-          type: "area",
+          type: 'area',
           brush: {
-            target: "chart2",
+            target: 'chart2',
             enabled: true,
           },
           selection: {
             enabled: true,
             xaxis: {
-              min: new Date("19 Jun 2017").getTime(),
-              max: new Date("14 Aug 2017").getTime(),
+              min: new Date('19 Jun 2017').getTime(),
+              max: new Date('14 Aug 2017').getTime(),
             },
           },
         },
-        colors: ["#008FFB"],
+        colors: ['#008FFB'],
         fill: {
-          type: "gradient",
+          type: 'gradient',
           gradient: {
             opacityFrom: 0.91,
             opacityTo: 0.1,
           },
         },
         xaxis: {
-          type: "datetime",
+          type: 'datetime',
           tooltip: {
             enabled: false,
           },
@@ -84,7 +84,7 @@ export default {
       },
       chartOptions: {
         chart: {
-          type: "area",
+          type: 'area',
           height: 350,
           toolbar: {
             show: true,
@@ -101,7 +101,7 @@ export default {
               reset: true | '<img src="/static/icons/reset.png" width="20">',
               customIcons: [],
             },
-            autoSelected: "pan",
+            autoSelected: 'pan',
           },
           zoom: {
             enabled: false,
@@ -111,35 +111,35 @@ export default {
           enabled: false,
         },
         stroke: {
-          curve: "straight",
+          curve: 'straight',
         },
 
         title: {
-          text: "",
-          align: "left",
+          text: '',
+          align: 'left',
         },
         subtitle: {
-          text: "",
-          align: "left",
+          text: '',
+          align: 'left',
         },
         labels: [],
         xaxis: {
-          type: "datetime",
+          type: 'datetime',
           categories: [
-            "2018-09-19T00:00:00.000Z",
-            "2018-09-19T01:30:00.000Z",
-            "2018-09-19T02:30:00.000Z",
-            "2018-09-19T03:30:00.000Z",
-            "2018-09-19T04:30:00.000Z",
-            "2018-09-19T05:30:00.000Z",
-            "2018-09-19T06:30:00.000Z",
+            '2018-09-19T00:00:00.000Z',
+            '2018-09-19T01:30:00.000Z',
+            '2018-09-19T02:30:00.000Z',
+            '2018-09-19T03:30:00.000Z',
+            '2018-09-19T04:30:00.000Z',
+            '2018-09-19T05:30:00.000Z',
+            '2018-09-19T06:30:00.000Z',
           ],
         },
         yaxis: {
           opposite: false,
         },
         legend: {
-          horizontalAlign: "left",
+          horizontalAlign: 'left',
         },
       },
     };

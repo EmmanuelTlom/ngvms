@@ -10,7 +10,6 @@
       :filter="filter"
       :loading="loading"
       v-model:pagination="pagination"
-      @request="onRequest"
     >
       <template v-slot:body-cell-fullname="props">
         <q-td :props="props">
@@ -42,60 +41,59 @@
 </template>
 
 <script>
-import { Dialog, exportFile, Loading, Notify, useMeta } from "quasar";
-import { api } from "src/boot/axios";
+import { exportFile } from 'quasar';
 const columns = [
   {
-    name: "idd",
+    name: 'idd',
     required: true,
-    label: "ID",
-    align: "left",
-    field: "idd",
+    label: 'ID',
+    align: 'left',
+    field: 'idd',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
 
   {
-    name: "fullname",
+    name: 'fullname',
     required: true,
-    label: "Name",
-    align: "left",
-    field: "fullname",
+    label: 'Name',
+    align: 'left',
+    field: 'fullname',
     sortable: true,
   },
   {
-    name: "email",
+    name: 'email',
     required: true,
-    label: "Email",
-    align: "left",
-    field: "email",
+    label: 'Email',
+    align: 'left',
+    field: 'email',
     sortable: true,
   },
 
   {
-    name: "phone_number",
+    name: 'phone_number',
     required: true,
-    label: "Phone",
-    align: "left",
-    field: "phone_number",
+    label: 'Phone',
+    align: 'left',
+    field: 'phone_number',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "date",
+    name: 'date',
     required: true,
-    label: "Date",
-    align: "left",
-    field: "date",
+    label: 'Date',
+    align: 'left',
+    field: 'date',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "status",
+    name: 'status',
     required: true,
-    label: "Status",
-    align: "left",
-    field: "status",
+    label: 'Status',
+    align: 'left',
+    field: 'status',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
@@ -103,7 +101,7 @@ const columns = [
 function wrapCsvValue(val, formatFn) {
   let formatted = formatFn !== void 0 ? formatFn(val) : val;
   formatted =
-    formatted === void 0 || formatted === null ? "" : String(formatted);
+    formatted === void 0 || formatted === null ? '' : String(formatted);
   formatted = formatted.split('"').join('""');
   return `"${formatted}"`;
 }
@@ -111,22 +109,22 @@ export default {
   data() {
     return {
       columns,
-      title: "",
+      title: '',
       showCities: false,
       cities: [],
-      guaPreview: "",
-      preview: "",
+      guaPreview: '',
+      preview: '',
       selected: [],
       organizations: [],
       states: [],
       rows: [
         {
-          idd: "009",
-          fullname: "Christine Brooks",
-          email: "christinebrooks@gmail.com",
-          phone_number: "08092342736",
-          date: "2/9/24",
-          status: "Verified",
+          idd: '009',
+          fullname: 'Christine Brooks',
+          email: 'christinebrooks@gmail.com',
+          phone_number: '08092342736',
+          date: '2/9/24',
+          status: 'Verified',
         },
       ],
       errors: {},
@@ -137,17 +135,17 @@ export default {
       create_memberDialog: false,
       editstate: false,
       pagination: {
-        sortBy: "id",
+        sortBy: 'id',
         descending: false,
         page: 1,
         rowsPerPage: 10,
       },
-      filter: "",
-      curl: "",
-      separator: "",
-      mode: "list",
-      role: "personels",
-      editId: "",
+      filter: '',
+      curl: '',
+      separator: '',
+      mode: 'list',
+      role: 'personels',
+      editId: '',
       loading: false,
       loaders: {
         delete: false,
@@ -158,32 +156,21 @@ export default {
     };
   },
   watch: {
-    "$route.params.id": {
-      handler(to, from) {
-        // console.log(to, from);
-        if (this.$router.currentRoute.value.params.id === "all") {
+    '$route.params.id': {
+      handler() {
+        if (this.$router.currentRoute.value.params.id === 'all') {
           // console.log(this.$router.currentRoute.value.params.id);
-          this.title = "All personnel";
+          this.title = 'All personnel';
         } else {
           this.title = this.$router.currentRoute.value.params.id;
         }
-        this.onRequest();
       },
       immediate: true,
     },
   },
-
-  mounted() {
-    this.onRequest({
-      pagination: this.pagination,
-      filter: undefined,
-    });
-  },
   methods: {
-    onRequest(props) {},
-
     refreshPage() {
-      if (this.curl !== "") {
+      if (this.curl !== '') {
         this.loading = true;
         this.$api
           .get(this.curl)
@@ -195,7 +182,7 @@ export default {
             }));
             // console.log(data);
           })
-          .catch(({ response }) => {
+          .catch(() => {
             // console.log(response);
             this.loading = false;
             this.rows = [];
@@ -211,22 +198,22 @@ export default {
             this.columns
               .map((col) =>
                 wrapCsvValue(
-                  typeof col.field === "function"
+                  typeof col.field === 'function'
                     ? col.field(row)
                     : row[col.field === void 0 ? col.name : col.field],
-                  col.format
-                )
+                  col.format,
+                ),
               )
-              .join(",")
-          )
+              .join(','),
+          ),
         )
-        .join("\r\n");
-      const status = exportFile(`Members`, content, "text/csv");
+        .join('\r\n');
+      const status = exportFile('Members', content, 'text/csv');
       if (status !== true) {
         this.$q.notify({
-          message: "Browser denied file download...",
-          color: "negative",
-          icon: "warning",
+          message: 'Browser denied file download...',
+          color: 'negative',
+          icon: 'warning',
         });
       }
     },

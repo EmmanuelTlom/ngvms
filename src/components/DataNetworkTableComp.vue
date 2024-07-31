@@ -10,7 +10,6 @@
       :filter="filter"
       :loading="loading"
       v-model:pagination="pagination"
-      @request="onRequest"
     >
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -45,41 +44,41 @@
 </template>
 
 <script>
-import { Dialog, exportFile, Loading, Notify, useMeta } from "quasar";
+import { exportFile } from 'quasar';
 // import { api } from "src/boot/axios";
 const columns = [
   {
-    name: "name",
+    name: 'name',
     required: true,
-    label: "Network Name",
-    align: "left",
-    field: "name",
+    label: 'Network Name',
+    align: 'left',
+    field: 'name',
     sortable: true,
   },
   {
-    name: "ussd",
+    name: 'ussd',
     required: true,
-    label: "USSD code",
-    align: "left",
-    field: "ussd",
+    label: 'USSD code',
+    align: 'left',
+    field: 'ussd',
     sortable: true,
   },
 
   {
-    name: "actions",
+    name: 'actions',
     required: true,
-    label: "",
-    align: "left",
-    field: "actions",
+    label: '',
+    align: 'left',
+    field: 'actions',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "status",
+    name: 'status',
     required: true,
-    label: "",
-    align: "left",
-    field: "status",
+    label: '',
+    align: 'left',
+    field: 'status',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
@@ -87,7 +86,7 @@ const columns = [
 function wrapCsvValue(val, formatFn) {
   let formatted = formatFn !== void 0 ? formatFn(val) : val;
   formatted =
-    formatted === void 0 || formatted === null ? "" : String(formatted);
+    formatted === void 0 || formatted === null ? '' : String(formatted);
   formatted = formatted.split('"').join('""');
   return `"${formatted}"`;
 }
@@ -95,16 +94,16 @@ export default {
   data() {
     return {
       columns,
-      title: "",
+      title: '',
       showCities: false,
       cities: [],
-      guaPreview: "",
-      preview: "",
+      guaPreview: '',
+      preview: '',
       selected: [],
       rows: [
         {
-          name: "AIRTEL",
-          ussd: "99",
+          name: 'AIRTEL',
+          ussd: '99',
         },
       ],
       errors: {},
@@ -115,17 +114,17 @@ export default {
       create_memberDialog: false,
       editstate: false,
       pagination: {
-        sortBy: "id",
+        sortBy: 'id',
         descending: false,
         page: 1,
         rowsPerPage: 10,
       },
-      filter: "",
-      curl: "",
-      separator: "",
-      mode: "list",
-      role: "personels",
-      editId: "",
+      filter: '',
+      curl: '',
+      separator: '',
+      mode: 'list',
+      role: 'personels',
+      editId: '',
       loading: false,
       loaders: {
         delete: false,
@@ -135,16 +134,7 @@ export default {
       },
     };
   },
-
-  mounted() {
-    this.onRequest({
-      pagination: this.pagination,
-      filter: undefined,
-    });
-  },
   methods: {
-    onRequest(props) {},
-
     refreshPage() {},
 
     exportTable() {
@@ -155,22 +145,22 @@ export default {
             this.columns
               .map((col) =>
                 wrapCsvValue(
-                  typeof col.field === "function"
+                  typeof col.field === 'function'
                     ? col.field(row)
                     : row[col.field === void 0 ? col.name : col.field],
-                  col.format
-                )
+                  col.format,
+                ),
               )
-              .join(",")
-          )
+              .join(','),
+          ),
         )
-        .join("\r\n");
-      const status = exportFile(`Members`, content, "text/csv");
+        .join('\r\n');
+      const status = exportFile('Members', content, 'text/csv');
       if (status !== true) {
         this.$q.notify({
-          message: "Browser denied file download...",
-          color: "negative",
-          icon: "warning",
+          message: 'Browser denied file download...',
+          color: 'negative',
+          icon: 'warning',
         });
       }
     },

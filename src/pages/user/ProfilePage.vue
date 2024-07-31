@@ -13,46 +13,51 @@
             flat
             no-caps
             no-wrap
-            >Personal Profile</q-btn
           >
+            Personal Profile
+          </q-btn>
         </div>
+
         <q-separator />
+
+        <q-linear-progress
+          color="primary"
+          track-color="grey"
+          :value="uploading.total / uploading.loaded"
+          :indeterminate="false"
+          v-if="uploading.loaded && uploading.loaded <= 1"
+        />
       </div>
 
       <div v-if="viewMode === 'personal'">
         <div style="gap: 1rem" class="row q-py-lg items-center no-wrap">
           <div class="img_profile">
-            <img
-              style="
-                width: 70px;
-                height: 70px;
-                border-radius: 48px;
-                object-fit: cover;
-              "
-              :src="
-                store.userdetails.photoUrl
-                  ? store.userdetails.photoUrl
-                  : profile_imagePreview
-                  ? profile_imagePreview
-                  : '/images/avatar.png'
-              "
-              :alt="store.userdetails.username"
-            />
-            <!-- <q-btn flat no-caps no-wrap>
-              <i class="fa-solid fa-camera"></i>
-            </q-btn> -->
-            <q-file
-              @update:model-value="setFile"
-              accept=".jpg,.png,.svg,.jpeg"
-              class="authUpload q-mt-sm"
-              v-model="profile_image"
-              ><i class="fa-solid fa-camera"></i
-            ></q-file>
+            <ImageCropper
+              :aspect-ratio="1 / 1"
+              :buttons="{ cancel: 'Cancel', crop: 'Accept' }"
+              @result="uploadAvatar"
+            >
+              <template #default="{ open, dataURL }">
+                <img
+                  style="
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 48px;
+                    object-fit: cover;
+                  "
+                  :src="dataURL || user.imageUrl || placeholder"
+                  :alt="user.username"
+                />
+                <q-btn class="authUpload q-mt-sm" @click="open">
+                  <i class="fa-solid fa-camera"></i>
+                </q-btn>
+              </template>
+            </ImageCropper>
           </div>
 
           <div>
-            <h4 class="review_big">{{ store.userdetails.username }}</h4>
-            <p class="transactsmall color">{{ store.userdetails.email }}</p>
+            <h4 class="review_big">{{ user.fullname }}</h4>
+            <p class="transactsmall color">{{ user.email }}</p>
           </div>
         </div>
 
@@ -64,11 +69,11 @@
               <div>
                 <p class="transactsmall color2">Username</p>
                 <!-- <p class="transactsmall color2">First Name</p> -->
-                <h4 class="review_big">{{ store.userdetails.username }}</h4>
+                <h4 class="review_big">{{ user.username }}</h4>
               </div>
               <div>
                 <p class="transactsmall color2">Phone Number</p>
-                <h4 class="review_big">{{ store.userdetails.phone }}</h4>
+                <h4 class="review_big">{{ user.phone }}</h4>
               </div>
             </div>
 
@@ -76,12 +81,12 @@
               <div>
                 <p class="transactsmall color2">Email</p>
                 <!-- <p class="transactsmall color2">Last Name</p> -->
-                <h4 class="review_big">{{ store.userdetails.email }}</h4>
+                <h4 class="review_big">{{ user.email }}</h4>
               </div>
               <div>
                 <p class="transactsmall color2">Current IP</p>
                 <!-- <p class="transactsmall color2">Location</p> -->
-                <h4 class="review_big">{{ store.userdetails.currentIp }}</h4>
+                <h4 class="review_big">{{ user.userData.ip || 'Unknown' }}</h4>
               </div>
             </div>
           </div>
@@ -105,77 +110,43 @@
   </div>
 </template>
 
-<script setup>
-import { Loading, Notify, QSpinnerOval } from "quasar";
-import { api } from "src/boot/axios";
-import { useMyAuthStore } from "src/stores/auth";
-import { onMounted, ref } from "vue";
-let store = useMyAuthStore();
-let viewMode = ref("personal");
-let model = ref(1);
-let editState = ref(false);
-let profile_image = ref(null);
-let profile_imagePreview = ref("");
-const setViewMode = (view) => {
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useBootstrapStore } from 'src/stores/bootstrap-store';
+import ImageCropper from 'src/components/utilities/ImageCropper.vue';
+import placeholder from '/public/images/avatar.png';
+import { useForm } from 'alova/client';
+import { profileRequest } from 'src/data/userRequests';
+import { User } from 'app/repository/models';
+import { notify } from 'src/utils/helpers';
+
+const user = computed({
+  get: () => useBootstrapStore().user,
+  set: useBootstrapStore().setUser,
+});
+
+const uploadAvatar = ({ file }: { file: File }) => {
+  form.value.image = file;
+  upload();
+};
+
+const {
+  form,
+  send: upload,
+  uploading,
+} = useForm((form) => profileRequest(form, 'image'), {
+  initialForm: {
+    image: null,
+  } as unknown as User & { image: File },
+}).onSuccess(({ data }) => {
+  notify(data.message, data.status);
+  user.value = data.data;
+});
+
+let viewMode = ref('personal');
+const setViewMode = (view: 'personal') => {
   viewMode.value = view;
 };
-
-const setFile = (props) => {
-  profile_image.value = props;
-  var reader = new FileReader();
-  reader.onload = (e) => {
-    profile_imagePreview.value = e.target.result;
-  };
-  reader.readAsDataURL(props);
-  Loading.show({
-    spinner: QSpinnerOval,
-    message: "Uploading profile image...",
-  });
-  const formData = new FormData();
-  formData.append("file-upload", profile_image.value);
-  api
-    .post(`/api/v1/users/upload-picture`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    .then((response) => {
-      console.log(response);
-      Notify.create({
-        message: response.data.message,
-        color: "green",
-        position: "top",
-      });
-      editState.value = false;
-      store.userdetails = response.data.payload;
-
-      Loading.hide();
-    })
-    .catch(({ response }) => {
-      // console.log(response);
-      Loading.hide();
-      Notify.create({
-        message: response.data.message,
-        color: "red",
-        position: "top",
-        actions: [{ icon: "close", color: "white" }],
-      });
-    });
-};
-const getProfile = () => {
-  api
-    .get(`/api/v1/users/me`)
-    .then((response) => {
-      console.log(response);
-      store.userdetails = response.data.data;
-    })
-    .catch(({ response }) => {
-      console.log(response);
-    });
-};
-// onMounted(() => {
-//   getProfile();
-// });
 </script>
 
 <style lang="scss" scoped>
@@ -184,7 +155,6 @@ const getProfile = () => {
   border-bottom: 3px solid #1c1c1e;
 }
 .q-btn {
-  padding-bottom: 1rem;
   color: #9a9fa5;
 }
 </style>

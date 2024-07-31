@@ -10,7 +10,6 @@
       :filter="filter"
       :loading="loading"
       v-model:pagination="pagination"
-      @request="onRequest"
     >
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
@@ -33,60 +32,59 @@
 </template>
 
 <script>
-import { exportFile } from "quasar";
-import { api } from "src/boot/axios";
+import { exportFile } from 'quasar';
 const columns = [
   {
-    name: "transaction",
+    name: 'transaction',
     required: true,
-    label: "TRANSACTION",
-    align: "left",
-    field: "transaction",
+    label: 'TRANSACTION',
+    align: 'left',
+    field: 'transaction',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
 
   {
-    name: "reference",
+    name: 'reference',
     required: true,
-    label: "REFERENCE",
-    align: "left",
-    field: "reference",
+    label: 'REFERENCE',
+    align: 'left',
+    field: 'reference',
     sortable: true,
   },
   {
-    name: "amount",
+    name: 'amount',
     required: true,
-    label: "AMOUNT",
-    align: "left",
-    field: "amount",
+    label: 'AMOUNT',
+    align: 'left',
+    field: 'amount',
     sortable: true,
   },
 
   {
-    name: "date",
+    name: 'date',
     required: true,
-    label: "Date",
-    align: "left",
-    field: "date",
+    label: 'Date',
+    align: 'left',
+    field: 'date',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "time",
+    name: 'time',
     required: true,
-    label: "TIME",
-    align: "left",
-    field: "time",
+    label: 'TIME',
+    align: 'left',
+    field: 'time',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "status",
+    name: 'status',
     required: true,
-    label: "STATUS",
-    align: "left",
-    field: "status",
+    label: 'STATUS',
+    align: 'left',
+    field: 'status',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
@@ -94,7 +92,7 @@ const columns = [
 function wrapCsvValue(val, formatFn) {
   let formatted = formatFn !== void 0 ? formatFn(val) : val;
   formatted =
-    formatted === void 0 || formatted === null ? "" : String(formatted);
+    formatted === void 0 || formatted === null ? '' : String(formatted);
   formatted = formatted.split('"').join('""');
   return `"${formatted}"`;
 }
@@ -102,22 +100,22 @@ export default {
   data() {
     return {
       columns,
-      title: "",
+      title: '',
       showCities: false,
       cities: [],
-      guaPreview: "",
-      preview: "",
+      guaPreview: '',
+      preview: '',
       selected: [],
       organizations: [],
       states: [],
       rows: [
         {
-          transaction: "DATA PURCHASE",
-          reference: "Gfdfjbrbdfh",
-          amount: "5000",
-          time: "3:45PM",
-          date: "2/9/24",
-          status: "Success",
+          transaction: 'DATA PURCHASE',
+          reference: 'Gfdfjbrbdfh',
+          amount: '5000',
+          time: '3:45PM',
+          date: '2/9/24',
+          status: 'Success',
         },
       ],
       errors: {},
@@ -128,17 +126,17 @@ export default {
       create_memberDialog: false,
       editstate: false,
       pagination: {
-        sortBy: "id",
+        sortBy: 'id',
         descending: false,
         page: 1,
         rowsPerPage: 10,
       },
-      filter: "",
-      curl: "",
-      separator: "",
-      mode: "list",
-      role: "personels",
-      editId: "",
+      filter: '',
+      curl: '',
+      separator: '',
+      mode: 'list',
+      role: 'personels',
+      editId: '',
       loading: false,
       loaders: {
         delete: false,
@@ -149,32 +147,21 @@ export default {
     };
   },
   watch: {
-    "$route.params.id": {
-      handler(to, from) {
-        // console.log(to, from);
-        if (this.$router.currentRoute.value.params.id === "all") {
+    '$route.params.id': {
+      handler() {
+        if (this.$router.currentRoute.value.params.id === 'all') {
           // console.log(this.$router.currentRoute.value.params.id);
-          this.title = "All personnel";
+          this.title = 'All personnel';
         } else {
           this.title = this.$router.currentRoute.value.params.id;
         }
-        this.onRequest();
       },
       immediate: true,
     },
   },
-
-  mounted() {
-    this.onRequest({
-      pagination: this.pagination,
-      filter: undefined,
-    });
-  },
   methods: {
-    onRequest(props) {},
-
     refreshPage() {
-      if (this.curl !== "") {
+      if (this.curl !== '') {
         this.loading = true;
         this.$api
           .get(this.curl)
@@ -186,7 +173,7 @@ export default {
             }));
             // console.log(data);
           })
-          .catch(({ response }) => {
+          .catch(() => {
             // console.log(response);
             this.loading = false;
             this.rows = [];
@@ -202,22 +189,22 @@ export default {
             this.columns
               .map((col) =>
                 wrapCsvValue(
-                  typeof col.field === "function"
+                  typeof col.field === 'function'
                     ? col.field(row)
                     : row[col.field === void 0 ? col.name : col.field],
-                  col.format
-                )
+                  col.format,
+                ),
               )
-              .join(",")
-          )
+              .join(','),
+          ),
         )
-        .join("\r\n");
-      const status = exportFile(`Members`, content, "text/csv");
+        .join('\r\n');
+      const status = exportFile('Members', content, 'text/csv');
       if (status !== true) {
         this.$q.notify({
-          message: "Browser denied file download...",
-          color: "negative",
-          icon: "warning",
+          message: 'Browser denied file download...',
+          color: 'negative',
+          icon: 'warning',
         });
       }
     },

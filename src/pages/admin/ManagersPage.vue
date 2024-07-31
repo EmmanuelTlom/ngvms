@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import ManagersCompVue from "src/components/ManagersComp.vue";
+import ManagersCompVue from 'src/components/ManagersComp.vue';
 </script>
 
 <style lang="scss" scoped></style>

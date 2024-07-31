@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 .authLayout {
-  font-family: "Nunito Sans", sans-serif !important;
+  font-family: 'Nunito Sans', sans-serif !important;
   background: #f5f6fa;
   padding: 2rem 0;
 }
@@ -137,7 +137,7 @@
     position: relative;
 
     &::before {
-      content: "";
+      content: '';
       left: -15%;
       height: 100%;
       position: absolute;
@@ -416,7 +416,7 @@
   }
   &::before {
     position: absolute;
-    content: "";
+    content: '';
     left: 50%;
     transform: translateX(-50%);
     width: 0.4px;
@@ -643,8 +643,8 @@ textarea {
 }
 
 .admin_auth {
-  font-family: "Nunito Sans", sans-serif !important;
-  background: url("/images/shape.png") #19184a;
+  font-family: 'Nunito Sans', sans-serif !important;
+  background: url('/images/shape.png') #19184a;
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -823,8 +823,8 @@ textarea {
     display: none;
   }
   .admin_auth {
-    font-family: "Nunito Sans", sans-serif !important;
-    background: url("/images/shape.png") #19184a;
+    font-family: 'Nunito Sans', sans-serif !important;
+    background: url('/images/shape.png') #19184a;
     background-size: cover;
     background-position: center;
     height: 100vh;

@@ -86,10 +86,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 let router = useRouter();
-let viewData = ref("profile");
 </script>
 
 <style lang="scss" scoped>

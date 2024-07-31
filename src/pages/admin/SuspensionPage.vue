@@ -22,8 +22,8 @@
 </template>
 
 <script setup>
-import SuspensionCompVue from "src/components/SuspensionComp.vue";
-import { useRouter } from "vue-router";
+import SuspensionCompVue from 'src/components/SuspensionComp.vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
 </script>
 

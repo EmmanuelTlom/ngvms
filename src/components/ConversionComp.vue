@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import ConvertDetailsVue from "./ConvertDetails.vue";
+import ConvertDetailsVue from './ConvertDetails.vue';
 </script>
 
 <style lang="scss" scoped>

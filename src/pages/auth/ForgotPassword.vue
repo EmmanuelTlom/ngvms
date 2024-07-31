@@ -185,17 +185,17 @@
 </template>
 
 <script setup>
-import { Notify } from "quasar";
-import { api } from "src/boot/axios";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { Notify } from 'quasar';
+import { api } from 'src/boot/axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
 let forgotPasswordView = ref(true);
 let verifyCodeView = ref(false);
 let toggleCode = ref(false);
 let resetPasswordView = ref(false);
 let loadingVerifyOtp = ref(false);
-let reenterPassword = ref("");
+let reenterPassword = ref('');
 let togglePassword = ref(false);
 let loading = ref(false);
 let data = ref({});
@@ -203,7 +203,7 @@ let data = ref({});
 const getPasswordReset = () => {
   loading.value = true;
   api
-    .get(`/api/v1/users/get-reset-password-token`, {
+    .get('/api/v1/users/get-reset-password-token', {
       email: data.value.email,
     })
     .then((response) => {
@@ -213,32 +213,31 @@ const getPasswordReset = () => {
       resetPasswordView.value = true;
       Notify.create({
         message: response.data.message,
-        color: "green",
-        position: "top",
+        color: 'green',
+        position: 'top',
       });
     })
     .catch(({ response }) => {
-      console.log(response);
       loading.value = false;
       Notify.create({
         message: response.data.message,
-        color: "red",
-        position: "top",
+        color: 'red',
+        position: 'top',
       });
     });
 };
 const resetPassword = () => {
   if (data.value.password !== reenterPassword.value) {
     Notify.create({
-      message: "Password does not match",
-      color: "red",
-      position: "top",
+      message: 'Password does not match',
+      color: 'red',
+      position: 'top',
     });
     return;
   } else {
     loading.value = true;
     api
-      .get(`/api/v1/users/get-reset-password-token`, {
+      .get('/api/v1/users/get-reset-password-token', {
         otp: data.value.code,
         password: data.value.password,
       })
@@ -248,18 +247,17 @@ const resetPassword = () => {
         data.value = {};
         Notify.create({
           message: response.data.message,
-          color: "green",
-          position: "top",
+          color: 'green',
+          position: 'top',
         });
-        router.replace({ name: "login" });
+        router.replace({ name: 'login' });
       })
       .catch(({ response }) => {
-        console.log(response);
         loading.value = false;
         Notify.create({
           message: response.data.message,
-          color: "red",
-          position: "top",
+          color: 'red',
+          position: 'top',
         });
       });
   }
@@ -267,16 +265,16 @@ const resetPassword = () => {
 const resendOtp = () => {
   loadingVerifyOtp.value = true;
   api
-    .put(`/api/v1/users/resend-verification-code`, {
+    .put('/api/v1/users/resend-verification-code', {
       email: data.value.email,
     })
     .then((response) => {
       console.log(response);
       loadingVerifyOtp.value = false;
       Notify.create({
-        message: "Successful",
-        position: "top",
-        color: "green",
+        message: 'Successful',
+        position: 'top',
+        color: 'green',
       });
     })
     .catch(({ response }) => {
@@ -284,9 +282,9 @@ const resendOtp = () => {
       Notify.create({
         message: response.data.message
           ? response.data.message
-          : "An error ocurred",
-        position: "top",
-        color: "red-7",
+          : 'An error ocurred',
+        position: 'top',
+        color: 'red-7',
       });
     });
 };
