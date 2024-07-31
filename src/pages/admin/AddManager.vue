@@ -10,7 +10,7 @@
           <img
             style="width: 80px; height: 80px; object-fit: cover"
             v-if="!profile_imageValue"
-            src="/images/image.png"
+            src="assets/images/image.png"
             alt=""
           />
           <img

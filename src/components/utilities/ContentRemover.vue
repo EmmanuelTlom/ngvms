@@ -19,14 +19,12 @@ defineOptions({
   name: 'ContentRemover',
 });
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type Propstype =
   | {
       id: string | number;
       ids?: string[];
-      list?: Record<
-        string,
-        string | number | boolean | Record<string, string>
-      >[];
+      list?: any[];
       title?: string;
       baseUrl?: string;
       buttons?: { cancel: string; ok: string };
@@ -36,7 +34,7 @@ type Propstype =
   | {
       id?: string | number;
       ids: string[];
-      list?: Record<string, string>[];
+      list?: any[];
       title?: string;
       baseUrl?: string;
       buttons?: { cancel: string; ok: string };

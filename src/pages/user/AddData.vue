@@ -204,7 +204,7 @@ import ImageCropper from 'src/components/utilities/ImageCropper.vue';
 import { vehicleRequest, vehicleCreateRequest } from 'src/data/serviceRequests';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 import { computed } from 'vue';
-import placeholder from '/public/images/image.png';
+import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
 import { RequestErrors } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
