@@ -48,10 +48,11 @@
           </div>
           <div class="right row justify-end">
             <q-carousel animated v-model="slide" infinite>
-              <q-carousel-slide :name="1" img-src="/images/hero1.png" />
-              <q-carousel-slide :name="2" img-src="/images/hero2.png" />
-              <q-carousel-slide :name="3" img-src="/images/hero3.png" />
-              <q-carousel-slide :name="4" img-src="/images/hero4.png" />
+              <q-carousel-slide :name="1" img-src="/images/hero1.jpeg" />
+              <q-carousel-slide :name="2" img-src="/images/hero2.jpeg" />
+              <q-carousel-slide :name="3" img-src="/images/hero3.jpeg" />
+              <q-carousel-slide :name="4" img-src="/images/hero4.jpeg" />
+              <q-carousel-slide :name="4" img-src="/images/hero5.webp" />
             </q-carousel>
             <!-- <img src="../assets/moi.svg" alt="" /> -->
           </div>
