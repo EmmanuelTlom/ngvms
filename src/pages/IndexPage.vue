@@ -64,8 +64,7 @@
 </template>
 
 <script setup>
-import FooterVue from "src/components/FooterVue.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from 'vue';
 
 let slide = ref(1);
 
@@ -74,17 +73,13 @@ let stats = ref({
   accreditedCenters: 0,
   registeredMotorCycles: 0,
 });
-let statsCountVehicles = ref(0);
-let statsCountAccreditedCenters = ref(0);
-let statsCountMotorcycles = ref(0);
 let counterRef = ref(false);
-let loadComplete = ref(false);
 
-let visible = computed(() => (counterRef.value ? "positive" : "negative"));
+let visible = computed(() => (counterRef.value ? 'positive' : 'negative'));
 
 const onIntersection = (entry) => {
   counterRef.value = entry.isIntersecting;
-  if (visible.value === "positive") {
+  if (visible.value === 'positive') {
     startCountAnimation();
   } else {
     stats.value = {
@@ -102,13 +97,13 @@ const startCountAnimation = () => {
   const finalCountCenters = 500;
   const finalCountMotorcycles = 40000;
   const incrementVehicles = Math.round(
-    finalCountVehicles / (duration / interval) + 1
+    finalCountVehicles / (duration / interval) + 1,
   );
   const incrementCenters = Math.round(
-    finalCountCenters / (duration / interval) + 1
+    finalCountCenters / (duration / interval) + 1,
   );
   const incrementMotorcycles = Math.round(
-    finalCountMotorcycles / (duration / interval) + 1
+    finalCountMotorcycles / (duration / interval) + 1,
   );
   const timer = setInterval(() => {
     if (stats.value.registeredVehicles < finalCountVehicles) {

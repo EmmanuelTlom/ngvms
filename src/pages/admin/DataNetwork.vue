@@ -40,15 +40,7 @@
 </template>
 
 <script setup>
-import DataNetworkTableComp from "src/components/DataNetworkTableComp.vue";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-let router = useRouter();
-let viewData = ref("profile");
-
-const setView = (view) => {
-  viewData.value = view;
-};
+import DataNetworkTableComp from 'src/components/DataNetworkTableComp.vue';
 </script>
 
 <style lang="scss" scoped>

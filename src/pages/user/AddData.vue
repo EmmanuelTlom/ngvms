@@ -129,7 +129,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 let data = ref({ profile_image: null });
 let profile_imageValue = ref(null);

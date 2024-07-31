@@ -40,15 +40,7 @@
 </template>
 
 <script setup>
-import AirtimeNetworkTableCompVue from "src/components/AirtimeNetworkTableComp.vue";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-let router = useRouter();
-let viewData = ref("profile");
-
-const setView = (view) => {
-  viewData.value = view;
-};
+import AirtimeNetworkTableCompVue from 'src/components/AirtimeNetworkTableComp.vue';
 </script>
 
 <style lang="scss" scoped>

@@ -62,19 +62,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-let rememberMe = ref(false);
 let code = ref(false);
 
-const bindRef = ref("");
+const bindRef = ref('');
 
 const handleOnComplete = (value) => {
   // console.log("OTP completed: ", value);
   code.value = value;
 };
 
-const handleOnChange = (value) => {
+const handleOnChange = () => {
   // console.log("OTP changed: ", value);
 };
 </script>

@@ -9,8 +9,8 @@
 </template>
 
 <script setup>
-import AutoConversionTableVue from "src/components/AutoConversionTable.vue";
-import ConversionCard from "src/components/ConversionCard.vue";
+import AutoConversionTableVue from 'src/components/AutoConversionTable.vue';
+import ConversionCard from 'src/components/ConversionCard.vue';
 </script>
 
 <style lang="scss" scoped>

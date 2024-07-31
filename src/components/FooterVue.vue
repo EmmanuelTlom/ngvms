@@ -36,8 +36,8 @@
 </template>
 
 <script setup>
-import Badge1 from "src/assets/badge1.svg";
-import Badge2 from "src/assets/badge2.svg";
+import Badge1 from 'src/assets/badge1.svg';
+import Badge2 from 'src/assets/badge2.svg';
 </script>
 
 <style lang="scss" scoped></style>

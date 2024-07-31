@@ -18,13 +18,7 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-
-let data = ref({
-  remember: false,
-});
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
 img {

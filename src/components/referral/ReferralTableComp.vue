@@ -45,51 +45,51 @@
 </template>
 
 <script>
-import { Dialog, exportFile, Loading, Notify, useMeta } from "quasar";
+import { exportFile } from 'quasar';
 // import { api } from "src/boot/axios";
 const columns = [
   {
-    name: "idd",
+    name: 'idd',
     required: true,
-    label: "User",
-    align: "left",
-    field: "idd",
+    label: 'User',
+    align: 'left',
+    field: 'idd',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
 
   {
-    name: "fullname",
+    name: 'fullname',
     required: true,
-    label: "Referral Name",
-    align: "left",
-    field: "fullname",
+    label: 'Referral Name',
+    align: 'left',
+    field: 'fullname',
     sortable: true,
   },
   {
-    name: "email",
+    name: 'email',
     required: true,
-    label: "User Email",
-    align: "left",
-    field: "email",
+    label: 'User Email',
+    align: 'left',
+    field: 'email',
     sortable: true,
   },
 
   {
-    name: "no_refrees",
+    name: 'no_refrees',
     required: true,
-    label: "No of Referees",
-    align: "center",
-    field: "no_refrees",
+    label: 'No of Referees',
+    align: 'center',
+    field: 'no_refrees',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "view",
+    name: 'view',
     required: true,
-    label: "Action",
-    align: "left",
-    field: "view",
+    label: 'Action',
+    align: 'left',
+    field: 'view',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
@@ -97,7 +97,7 @@ const columns = [
 function wrapCsvValue(val, formatFn) {
   let formatted = formatFn !== void 0 ? formatFn(val) : val;
   formatted =
-    formatted === void 0 || formatted === null ? "" : String(formatted);
+    formatted === void 0 || formatted === null ? '' : String(formatted);
   formatted = formatted.split('"').join('""');
   return `"${formatted}"`;
 }
@@ -105,21 +105,21 @@ export default {
   data() {
     return {
       columns,
-      title: "",
+      title: '',
       showCities: false,
       cities: [],
-      guaPreview: "",
-      preview: "",
+      guaPreview: '',
+      preview: '',
       selected: [],
       organizations: [],
       states: [],
       rows: [
         {
-          idd: "009",
-          fullname: "Christine Brooks",
-          email: "christinebrooks@gmail.com",
-          no_refrees: "5",
-          view: "View referees",
+          idd: '009',
+          fullname: 'Christine Brooks',
+          email: 'christinebrooks@gmail.com',
+          no_refrees: '5',
+          view: 'View referees',
         },
       ],
       errors: {},
@@ -130,17 +130,17 @@ export default {
       create_memberDialog: false,
       editstate: false,
       pagination: {
-        sortBy: "id",
+        sortBy: 'id',
         descending: false,
         page: 1,
         rowsPerPage: 10,
       },
-      filter: "",
-      curl: "",
-      separator: "",
-      mode: "list",
-      role: "personels",
-      editId: "",
+      filter: '',
+      curl: '',
+      separator: '',
+      mode: 'list',
+      role: 'personels',
+      editId: '',
       loading: false,
       loaders: {
         delete: false,
@@ -151,12 +151,12 @@ export default {
     };
   },
   watch: {
-    "$route.params.id": {
-      handler(to, from) {
+    '$route.params.id': {
+      handler() {
         // console.log(to, from);
-        if (this.$router.currentRoute.value.params.id === "all") {
+        if (this.$router.currentRoute.value.params.id === 'all') {
           // console.log(this.$router.currentRoute.value.params.id);
-          this.title = "All personnel";
+          this.title = 'All personnel';
         } else {
           this.title = this.$router.currentRoute.value.params.id;
         }
@@ -173,10 +173,8 @@ export default {
     });
   },
   methods: {
-    onRequest(props) {},
-
     refreshPage() {
-      if (this.curl !== "") {
+      if (this.curl !== '') {
         this.loading = true;
         this.$api
           .get(this.curl)
@@ -188,8 +186,7 @@ export default {
             }));
             // console.log(data);
           })
-          .catch(({ response }) => {
-            // console.log(response);
+          .catch(() => {
             this.loading = false;
             this.rows = [];
           });
@@ -204,22 +201,22 @@ export default {
             this.columns
               .map((col) =>
                 wrapCsvValue(
-                  typeof col.field === "function"
+                  typeof col.field === 'function'
                     ? col.field(row)
                     : row[col.field === void 0 ? col.name : col.field],
-                  col.format
-                )
+                  col.format,
+                ),
               )
-              .join(",")
-          )
+              .join(','),
+          ),
         )
-        .join("\r\n");
-      const status = exportFile(`Members`, content, "text/csv");
+        .join('\r\n');
+      const status = exportFile('Members', content, 'text/csv');
       if (status !== true) {
         this.$q.notify({
-          message: "Browser denied file download...",
-          color: "negative",
-          icon: "warning",
+          message: 'Browser denied file download...',
+          color: 'negative',
+          icon: 'warning',
         });
       }
     },

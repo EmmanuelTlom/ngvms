@@ -64,27 +64,6 @@
                   </p>
                 </div>
 
-                <!-- <div class="or_section">
-                  <p class="text-center review_small">Or login with</p>
-
-                  <div class="or_btns">
-                    <q-btn flat>
-                      <img src="/images/facebook.svg" alt="" />
-                    </q-btn>
-                    <q-btn flat> <img src="/images/google.svg" alt="" /></q-btn>
-                    <q-btn flat> <img src="/images/apple.svg" alt="" /></q-btn>
-                  </div>
-                </div> -->
-                <!-- <div class="input-box active-grey">
-                  <label class="input-label">Dropdown/select list</label>
-                  <select class="input-1">
-                    <option value="-1"></option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                  </select>
-                </div> -->
-
                 <div class="clear"></div>
               </form>
             </div>
@@ -191,50 +170,43 @@
 </template>
 
 <script setup>
-import { Notify, Platform } from "quasar";
-import { api } from "src/boot/axios";
-import { useMyAuthStore } from "src/stores/auth";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { Notify } from 'quasar';
+import { api } from 'src/boot/axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
-let store = useMyAuthStore();
-let rememberMe = ref(false);
 let loading = ref(false);
 let togglePassword = ref(true);
 let data = ref({});
 let loadingVerify = ref(false);
 let loadingVerifyOtp = ref(false);
-let confirmPassword = ref("");
 let verifyEmailDialog = ref(false);
-let bindRef = ref("");
-let code = ref("");
+let bindRef = ref('');
+let code = ref('');
 const handleOnComplete = (value) => {
   // console.log("OTP completed: ", value);
   code.value = value;
 };
 
-const handleOnChange = (value) => {
+const handleOnChange = () => {
   // console.log("OTP changed: ", value);
 };
-const loginFcn = () => {};
 const submit = () => {
   loading.value = true;
   api
-    .post(`/api/v1/users/login`, {
+    .post('/api/v1/users/login', {
       ...data.value,
-      platform: "web",
+      platform: 'web',
     })
-    .then((response) => {
-      console.log(response);
+    .then(() => {
       loading.value = false;
       Notify.create({
-        message: "Successful",
-        position: "top",
-        color: "green",
+        message: 'Successful',
+        position: 'top',
+        color: 'green',
       });
-      store.setUserDetails(response.data);
       router.replace({
-        name: "user.dashboard",
+        name: 'user.dashboard',
       });
     })
     .catch(({ response }) => {
@@ -242,11 +214,11 @@ const submit = () => {
       Notify.create({
         message: response.data.message
           ? response.data.message
-          : "An error ocurred",
-        position: "top",
-        color: "red-7",
+          : 'An error ocurred',
+        position: 'top',
+        color: 'red-7',
       });
-      if (response.data.message === "Error: Account Not Verified.") {
+      if (response.data.message === 'Error: Account Not Verified.') {
         {
           verifyEmailDialog.value = true;
         }
@@ -257,26 +229,26 @@ const submit = () => {
 const verifyEmail = () => {
   loadingVerify.value = true;
   api
-    .put(`/api/v1/users/verify`, {
+    .put('/api/v1/users/verify', {
       email: data.value.email
         ? data.value.email
-        : "emmanuelchukwuemeka908@gmail.com",
+        : 'emmanuelchukwuemeka908@gmail.com',
       code: code.value,
     })
     .then((response) => {
       console.log(response);
       loadingVerify.value = false;
       Notify.create({
-        message: "Successful",
-        position: "bottom",
-        color: "green",
+        message: 'Successful',
+        position: 'bottom',
+        color: 'green',
       });
       Notify.create({
-        message: "Please login",
-        position: "top",
-        color: "green",
+        message: 'Please login',
+        position: 'top',
+        color: 'green',
         timeout: 30002,
-        actions: [{ icon: "close", color: "white" }],
+        actions: [{ icon: 'close', color: 'white' }],
       });
 
       // store.setUserDetails(response.data);
@@ -290,25 +262,25 @@ const verifyEmail = () => {
       Notify.create({
         message: response.data.message
           ? response.data.message
-          : "An error ocurred",
-        position: "top",
-        color: "red-7",
+          : 'An error ocurred',
+        position: 'top',
+        color: 'red-7',
       });
     });
 };
 const resendEmailOtp = () => {
   loadingVerifyOtp.value = true;
   api
-    .put(`/api/v1/users/resend-verification-code`, {
+    .put('/api/v1/users/resend-verification-code', {
       email: data.value.email,
     })
     .then((response) => {
       console.log(response);
       loadingVerifyOtp.value = false;
       Notify.create({
-        message: "Successful",
-        position: "top",
-        color: "green",
+        message: 'Successful',
+        position: 'top',
+        color: 'green',
       });
     })
     .catch(({ response }) => {
@@ -316,9 +288,9 @@ const resendEmailOtp = () => {
       Notify.create({
         message: response.data.message
           ? response.data.message
-          : "An error ocurred",
-        position: "top",
-        color: "red-7",
+          : 'An error ocurred',
+        position: 'top',
+        color: 'red-7',
       });
     });
 };

@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import ApiLogsCompVue from "src/components/ApiLogsComp.vue";
+import ApiLogsCompVue from 'src/components/ApiLogsComp.vue';
 </script>
 
 <style lang="scss" scoped></style>

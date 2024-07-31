@@ -270,13 +270,13 @@
 </template>
 
 <script setup>
-import UserTransationSummaryVue from "src/components/UserTransationSummary.vue";
-import WalletSummaryVue from "src/components/WalletSummary.vue";
+import UserTransationSummaryVue from 'src/components/UserTransationSummary.vue';
+import WalletSummaryVue from 'src/components/WalletSummary.vue';
 
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
-let viewData = ref("profile");
+let viewData = ref('profile');
 
 const setView = (view) => {
   viewData.value = view;

@@ -21,10 +21,6 @@
   </q-item>
 </template>
 
-<script setup>
-let props = defineProps({
-  record: Object,
-});
-</script>
+<script setup></script>
 
 <style lang="scss" scoped></style>

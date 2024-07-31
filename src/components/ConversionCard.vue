@@ -70,12 +70,7 @@
   </div>
 </template>
 
-<script setup>
-let props = defineProps({
-  data: Object,
-  kind: String,
-});
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
 .wrapper {
@@ -114,7 +109,7 @@ hr {
   }
 }
 .card_text {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -128,7 +123,7 @@ hr {
 }
 
 .card_bigtext {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 22px;
   line-height: 38px;
   letter-spacing: 1px;

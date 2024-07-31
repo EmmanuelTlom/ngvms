@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import CouponsTableVue from "src/components/CouponsTable.vue";
+import CouponsTableVue from 'src/components/CouponsTable.vue';
 </script>
 
 <style lang="scss" scoped>

@@ -113,20 +113,12 @@
                   border-radius: 48px;
                   object-fit: cover;
                 "
-                :src="
-                  store.userdetails.photoUrl
-                    ? store.userdetails.photoUrl
-                    : '/images/avatar.png'
-                "
-                :alt="store.userdetails.username"
+                :src="userData.photoUrl"
+                :alt="userData.username"
               />
               <router-link :to="{ name: 'user.profile' }">
                 <p class="review_small bold">
-                  {{
-                    store.userdetails.username
-                      ? store.userdetails.username
-                      : "Adam Kelvin"
-                  }}
+                  {{ userData.username }}
                 </p></router-link
               >
             </div>
@@ -208,9 +200,8 @@
 </template>
 
 <script setup>
-import { useMyAuthStore } from "src/stores/auth";
-import { ref } from "vue";
-let store = useMyAuthStore();
+import { ref } from 'vue';
+import { userData } from 'src/data/dummy';
 let notifMenu = ref(false);
 const leftDrawerOpen = ref(false);
 

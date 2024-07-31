@@ -245,59 +245,57 @@
 </template>
 
 <script setup>
-import { Notify, Platform } from "quasar";
-import { api } from "src/boot/axios";
-import { useMyAuthStore } from "src/stores/auth";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { Notify } from 'quasar';
+import { api } from 'src/boot/axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
-let store = useMyAuthStore();
 let rememberMe = ref(false);
 let loading = ref(false);
 let loadingVerify = ref(false);
 let loadingVerifyOtp = ref(false);
 let togglePassword = ref(true);
 let toggleConfirmPassword = ref(true);
-let confirmPassword = ref("");
+let confirmPassword = ref('');
 let data = ref({});
 let verifyEmailDialog = ref(false);
-let bindRef = ref("");
-let code = ref("");
+let bindRef = ref('');
+let code = ref('');
 const handleOnComplete = (value) => {
   // console.log("OTP completed: ", value);
   code.value = value;
 };
 
-const handleOnChange = (value) => {
+const handleOnChange = () => {
   // console.log("OTP changed: ", value);
 };
 const submit = () => {
   if (confirmPassword.value !== data.value.password) {
     Notify.create({
-      message: "Password does not match",
-      position: "top",
-      color: "red",
+      message: 'Password does not match',
+      position: 'top',
+      color: 'red',
     });
   } else if (!rememberMe.value) {
     Notify.create({
-      message: "You need to agree to our privacy policy before proceeding",
-      position: "top",
-      color: "red",
+      message: 'You need to agree to our privacy policy before proceeding',
+      position: 'top',
+      color: 'red',
     });
   } else {
     loading.value = true;
     api
-      .post(`/api/v1/users`, {
+      .post('/api/v1/users', {
         ...data.value,
-        userType: "USER",
+        userType: 'USER',
       })
       .then((response) => {
         console.log(response);
         loading.value = false;
         Notify.create({
-          message: "Successful",
-          position: "top",
-          color: "green",
+          message: 'Successful',
+          position: 'top',
+          color: 'green',
         });
         // store.setUserDetails(response.data);
 
@@ -308,9 +306,9 @@ const submit = () => {
         Notify.create({
           message: response.data.message
             ? response.data.message
-            : "An error ocurred",
-          position: "top",
-          color: "red-7",
+            : 'An error ocurred',
+          position: 'top',
+          color: 'red-7',
         });
       });
   }
@@ -324,25 +322,25 @@ const submit = () => {
 const verifyEmail = () => {
   loadingVerify.value = true;
   api
-    .put(`/api/v1/users/verify`, {
+    .put('/api/v1/users/verify', {
       email: data.value.email
         ? data.value.email
-        : "emmanuelchukwuemeka908@gmail.com",
+        : 'emmanuelchukwuemeka908@gmail.com',
       code: code.value,
     })
     .then((response) => {
       console.log(response);
       loadingVerify.value = false;
       Notify.create({
-        message: "Successful",
-        position: "top",
-        color: "green",
+        message: 'Successful',
+        position: 'top',
+        color: 'green',
       });
 
       // store.setUserDetails(response.data);
       verifyEmailDialog.value = false;
       router.replace({
-        name: "login",
+        name: 'login',
       });
     })
     .catch(({ response }) => {
@@ -350,25 +348,25 @@ const verifyEmail = () => {
       Notify.create({
         message: response.data.message
           ? response.data.message
-          : "An error ocurred",
-        position: "top",
-        color: "red-7",
+          : 'An error ocurred',
+        position: 'top',
+        color: 'red-7',
       });
     });
 };
 const resendEmailOtp = () => {
   loadingVerifyOtp.value = true;
   api
-    .put(`/api/v1/users/resend-verification-code`, {
+    .put('/api/v1/users/resend-verification-code', {
       email: data.value.email,
     })
     .then((response) => {
       console.log(response);
       loadingVerifyOtp.value = false;
       Notify.create({
-        message: "Successful",
-        position: "top",
-        color: "green",
+        message: 'Successful',
+        position: 'top',
+        color: 'green',
       });
     })
     .catch(({ response }) => {
@@ -376,9 +374,9 @@ const resendEmailOtp = () => {
       Notify.create({
         message: response.data.message
           ? response.data.message
-          : "An error ocurred",
-        position: "top",
-        color: "red-7",
+          : 'An error ocurred',
+        position: 'top',
+        color: 'red-7',
       });
     });
 };

@@ -24,8 +24,8 @@
 </template>
 
 <script setup>
-import ReferralBonusVue from "src/components/referral/ReferralBonus.vue";
-import { useRouter } from "vue-router";
+import ReferralBonusVue from 'src/components/referral/ReferralBonus.vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
 </script>
 

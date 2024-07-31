@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import ReferralTableCompVue from "src/components/referral/ReferralTableComp.vue";
+import ReferralTableCompVue from 'src/components/referral/ReferralTableComp.vue';
 </script>
 
 <style lang="scss" scoped></style>

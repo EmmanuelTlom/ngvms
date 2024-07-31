@@ -26,8 +26,8 @@
 </template>
 
 <script setup>
-import RefreesTableCompVue from "src/components/referral/RefreesTableComp.vue";
-import { useRouter } from "vue-router";
+import RefreesTableCompVue from 'src/components/referral/RefreesTableComp.vue';
+import { useRouter } from 'vue-router';
 let router = useRouter();
 </script>
 

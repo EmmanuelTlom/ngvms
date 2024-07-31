@@ -30,13 +30,13 @@
                 object-fit: cover;
               "
               :src="
-                store.userdetails.photoUrl
-                  ? store.userdetails.photoUrl
+                userData.photoUrl
+                  ? userData.photoUrl
                   : profile_imagePreview
-                  ? profile_imagePreview
-                  : '/images/avatar.png'
+                    ? profile_imagePreview
+                    : '/images/avatar.png'
               "
-              :alt="store.userdetails.username"
+              :alt="userData.username"
             />
             <!-- <q-btn flat no-caps no-wrap>
               <i class="fa-solid fa-camera"></i>
@@ -51,8 +51,8 @@
           </div>
 
           <div>
-            <h4 class="review_big">{{ store.userdetails.username }}</h4>
-            <p class="transactsmall color">{{ store.userdetails.email }}</p>
+            <h4 class="review_big">{{ userData.username }}</h4>
+            <p class="transactsmall color">{{ userData.email }}</p>
           </div>
         </div>
 
@@ -64,11 +64,11 @@
               <div>
                 <p class="transactsmall color2">Username</p>
                 <!-- <p class="transactsmall color2">First Name</p> -->
-                <h4 class="review_big">{{ store.userdetails.username }}</h4>
+                <h4 class="review_big">{{ userData.username }}</h4>
               </div>
               <div>
                 <p class="transactsmall color2">Phone Number</p>
-                <h4 class="review_big">{{ store.userdetails.phone }}</h4>
+                <h4 class="review_big">{{ userData.phone }}</h4>
               </div>
             </div>
 
@@ -76,12 +76,12 @@
               <div>
                 <p class="transactsmall color2">Email</p>
                 <!-- <p class="transactsmall color2">Last Name</p> -->
-                <h4 class="review_big">{{ store.userdetails.email }}</h4>
+                <h4 class="review_big">{{ userData.email }}</h4>
               </div>
               <div>
                 <p class="transactsmall color2">Current IP</p>
                 <!-- <p class="transactsmall color2">Location</p> -->
-                <h4 class="review_big">{{ store.userdetails.currentIp }}</h4>
+                <h4 class="review_big">{{ userData.currentIp }}</h4>
               </div>
             </div>
           </div>
@@ -106,16 +106,14 @@
 </template>
 
 <script setup>
-import { Loading, Notify, QSpinnerOval } from "quasar";
-import { api } from "src/boot/axios";
-import { useMyAuthStore } from "src/stores/auth";
-import { onMounted, ref } from "vue";
-let store = useMyAuthStore();
-let viewMode = ref("personal");
-let model = ref(1);
+import { Loading, Notify, QSpinnerOval } from 'quasar';
+import { api } from 'src/boot/axios';
+import { ref } from 'vue';
+import { userData } from 'src/data/dummy';
+let viewMode = ref('personal');
 let editState = ref(false);
 let profile_image = ref(null);
-let profile_imagePreview = ref("");
+let profile_imagePreview = ref('');
 const setViewMode = (view) => {
   viewMode.value = view;
 };
@@ -129,53 +127,38 @@ const setFile = (props) => {
   reader.readAsDataURL(props);
   Loading.show({
     spinner: QSpinnerOval,
-    message: "Uploading profile image...",
+    message: 'Uploading profile image...',
   });
   const formData = new FormData();
-  formData.append("file-upload", profile_image.value);
+  formData.append('file-upload', profile_image.value);
   api
-    .post(`/api/v1/users/upload-picture`, formData, {
+    .post('/api/v1/users/upload-picture', formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     })
     .then((response) => {
       console.log(response);
       Notify.create({
         message: response.data.message,
-        color: "green",
-        position: "top",
+        color: 'green',
+        position: 'top',
       });
       editState.value = false;
-      store.userdetails = response.data.payload;
+      userData = response.data.payload;
 
       Loading.hide();
     })
     .catch(({ response }) => {
-      // console.log(response);
       Loading.hide();
       Notify.create({
         message: response.data.message,
-        color: "red",
-        position: "top",
-        actions: [{ icon: "close", color: "white" }],
+        color: 'red',
+        position: 'top',
+        actions: [{ icon: 'close', color: 'white' }],
       });
     });
 };
-const getProfile = () => {
-  api
-    .get(`/api/v1/users/me`)
-    .then((response) => {
-      console.log(response);
-      store.userdetails = response.data.data;
-    })
-    .catch(({ response }) => {
-      console.log(response);
-    });
-};
-// onMounted(() => {
-//   getProfile();
-// });
 </script>
 
 <style lang="scss" scoped>

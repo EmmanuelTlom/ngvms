@@ -48,58 +48,57 @@
 </template>
 
 <script>
-import { api } from "src/boot/axios";
 const columns = [
   {
-    name: "user",
+    name: 'user',
     required: true,
-    label: "User",
-    align: "left",
-    field: "user",
+    label: 'User',
+    align: 'left',
+    field: 'user',
     sortable: true,
   },
   {
-    name: "order",
+    name: 'order',
     required: true,
-    label: "Order ID",
-    align: "left",
-    field: "order",
+    label: 'Order ID',
+    align: 'left',
+    field: 'order',
     sortable: true,
   },
 
   {
-    name: "network",
+    name: 'network',
     required: true,
-    label: "Network",
-    align: "left",
-    field: "network",
+    label: 'Network',
+    align: 'left',
+    field: 'network',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "number",
+    name: 'number',
     required: true,
-    label: "Number",
-    align: "left",
-    field: "number",
+    label: 'Number',
+    align: 'left',
+    field: 'number',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "amount",
+    name: 'amount',
     required: true,
-    label: "Amount",
-    align: "left",
-    field: "amount",
+    label: 'Amount',
+    align: 'left',
+    field: 'amount',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
   {
-    name: "status",
+    name: 'status',
     required: true,
-    label: "Status",
-    align: "left",
-    field: "status",
+    label: 'Status',
+    align: 'left',
+    field: 'status',
     // field: (row, index) => console.log(row, index),
     sortable: true,
   },
@@ -113,21 +112,21 @@ export default {
   data() {
     return {
       columns,
-      title: "",
+      title: '',
       showCities: false,
       cities: [],
-      guaPreview: "",
-      preview: "",
+      guaPreview: '',
+      preview: '',
       selected: [],
       rows: [
         {
-          img: "/images/image.svg",
-          user: "Adebisi Jamiu",
-          network: "MTN",
-          order: "trsgy2era",
-          number: "08092342736",
-          amount: "2500",
-          status: "Approved",
+          img: '/images/image.svg',
+          user: 'Adebisi Jamiu',
+          network: 'MTN',
+          order: 'trsgy2era',
+          number: '08092342736',
+          amount: '2500',
+          status: 'Approved',
         },
       ],
       errors: {},
@@ -137,17 +136,17 @@ export default {
       viewDialog: false,
       editstate: false,
       pagination: {
-        sortBy: "id",
+        sortBy: 'id',
         descending: false,
         page: 1,
         rowsPerPage: 10,
       },
-      filter: "",
-      curl: "",
-      separator: "",
-      mode: "list",
-      role: "users",
-      editId: "",
+      filter: '',
+      curl: '',
+      separator: '',
+      mode: 'list',
+      role: 'users',
+      editId: '',
       loading: false,
       loaders: {
         delete: false,
@@ -165,7 +164,7 @@ export default {
     });
   },
   methods: {
-    onRequest(props) {
+    onRequest() {
       // this.loading = true;
       // const url = `admin/all-health-personnel`;
       // this.curl = url;
@@ -182,8 +181,7 @@ export default {
       //       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       //       .splice(0, 5);
       //   })
-      //   .catch(({ response }) => {
-      //     // console.log(response);
+      //   .catch(() => {
       //     this.loading = false;
       //     this.rows = [];
       //   });

@@ -15,7 +15,7 @@
 
 <style lang="scss" scoped>
 .managers_card {
-  background: url("/images/bgg.svg") white no-repeat;
+  background: url('/images/bgg.svg') white no-repeat;
   // background-size: cover;
   background-position: center;
   padding: 2rem 1rem;

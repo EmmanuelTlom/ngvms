@@ -29,11 +29,7 @@
   </div>
 </template>
 
-<script setup>
-let props = defineProps({
-  data: Object,
-});
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
 .dash_card {
@@ -43,7 +39,7 @@ let props = defineProps({
   border-radius: 8px;
 }
 .card_text {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -57,7 +53,7 @@ let props = defineProps({
 }
 
 .card_bigtext {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 22px;
   line-height: 38px;
   letter-spacing: 1px;

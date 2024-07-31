@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import DisputeTableCompVue from "src/components/DisputeTableComp.vue";
+import DisputeTableCompVue from 'src/components/DisputeTableComp.vue';
 </script>
 
 <style lang="scss" scoped>
