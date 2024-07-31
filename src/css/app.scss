@@ -1771,6 +1771,10 @@ input:focus {
   .hero {
     height: 100%;
   }
+
+  .reviews .big_quotes {
+    width: 80px !important;
+  }
   .header {
     ul {
       display: none;
@@ -1780,11 +1784,6 @@ input:focus {
       display: none;
     }
   }
-
-  .reviews .big_quotes {
-    width: 80px !important;
-  }
-
   .toggle_btn {
     display: flex;
     .q-btn {

@@ -71,7 +71,7 @@
     >
       <!-- drawer content -->
       <q-scroll-area class="fit">
-        <div class="logo row items-center">
+        <div class="logo q-pa-lg row items-center">
           <img src="/images/logo.svg" alt="" />
         </div>
 

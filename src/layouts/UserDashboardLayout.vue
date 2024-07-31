@@ -26,14 +26,14 @@
                   Add New Data
                 </router-link>
               </li>
-              <li>
+              <!-- <li>
                 <router-link
                   class="review_small bold"
                   :to="{ name: 'user.history' }"
                 >
                   Edit Data
                 </router-link>
-              </li>
+              </li> -->
               <li>
                 <router-link
                   class="review_small bold"
@@ -146,7 +146,7 @@
     >
       <!-- drawer content -->
       <q-scroll-area class="fit">
-        <div class="logo row items-center">
+        <div class="logo q-pa-lg row items-center">
           <img src="/images/logo.svg" alt="" />
         </div>
         <q-list padding class="menu-list">
@@ -157,19 +157,19 @@
 
             <q-item-section> Home </q-item-section>
           </q-item>
-          <q-item :to="{ name: 'user.bills' }" clickable v-ripple>
+          <q-item :to="{ name: 'user.add.data' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-wallet-2-line"></i>
             </q-item-section>
 
-            <q-item-section> Vouchers </q-item-section>
+            <q-item-section> Add Data </q-item-section>
           </q-item>
-          <q-item :to="{ name: 'user.referral' }" clickable v-ripple>
+          <q-item :to="{ name: 'user.history' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-user-search-line"></i>
             </q-item-section>
 
-            <q-item-section> Referrals </q-item-section>
+            <q-item-section> My History </q-item-section>
           </q-item>
           <q-item :to="{ name: 'user.profile' }" clickable v-ripple>
             <q-item-section avatar>
