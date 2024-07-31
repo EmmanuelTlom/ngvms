@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="right row justify-end">
-            <q-carousel animated v-model="slide" infinite>
+            <q-carousel :autoplay="true" animated v-model="slide" infinite>
               <q-carousel-slide :name="1" img-src="/images/hero1.jpeg" />
               <q-carousel-slide :name="2" img-src="/images/hero2.jpeg" />
               <q-carousel-slide :name="3" img-src="/images/hero3.jpeg" />
