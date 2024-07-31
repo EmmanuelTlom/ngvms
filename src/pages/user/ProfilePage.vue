@@ -114,7 +114,7 @@
 import { computed, ref } from 'vue';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 import ImageCropper from 'src/components/utilities/ImageCropper.vue';
-import placeholder from '/public/images/avatar.png';
+import placeholder from 'src/assets/avatar.png';
 import { useForm } from 'alova/client';
 import { profileRequest } from 'src/data/userRequests';
 import { User } from 'app/repository/models';

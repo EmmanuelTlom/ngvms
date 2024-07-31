@@ -56,7 +56,7 @@
                 ) > 24
               "
               :id="props.value"
-              :list="(() => data as unknown as GenericData[])()"
+              :list="data"
             />
           </div>
         </q-td>
@@ -80,7 +80,6 @@
 
 <script setup lang="ts">
 import { usePagination } from 'alova/client';
-import { GenericData } from 'app/repository/models';
 import { date, QTableProps } from 'quasar';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
 import { vehiclesRequest } from 'src/data/serviceRequests';
