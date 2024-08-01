@@ -40,7 +40,9 @@ export const useBootstrapStore = defineStore('bootstrap', {
       this.ready = true;
     },
     redirectTo (route: RouteLocationNormalized) {
-      this.redirect = route;
+      this.$patch((state) => {
+        state.redirect = route
+      })
     },
     saveAuthUser (user: User, token?: string | null) {
       this.user = user;

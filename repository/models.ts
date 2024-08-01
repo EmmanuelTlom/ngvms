@@ -83,6 +83,15 @@ export type Dashboard = {
   financial_service_providers_inc: number,
 }
 
+export type Notification = {
+  id: string;
+  title: string;
+  message: string;
+  important: boolean,
+  readAt: string;
+  createdAt: string;
+};
+
 export type EverythingData = {
   id: number;
   name: string;

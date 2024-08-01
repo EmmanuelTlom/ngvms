@@ -89,7 +89,7 @@ export const authValidator = (
   const user = usr ? usr : boot.user;
 
   // Check if user is logged in when requesting a page that requires authentication
-  if (!boot.token && (to.meta.requireAuth || to.meta.requireAdmin)) {
+  if (!boot.token && (to.meta.requireAuth || to.meta.requireAdmin) && to.name !== 'login') {
     // Redirect to Login if login required
     return router.replace({ name: 'login' });
   } else if (boot.token) {

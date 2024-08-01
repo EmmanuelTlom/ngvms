@@ -86,7 +86,7 @@
               <div>
                 <p class="transactsmall color2">Current IP</p>
                 <!-- <p class="transactsmall color2">Location</p> -->
-                <h4 class="review_big">{{ user.userData.ip || 'Unknown' }}</h4>
+                <h4 class="review_big">{{ user.userData?.ip || 'Unknown' }}</h4>
               </div>
             </div>
           </div>

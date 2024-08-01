@@ -33,7 +33,7 @@
         </ImageCropper>
 
         <div class="dash_inputs q-mt-md">
-          <q-form @submit.prevent="send">
+          <q-form ref="formRef" @submit.prevent="send">
             <div class="grid">
               <div class="input_wrap">
                 <label for="">NMDPRA</label>
@@ -203,15 +203,16 @@ import { useForm, useRequest } from 'alova/client';
 import ImageCropper from 'src/components/utilities/ImageCropper.vue';
 import { vehicleRequest, vehicleCreateRequest } from 'src/data/serviceRequests';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
 import { RequestErrors } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
-import { date } from 'quasar';
+import { date, QForm } from 'quasar';
 
 const route = useRoute();
 const router = useRouter();
+const formRef = ref<QForm>();
 const everything = computed(() => useBootstrapStore().everything);
 
 const errors = computed(
@@ -232,6 +233,7 @@ const {
   form,
   send,
   error,
+  reset,
   updateForm,
   loading: submiting,
 } = useForm((form) => vehicleCreateRequest(form, route.params.data_id), {
@@ -281,6 +283,16 @@ const { data } = useRequest(
     financial_service_provider_id: data.financialServiceProvider?.id,
   });
 });
+
+watch(
+  () => route.params.data_id,
+  (id, oid) => {
+    if (oid && !id) {
+      reset();
+      formRef.value?.resetValidation();
+    }
+  },
+);
 </script>
 
 <style lang="scss" scoped></style>

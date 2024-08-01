@@ -885,14 +885,21 @@ input:focus {
 
   .main_div {
     background: #f7f7f7;
+    position: relative;
     .row_top {
       padding: 12px;
       margin-bottom: 1rem;
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      z-index: 1;
     }
     .notif_list {
       padding: 30px;
       background: white;
-      padding: 12px 24px;
+      padding: 12px 0;
 
       .head {
         font-size: 14px;
@@ -902,6 +909,7 @@ input:focus {
         text-align: left;
         color: #6c737b;
         margin-bottom: 0.5rem;
+        padding-left: 0.5em;
       }
       .q-item {
         position: relative;
@@ -919,6 +927,7 @@ input:focus {
         background: #008225;
         border-radius: 50%;
         left: 0;
+        margin-left: 5px;
       }
       .q-item.blueTick::before {
         content: '';

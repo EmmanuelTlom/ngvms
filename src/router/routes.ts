@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/auth/LoginPage.vue'),
         name: 'logout',
         beforeEnter: async () => {
-          logoutRequest().send();
+          await logoutRequest().send();
           return { name: 'login' };
         },
       },

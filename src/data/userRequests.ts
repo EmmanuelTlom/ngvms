@@ -1,4 +1,4 @@
-import { Dashboard, GenericData, ResponseBody, User } from 'app/repository/models';
+import { Dashboard, GenericData, Notification, ResponseBody, User } from 'app/repository/models';
 import { alova, axios } from 'src/boot/alova';
 
 export const logoutRequest = () => {
@@ -58,5 +58,23 @@ export const dashboardRequest = (
 ) => {
   return alova.Get<ResponseBody<Dashboard>>('/v1/account/dashboard', {
     params
+  });
+};
+
+type NotifResponseBody<T> = ResponseBody<T> & {
+  stats: {
+    read: number,
+    unread: number,
+    important: number
+  },
+  important: Notification[]
+}
+
+export const notificationsRequest = (
+  params?: GenericData,
+) => {
+  return alova.Get<NotifResponseBody<Notification>>('/v1/account/notifications', {
+    params,
+    cacheFor: 5 * 60
   });
 };

@@ -1,8 +1,13 @@
 // outside of a Vue file
 import { Dialog, DialogChainObject, Notify, QBtnProps, QDialogSelectionPrompt, copyToClipboard, date, scroll } from 'quasar';
+import TimeAgo, { FormatStyleName } from 'javascript-time-ago';
 
 import { ResponseStatus } from 'repository/models';
+import en from 'javascript-time-ago/locale/en';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
+
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo('en-US');
 
 type NMessage = {
   ok?: boolean | string | QBtnProps;
@@ -464,6 +469,27 @@ const helpers = {
 
     return symb + (abbrev === true ? helpers.intStr(amount) : parsedAmount);
   },
+
+  timeAgoStamp (
+    time: string | Date,
+    format: 'facebook' | 'twitter' | 'mini' = 'facebook',
+    timeFormat = 'MMM DD, YYYY',
+    switchAfter = 72,
+  ) {
+    const styles: Record<string, FormatStyleName> = {
+      twitter: 'twitter',
+      facebook: 'round',
+    }
+
+    if (date.getDateDiff(new Date(), new Date(time), 'hours') <= switchAfter) {
+      return timeAgo.format(
+        time instanceof Date ? time : new Date(time),
+        styles[format] || 'round',
+      );
+    } else {
+      return date.formatDate(time, timeFormat);
+    }
+  },
   humanize (num: number, slugify?: '-' | '_'): string {
     if (!num) {
       return '';
@@ -657,4 +683,5 @@ export const subString = helpers.subString
 export const currentUrl = helpers.currentUrl
 export const formatBytes = helpers.formatBytes
 export const arrayUnique = helpers.arrayUnique
+export const timeAgoStamp = helpers.timeAgoStamp
 export const formatSeconds = helpers.formatSeconds
