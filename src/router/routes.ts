@@ -34,12 +34,18 @@ const routes: RouteRecordRaw[] = [
         name: 'forgot.password',
       },
       {
+        path: '/verify/:type?',
+        meta: { requireGuest: false, requireAuth: true },
+        component: () => import('pages/auth/VerifyPage.vue'),
+        name: 'auth.verify',
+      },
+      {
         meta: { requireGuest: false, requireAuth: true },
         path: '/user/logout',
         component: () => import('pages/auth/LoginPage.vue'),
         name: 'logout',
         beforeEnter: async () => {
-          logoutRequest().send();
+          await logoutRequest().send();
           return { name: 'login' };
         },
       },

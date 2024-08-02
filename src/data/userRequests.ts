@@ -1,4 +1,4 @@
-import { Dashboard, GenericData, ResponseBody, User } from 'app/repository/models';
+import { Dashboard, GenericData, Notification, ResponseBody, User } from 'app/repository/models';
 import { alova, axios } from 'src/boot/alova';
 
 export const logoutRequest = () => {
@@ -19,6 +19,34 @@ export const loginRequest = (
   method.meta = {
     authRole: 'login'
   };
+  return method;
+};
+
+export const forgotPasswordRequest = (
+  form: {
+    email: string,
+  }) => {
+  return alova.Post<ResponseBody<User>>('/v1/auth/forgot-password', form);
+};
+
+export const resetPasswordRequest = (
+  form: {
+    code: string,
+    password?: 'string'
+    password_confirmation?: 'string'
+  },
+  check: boolean = false
+) => {
+  return alova.Post<ResponseBody<User>>(`/v1/auth/reset-password${check ? '/check-code' : ''}`, form);
+};
+
+export const verificationRequest = (
+  form: {
+    code: string,
+    _method?: 'POST' | 'PUT'
+  },
+  type: 'email' | 'phone') => {
+  const method = alova.Post<ResponseBody<User> & { reboot: boolean }>(`/v1/verify/with-code/${type}`, form);
   return method;
 };
 
@@ -58,5 +86,23 @@ export const dashboardRequest = (
 ) => {
   return alova.Get<ResponseBody<Dashboard>>('/v1/account/dashboard', {
     params
+  });
+};
+
+type NotifResponseBody<T> = ResponseBody<T> & {
+  stats: {
+    read: number,
+    unread: number,
+    important: number
+  },
+  important: Notification[]
+}
+
+export const notificationsRequest = (
+  params?: GenericData,
+) => {
+  return alova.Get<NotifResponseBody<Notification>>('/v1/account/notifications', {
+    params,
+    cacheFor: 5 * 60
   });
 };

@@ -48,60 +48,64 @@
           <div style="gap: 1rem" class="row btns items-center">
             <q-btn dense flat round>
               <img src="/images/notif.svg" alt="" />
-              <q-badge color="secondary" floating
-                ><span class="dot"></span
-              ></q-badge>
+              <q-badge
+                rounded
+                color="secondary"
+                floating
+                v-if="notifs.stats.unread"
+              >
+                <span class="dot"></span>
+              </q-badge>
               <q-menu
                 v-model="notifMenu"
                 transition-show="scale"
                 class="qmenu_notif"
                 transition-hide="scale"
+                max-width="300px"
+                max-height="600px"
+                @show="send"
               >
+                <q-inner-loading
+                  :showing="
+                    loadingNotifications &&
+                    !allNotifications.length &&
+                    !importantNotifications.length
+                  "
+                />
                 <div class="main_div">
                   <div class="row row_top items-center justify-between">
-                    <h4 class="dashtext">Notification</h4>
+                    <h4 class="dashtext">Notifications</h4>
                     <q-btn @click="notifMenu = false" flat no-wrap no-caps>
                       Close
                       <img class="q-ml-sm" src="/images/closetur.svg" alt="" />
                     </q-btn>
                   </div>
-                  <q-list class="notif_list">
-                    <h4 class="head">Important Notifications (2)</h4>
-                    <q-item v-for="n in 2" :key="n" clickable v-ripple>
-                      <q-item-section>
-                        <q-item-label class="review_small text-weight-medium"
-                          >Happy Independence Day
-                        </q-item-label>
-                        <q-item-label class="message text-weight-medium"
-                          >Wishing you and yours a wonderful holiday as
-                          we...</q-item-label
-                        >
-                        <q-item-label class="caption" caption
-                          >1 hour ago</q-item-label
-                        >
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                  <q-list class="notif_list">
-                    <h4 class="head">Other Notifications (10)</h4>
+                  <q-list
+                    class="notif_list"
+                    :key="n"
+                    v-for="(nt, n) in notifications"
+                  >
+                    <h4 class="head">{{ nt.title }} ({{ nt.count }})</h4>
                     <q-item
-                      v-for="(n, index) in 2"
-                      :class="index % 2 ? 'blueTick' : 'tick'"
-                      :key="n"
+                      v-for="(n, index) in nt.data"
+                      :class="!!n.readAt ? 'blueTick' : 'tick'"
+                      :key="index"
                       clickable
                       v-ripple
                     >
                       <q-item-section>
-                        <q-item-label class="review_small text-weight-medium"
-                          >NGVNS Debit Alert
+                        <q-item-label class="review_small text-weight-medium">
+                          {{ n.title }}
                         </q-item-label>
-                        <q-item-label class="message text-weight-medium"
-                          >Your GTBank direct debit transaction of
-                          NGN4,500...</q-item-label
+                        <q-item-label
+                          :lines="2"
+                          class="message text-weight-medium"
                         >
-                        <q-item-label class="caption" caption
-                          >1 hour ago</q-item-label
-                        >
+                          {{ n.message }}
+                        </q-item-label>
+                        <q-item-label class="caption" caption>
+                          {{ timeAgoStamp(n.createdAt) }}
+                        </q-item-label>
                       </q-item-section>
                     </q-item>
                   </q-list>
@@ -202,9 +206,13 @@
   </q-layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
+import { useAutoRequest, usePagination } from 'alova/client';
+import { notificationsRequest } from 'src/data/userRequests';
+import { Notification } from 'app/repository/models';
+import { timeAgoStamp } from 'src/utils/helpers';
 
 const user = computed(() => useBootstrapStore().user);
 const notifMenu = ref(false);
@@ -213,6 +221,45 @@ const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+
+const { data: notifs } = useAutoRequest(
+  () => notificationsRequest({ statsOnly: 1 }),
+  {
+    force: true,
+    throttle: 1000,
+    pollingTime: 10000,
+    initialData: { stats: { read: 0, unread: 0, important: 0 } },
+  },
+);
+
+const importantNotifications = ref<Notification[]>([]);
+const notifications = computed(() => {
+  return [
+    {
+      title: 'Important Notifications',
+      data: importantNotifications.value,
+      count: notifs.value.stats.important,
+      show: importantNotifications.value.some((e) => !e.readAt),
+    },
+    {
+      title: `${notifs.value.stats.important ? 'Other' : 'All'} Notifications`,
+      data: allNotifications.value,
+      count: notifs.value.stats.unread + notifs.value.stats.read,
+      show: allNotifications.value.some((e: Notification) => !e.readAt),
+    },
+  ].filter((e) => e.count > 0 || e.show);
+});
+
+const {
+  send,
+  data: allNotifications,
+  loading: loadingNotifications,
+} = usePagination(() => notificationsRequest({ premark: 1, withStats: 1 }), {
+  immediate: false,
+  initialData: [],
+}).onSuccess(({ data }) => {
+  importantNotifications.value = data.important;
+});
 </script>
 
 <style scoped>

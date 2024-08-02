@@ -29,7 +29,7 @@ export const refreshUser = (router?: Router) => {
         if (error?.status_code === 401 && error?.status === 'error') {
           boot.saveAuthUser({} as User, null);
           if (router && router.replace) {
-            return router.replace({ name: 'auth.login' });
+            return router.replace({ name: 'login' });
           }
         }
         resolve({} as User);
@@ -89,7 +89,7 @@ export const authValidator = (
   const user = usr ? usr : boot.user;
 
   // Check if user is logged in when requesting a page that requires authentication
-  if (!boot.token && (to.meta.requireAuth || to.meta.requireAdmin)) {
+  if (!boot.token && (to.meta.requireAuth || to.meta.requireAdmin) && to.name !== 'login') {
     // Redirect to Login if login required
     return router.replace({ name: 'login' });
   } else if (boot.token) {
@@ -110,8 +110,11 @@ export const authValidator = (
         !isVerified &&
         to.name !== 'logout'
       ) {
+        if (to.name == 'auth.verify')
+          return true;
+
         const type = user.verifying || 'email';
-        if (!user.emailVerifiedAt && config.verify_email && to.name) {
+        if (!user.emailVerifiedAt && config.verify_email) {
           return router.push({
             name: 'auth.verify',
             params: { type },

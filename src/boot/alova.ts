@@ -3,6 +3,7 @@ import { AlovaGenerics, Method, createAlova } from 'alova';
 import { AxiosError, AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { GenericResponse, ResponseBody, User } from 'repository/models';
 
+import { MutationType } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
 import VueHook from 'alova/vue';
 import { boot } from 'quasar/wrappers';
@@ -28,17 +29,19 @@ function isAxios (useAxios: boolean, response: AxiosResponse | Response): respon
   return useAxios === true;
 }
 
+const clearAuth = async () => {
+  const boot = useBootstrapStore();
+  await boot.clearAuth().then(() => {
+    boot.redirectTo({ name: 'login' } as RouteLocationNormalized);
+  });
+}
+
 const { onAuthRequired, onResponseRefreshToken } = createClientTokenAuthentication({
   refreshToken: {
     isExpired: () => {
       return false;
     },
-    handler: async () => {
-      const boot = useBootstrapStore();
-      await boot.clearAuth().then(() => {
-        boot.redirectTo({ name: 'auth.login' } as RouteLocationNormalized);
-      });
-    },
+    handler: clearAuth
   },
   assignToken: method => {
     const boot = useBootstrapStore();
@@ -52,7 +55,7 @@ const { onAuthRequired, onResponseRefreshToken } = createClientTokenAuthenticati
   },
   async logout () {
     await useBootstrapStore().clearAuth()
-  }
+  },
 });
 
 const { onAuthRequired: onAuthRequiredAxios, onResponseRefreshToken: onResponseRefreshTokenAxios } = createClientTokenAuthentication<
@@ -63,12 +66,7 @@ const { onAuthRequired: onAuthRequiredAxios, onResponseRefreshToken: onResponseR
     isExpired: () => {
       return false;
     },
-    handler: async () => {
-      const boot = useBootstrapStore();
-      await boot.clearAuth().then(() => {
-        boot.redirectTo({ name: 'auth.login' } as RouteLocationNormalized);
-      });
-    }
+    handler: clearAuth
   },
   assignToken: method => {
     const boot = useBootstrapStore();
@@ -93,6 +91,8 @@ const responded = async (
       const message = (json.message || response.statusText || 'Unknown error') as string;
       if (![422, 401, 403].includes(response.status)) {
         notify(message, json.status || 'error');
+      } else if (response.status === 401) {
+        clearAuth()
       }
 
       if (json.errors) {
@@ -167,6 +167,8 @@ const axios = createAlova({
           response.data.message || response.statusText || 'Unknown error';
         if (![422, 401, 403].includes(response.status)) {
           notify(message, response.data.status || 'error');
+        } else if (response.status === 401) {
+          clearAuth()
         }
       }
       if (response.data?.errors) {
@@ -194,14 +196,20 @@ export default boot(async ({ app, router }) => {
 
   app.config.globalProperties.$alova = alova;
 
-  router.beforeResolve(async (to) => {
-    if (
-      boot.redirect &&
-      to.name !== boot.redirect.name
-    ) {
-      router.replace(boot.redirect);
+  const redirector = (redirect: RouteLocationNormalized | null, cur: RouteLocationNormalized) => {
+    if (redirect && cur.name !== redirect.name) {
+      router.replace(redirect);
       boot.redirect = null;
     }
+  }
+
+  router.beforeResolve(async (to) => {
+    boot.$subscribe((e, i) => {
+      if (e.type === MutationType.patchFunction && i.redirect) {
+        redirector(i.redirect, to)
+      }
+    })
+    redirector(boot.redirect, to)
   });
 });
 
