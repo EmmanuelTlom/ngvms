@@ -29,7 +29,7 @@ export const refreshUser = (router?: Router) => {
         if (error?.status_code === 401 && error?.status === 'error') {
           boot.saveAuthUser({} as User, null);
           if (router && router.replace) {
-            return router.replace({ name: 'auth.login' });
+            return router.replace({ name: 'login' });
           }
         }
         resolve({} as User);
@@ -110,8 +110,11 @@ export const authValidator = (
         !isVerified &&
         to.name !== 'logout'
       ) {
+        if (to.name == 'auth.verify')
+          return true;
+
         const type = user.verifying || 'email';
-        if (!user.emailVerifiedAt && config.verify_email && to.name) {
+        if (!user.emailVerifiedAt && config.verify_email) {
           return router.push({
             name: 'auth.verify',
             params: { type },

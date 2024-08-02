@@ -22,6 +22,34 @@ export const loginRequest = (
   return method;
 };
 
+export const forgotPasswordRequest = (
+  form: {
+    email: string,
+  }) => {
+  return alova.Post<ResponseBody<User>>('/v1/auth/forgot-password', form);
+};
+
+export const resetPasswordRequest = (
+  form: {
+    code: string,
+    password?: 'string'
+    password_confirmation?: 'string'
+  },
+  check: boolean = false
+) => {
+  return alova.Post<ResponseBody<User>>(`/v1/auth/reset-password${check ? '/check-code' : ''}`, form);
+};
+
+export const verificationRequest = (
+  form: {
+    code: string,
+    _method?: 'POST' | 'PUT'
+  },
+  type: 'email' | 'phone') => {
+  const method = alova.Post<ResponseBody<User> & { reboot: boolean }>(`/v1/verify/with-code/${type}`, form);
+  return method;
+};
+
 export const registerRequest = (
   form: {
     name: string,
