@@ -5,7 +5,7 @@
         <div class="grid">
           <div class="left">
             <h1 class="main_text">
-              Welcome to The NVGMS Monitoring and Database System.
+              Welcome to NVGMS, Nigeria Gas Vehicle Monitoring System.
             </h1>
 
             <div style="gap: 1rem" class="row q-my-lg items-center no-wrap">

@@ -36,7 +36,7 @@ const stats = ref<
 >([
   {
     id: 'storage_dealerships',
-    name: 'Storage Dealerships',
+    name: 'SON Certified CNG Conversion Kit Supplier',
     numbers: 0,
     icon: '/images/users.svg',
     data: '{inc}% {dir} from yesterday',
@@ -45,7 +45,7 @@ const stats = ref<
   },
   {
     id: 'filling_outlets',
-    name: 'Filling Outlets',
+    name: 'NMDPRA (Licenced CNG Filling Station)',
     numbers: 0,
     icon: '/images/shield.svg',
     data: '{inc}% {dir} from past week',
@@ -63,7 +63,7 @@ const stats = ref<
   },
   {
     id: 'verification_centers',
-    name: 'Verification Centers',
+    name: 'FRSC Vehicle Registration Verification ',
     numbers: 0,
     icon: '/images/circle.svg',
     data: '{inc}% {dir} from yesterday',
@@ -72,7 +72,7 @@ const stats = ref<
   },
   {
     id: 'certificate_centers',
-    name: 'Certificate Centers',
+    name: 'NADDC(Accredited Conversion Centre)',
     numbers: 0,
     icon: '/images/circle.svg',
     data: '{inc}% {dir} from yesterday',

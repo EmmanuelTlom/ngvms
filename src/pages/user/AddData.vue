@@ -36,7 +36,7 @@
           <q-form ref="formRef" @submit.prevent="send">
             <div class="grid">
               <div class="input_wrap">
-                <label for="">NMDPRA</label>
+                <label for="">NMDPRA(Licenced CNG Filling Station)</label>
                 <div class="input">
                   <select v-model="form.certificate_center_id">
                     <option
@@ -73,7 +73,7 @@
             </div>
             <div class="grid">
               <div class="input_wrap">
-                <label for="">SON Approved Kit & Storage Dealership</label>
+                <label for="">SON Certified CNG Conversion Kit Supplier</label>
                 <div class="input">
                   <select v-model="form.storage_dealership_id">
                     <option
@@ -91,13 +91,9 @@
                 </span>
               </div>
               <div class="input_wrap">
-                <label for="">Unique Identifier</label>
+                <label for="">UID(Unique Identifier)</label>
                 <div class="input">
-                  <input
-                    type="text"
-                    placeholder="Enter your first name"
-                    v-model="form.identifier"
-                  />
+                  <input type="text" placeholder="" v-model="form.identifier" />
                 </div>
 
                 <span class="error-message" v-if="errors.identifier">
@@ -108,7 +104,7 @@
 
             <div class="grid">
               <div class="input_wrap">
-                <label for="">FRSC REG Verification</label>
+                <label for="">FRSC Vehicle Registration Verification</label>
                 <div class="input">
                   <select v-model="form.verification_center_id">
                     <option
@@ -153,10 +149,7 @@
               </div>
             </div>
             <div class="input_wrap">
-              <label for=""
-                >NADDC(National Automotive Design & Development Council)
-                Accredited Conversion Centers</label
-              >
+              <label for="">NADDC Accredited Conversion Centers</label>
               <div class="input">
                 <select v-model="form.conversion_center_id">
                   <option

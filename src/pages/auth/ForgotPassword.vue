@@ -125,7 +125,7 @@
                   <div class="clear"></div>
                 </form>
               </div>
-              <q-inner-loading :showing="!!$route.query.token && loading" />
+              <!-- <q-inner-loading :showing="!!$route.query.token && loading" /> -->
             </div>
             <div v-if="view === 'reset'">
               <template v-if="!completed">

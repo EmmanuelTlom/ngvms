@@ -6,8 +6,9 @@
           <div class="left">
             <h4 class="section_header">Verify your {{ name[type] }}.</h4>
             <p class="section_paraText">
-              We have sent instructions to your provided {{ name[type] }} to
-              help you complete your verification.
+              We have sent instructions to your provided {{ name[type] }}
+              <span class="text-green-5">{{ store.user.email }}</span> to help
+              you complete your verification.
             </p>
             <div class="auth q-mt-lg">
               <form @submit.prevent="send" id="form">
@@ -94,7 +95,8 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { notify } from 'src/utils/helpers';
 import { date, useInterval } from 'quasar';
-
+import { useBootstrapStore } from 'src/stores/bootstrap-store';
+let store = useBootstrapStore();
 const { registerInterval, removeInterval } = useInterval();
 const now = ref(new Date());
 const type = computed<'phone' | 'email'>(() => route.params.type as 'phone');

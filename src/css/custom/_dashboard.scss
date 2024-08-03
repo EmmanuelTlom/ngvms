@@ -772,6 +772,7 @@ textarea {
 @media (min-width: 1200px) {
   .stats_hold {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
   }
   .users_detail .wallet_bg {
     min-width: 300px;

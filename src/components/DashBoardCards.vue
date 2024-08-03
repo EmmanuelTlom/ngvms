@@ -1,8 +1,8 @@
 <template>
   <div class="dash_card" :class="data.classStyle">
-    <div class="row justify-between no-wrap">
-      <div>
-        <p class="card_text">{{ data.name }}</p>
+    <div style="gap: 0.5rem" class="row justify-between no-wrap">
+      <div class="flex-zone">
+        <p class="card_text main">{{ data.name }}</p>
         <h4 class="card_bigtext">{{ data.numbers }}</h4>
       </div>
 
@@ -44,10 +44,16 @@ let data = defineModel<{
 
 <style lang="scss" scoped>
 .dash_card {
-  background: #ffffff;
+  // background: #ffffff;
+  background: rgba(0, 0, 0, 0.08);
   padding: 1rem;
   box-shadow: 6px 6px 54px 0px #0000000d;
   border-radius: 8px;
+  height: 190px;
+  position: relative;
+  .flex-zone {
+    flex: 3.5;
+  }
 }
 .card_text {
   font-family: 'Nunito Sans', sans-serif;
@@ -56,34 +62,47 @@ let data = defineModel<{
   line-height: 22px;
   letter-spacing: 0px;
   text-align: left;
+
   color: #202224;
+
+  &.main {
+    background: white;
+    padding: 0.5rem;
+    font-weight: 700;
+    border-radius: 8px;
+    height: 80px;
+  }
 }
 .card_text.small {
   font-size: 12px;
   white-space: nowrap;
+  position: absolute;
+  bottom: 5%;
 }
 
 .card_bigtext {
   font-family: 'Nunito Sans', sans-serif;
-  font-size: 22px;
+  font-size: 25px;
   line-height: 38px;
   letter-spacing: 1px;
   text-align: left;
   font-weight: 700;
+  position: absolute;
+  bottom: 22%;
 }
 
 .icon {
-  width: 50px;
-  height: 50px;
+  min-width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  // flex: 1;
   border-radius: 1.5rem;
 
   img {
-    width: 30px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
   }
 }
 
