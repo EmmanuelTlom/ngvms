@@ -1,6 +1,6 @@
 # NGVMS (ngvms)
 
-The NVGMS Monitoring and Database System.
+The NGVMS Monitoring and Database System.
 
 ## Install the dependencies
 

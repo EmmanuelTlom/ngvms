@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/admin',
-    meta: { requireAuth: true, requireAdmin: true, },
+    // meta: { requireAuth: true, requireAdmin: true, },
     component: () => import('layouts/AdminDashboardLayout.vue'),
     children: [
       {

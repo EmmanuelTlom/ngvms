@@ -19,7 +19,7 @@
         </div>
 
         <div class="row right items-center no-wrap">
-          <q-btn-dropdown
+          <!-- <q-btn-dropdown
             class="review_small lang"
             flat
             no-caps
@@ -33,7 +33,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-          </q-btn-dropdown>
+          </q-btn-dropdown> -->
           <q-btn-dropdown class="review_small" flat no-caps no-wrap>
             <template v-slot:label>
               <div style="gap: 1rem" class="row items-center no-wrap">
@@ -81,10 +81,177 @@
               <i class="ri-dashboard-3-line"></i>
             </q-item-section>
 
-            <q-item-section> Dashboard </q-item-section>
+            <q-item-section> Dashboard Overview </q-item-section>
           </q-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2"
+                    >User Management</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> User Accounts </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Role Management </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Activity Logs </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2">
+                    Vehicle Management</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> Vehicle Registration </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Vehicle Database </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Documentation Management </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Service History </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2">
+                    Monitoring and Tracking</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> Real-Time Tracking </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Route History </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Fuel Consumption </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Emissions Monitoring </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2">
+                    Alerts and Notifications</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> Service Reminders </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Compliance Alerts </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Emergency Notifications </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2">
+                    Data Management</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> Centralized Database </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Search and Filter </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Data Export/Import </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2">
+                    Support and Helpdesk</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> User Support </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> FAQ and Documentation </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2">
+                    System Settings</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item clickable v-ripple>
+                <q-item-section> Configuration Options </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Integration Management </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Widgets and Layouts</q-item-section>
+              </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section> Themes and Preferences</q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
 
-          <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
+          <!-- <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-layout-grid-line"></i>
             </q-item-section>
@@ -120,7 +287,7 @@
             </q-item-section>
 
             <q-item-section> Conversions </q-item-section>
-          </q-item>
+          </q-item> -->
         </q-list>
       </q-scroll-area>
     </q-drawer>
@@ -162,7 +329,9 @@ const toggleLeftDrawer = () => {
 .review_small.text {
   font-weight: 700;
 }
-
+.menu-list .q-item.q-router-link--active.q-router-link--exact-active {
+  margin-left: 1rem;
+}
 @media (min-width: 1100px) {
   .search_inp {
     width: 100%;

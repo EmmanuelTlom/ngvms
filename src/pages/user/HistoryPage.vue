@@ -126,7 +126,7 @@ const columns: QTableProps['columns'] = [
   {
     name: 'identifier',
     required: true,
-    label: 'Identifier',
+    label: 'UID',
     align: 'left',
     field: 'identifier',
     sortable: true,
@@ -134,7 +134,7 @@ const columns: QTableProps['columns'] = [
   {
     name: 'verification_center_id',
     required: true,
-    label: 'Verification Center',
+    label: 'FRSC',
     align: 'left',
     field: (row) => row.verificationCenter.name,
     sortable: true,
@@ -142,7 +142,7 @@ const columns: QTableProps['columns'] = [
   {
     name: 'storage_dealership_id',
     required: true,
-    label: 'Kit & Storage Dealership',
+    label: 'SON',
     align: 'left',
     field: (row) => row.storageDealership.name,
     sortable: true,
@@ -151,25 +151,9 @@ const columns: QTableProps['columns'] = [
   {
     name: 'financial_service_provider_id',
     required: true,
-    label: 'Financial Service Providers',
+    label: 'Financial Service Provider',
     align: 'center',
     field: (row) => row.financialServiceProvider.name,
-    sortable: true,
-  },
-  {
-    name: 'filling_outlet_id',
-    required: true,
-    label: 'Filling Outlet',
-    align: 'left',
-    field: (row) => row.fillingOutlet.name,
-    sortable: true,
-  },
-  {
-    name: 'date',
-    required: true,
-    label: 'Date',
-    align: 'left',
-    field: (row) => row.conversionCenter.name,
     sortable: true,
   },
   {
@@ -180,6 +164,23 @@ const columns: QTableProps['columns'] = [
     field: (row) => row.certificateCenter.name,
     sortable: true,
   },
+  {
+    name: 'filling_outlet_id',
+    required: true,
+    label: 'NADDC',
+    align: 'left',
+    field: (row) => row.fillingOutlet.name,
+    sortable: true,
+  },
+  // {
+  //   name: 'date',
+  //   required: true,
+  //   label: 'Date',
+  //   align: 'left',
+  //   field: (row) => row.conversionCenter.name,
+  //   sortable: true,
+  // },
+
   {
     name: 'createdAt',
     required: true,

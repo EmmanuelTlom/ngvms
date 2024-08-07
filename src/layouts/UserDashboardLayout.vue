@@ -195,7 +195,7 @@
     <q-footer>
       <div class="row justify-center">
         <p class="rights">
-          © NGVNS {{ new Date().getFullYear() }}. All Rights Reserved.
+          © NGVMS {{ new Date().getFullYear() }}. All Rights Reserved.
         </p>
       </div>
     </q-footer>

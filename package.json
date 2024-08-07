@@ -1,7 +1,7 @@
 {
   "name": "ngvms",
   "version": "0.0.1",
-  "description": "The NVGMS Monitoring and Database System.",
+  "description": "The NGVMS Monitoring and Database System.",
   "productName": "NGVMS",
   "author": "emmanueltlom <nwabuodafiemmanuel@gmail.com>",
   "type": "module",
