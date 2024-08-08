@@ -65,7 +65,7 @@
           <template v-slot:body-cell-vehicle_data="props">
             <q-td :props="props">
               <p>
-                <span>{{ vehicle.reg_number }}, {{ vehicle.make }}</span>
+                <!-- <span>{{ vehicle.reg_number }}, {{ vehicle.make }}</span> -->
               </p>
             </q-td>
           </template>
