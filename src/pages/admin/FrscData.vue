@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">Api Logs</h4>
+      <h4 class="dashboardmain_text">FRSC's Data</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -11,13 +11,13 @@
     </div>
 
     <div class="stats_hold q-mt-md">
-      <ApiLogsCompVue />
+      <FrscDataTableComp />
     </div>
   </div>
 </template>
 
 <script setup>
-import ApiLogsCompVue from 'src/components/ApiLogsComp.vue';
+import FrscDataTableComp from 'src/components/FrscDataTableComp.vue';
 </script>
 
 <style lang="scss" scoped></style>

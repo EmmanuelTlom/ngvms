@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">Referrals</h4>
+      <h4 class="dashboardmain_text">NMDPRA's Data</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -9,19 +9,15 @@
         </div>
       </div>
     </div>
-    <div class="row q-my-lg justify-end">
-      <q-btn :to="{ name: 'referral.bonus' }" class="add_btn" flat no-wrap>
-        VIEW REFERRAL BONUS
-      </q-btn>
-    </div>
+
     <div class="stats_hold q-mt-md">
-      <ReferralTableCompVue />
+      <NMDPRADataTableComp />
     </div>
   </div>
 </template>
 
 <script setup>
-import ReferralTableCompVue from 'src/components/referral/ReferralTableComp.vue';
+import NMDPRADataTableComp from 'src/components/NMDPRADataTableComp.vue';
 </script>
 
 <style lang="scss" scoped></style>

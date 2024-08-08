@@ -89,6 +89,35 @@
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
                   <i class="ri-copper-coin-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2"
+                    >Data Management</span
+                  >
+                </div>
+              </div>
+            </template>
+            <q-card class="q-px-md">
+              <q-item :to="{ name: 'admin.son.data' }" clickable v-ripple>
+                <q-item-section> SON </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin.naddc.data' }" clickable v-ripple>
+                <q-item-section> NADDC </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin.frsc.data' }" clickable v-ripple>
+                <q-item-section> FRSC </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin.nmdpra.data' }" clickable v-ripple>
+                <q-item-section> NMDPRA </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin.dealer.data' }" clickable v-ripple>
+                <q-item-section> Dealers </q-item-section>
+              </q-item>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item>
+            <template v-slot:header>
+              <div class="row full-width items-center justify-between">
+                <div style="gap: 0.6rem" class="row no-wrap items-center">
+                  <i class="ri-copper-coin-line text-h5"></i>
+                  <span style="font-size: 14px" class="text-body2"
                     >User Management</span
                   >
                 </div>

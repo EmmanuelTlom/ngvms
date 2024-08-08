@@ -18,6 +18,8 @@
     "@quasar/extras": "^1.16.4",
     "alova": "^3.0.4",
     "axios": "^1.7.2",
+    "html2pdf-ts": "^1.2.22",
+    "html2pdf.js": "^0.10.2",
     "javascript-time-ago": "^2.5.10",
     "pinia": "^2.0.11",
     "pinia-plugin-persistedstate": "^3.2.1",

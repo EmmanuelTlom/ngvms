@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">Coupons</h4>
+      <h4 class="dashboardmain_text">NADDC's Data</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -11,17 +11,13 @@
     </div>
 
     <div class="stats_hold q-mt-md">
-      <CouponsTableVue />
+      <NaddcDataTableComp />
     </div>
   </div>
 </template>
 
 <script setup>
-import CouponsTableVue from 'src/components/CouponsTable.vue';
+import NaddcDataTableComp from 'src/components/NaddcDataTableComp.vue';
 </script>
 
-<style lang="scss" scoped>
-.dashboardmain_text {
-  margin-bottom: 0;
-}
-</style>
+<style lang="scss" scoped></style>

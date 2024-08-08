@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">Dispute</h4>
+      <h4 class="dashboardmain_text">SON's Data</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -11,17 +11,13 @@
     </div>
 
     <div class="stats_hold q-mt-md">
-      <DisputeTableCompVue />
+      <SonsDataTableComp />
     </div>
   </div>
 </template>
 
 <script setup>
-import DisputeTableCompVue from 'src/components/DisputeTableComp.vue';
+import SonsDataTableComp from 'src/components/SonsDataTableComp.vue';
 </script>
 
-<style lang="scss" scoped>
-.dashboardmain_text {
-  margin-bottom: 0;
-}
-</style>
+<style lang="scss" scoped></style>
