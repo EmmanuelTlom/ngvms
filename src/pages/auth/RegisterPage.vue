@@ -90,6 +90,19 @@
                   {{ errors.password_confirmation }}
                 </span>
 
+                <div class="input-box last active-grey">
+                  <label class="input-label">User Type</label>
+                  <div class="row items-center justify-between no-wrap q-pr-sm">
+                    <q-radio
+                      v-model="form.type"
+                      :key="x"
+                      :val="x"
+                      :label="x.toUpperCase()"
+                      v-for="x in ['dealer', 'son', 'naddc', 'frsc', 'nmdpra']"
+                    />
+                  </div>
+                </div>
+
                 <div class="row items-center justify-between">
                   <div>
                     <q-checkbox v-model="form.accept">
@@ -159,6 +172,7 @@ const togglePassword = ref(true);
 const { send, form, error, loading, onSuccess } = useForm(registerRequest, {
   store: true,
   initialForm: {
+    type: 'dealer',
     name: '',
     email: '',
     phone: '',

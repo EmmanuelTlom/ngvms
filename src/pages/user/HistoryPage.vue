@@ -130,14 +130,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  exportFile,
-  QTableProps,
-  date,
-  Loading,
-  Notify,
-  QSpinnerOval,
-} from 'quasar';
+import { exportFile, QTableProps, date, Notify } from 'quasar';
 import { usePagination } from 'alova/client';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
 import { vehiclesRequest } from 'src/data/serviceRequests';
@@ -145,19 +138,13 @@ import html2pdf from 'html2pdf.js';
 
 const content = ref<HTMLElement | null>(null);
 
-let rows = ref([]);
+// let rows = ref([]);
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// type FormatFunction = (val: any) => string;
 
-type FormatFunction = (val: any) => string;
-interface Column {
-  label: string;
-  field?: string | ((row: Row) => any);
-  name?: string;
-  format?: FormatFunction;
-}
-
-interface Row {
-  [key: string]: any;
-}
+// interface Row {
+//   [key: string]: any;
+// }
 const pagination = ref({
   rowsPerPage: 30,
 });
@@ -264,8 +251,12 @@ const columns: QTableProps['columns'] = [
   },
 ];
 
-function wrapCsvValue(val: any, formatFn?: (val: any) => string): string {
-  const formatted = formatFn !== void 0 ? formatFn(val) : val;
+function wrapCsvValue(
+  val: string,
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  formatFn?: (val: any, row: any) => any,
+): string {
+  const formatted = formatFn !== void 0 ? formatFn(val, undefined) : val;
 
   if (formatted === void 0 || formatted === null) {
     return '';
@@ -276,34 +267,35 @@ function wrapCsvValue(val: any, formatFn?: (val: any) => string): string {
   }
 }
 
-console.log(data.value);
 function exportTable(): void {
-  const content = [columns.slice(0, -1).map((col) => wrapCsvValue(col.label))]
-    .concat(
-      data.value.map((row) =>
-        columns
-          .map((col) => {
-            const field = col.field;
-            if (typeof field === 'function') {
-              return wrapCsvValue(field(row), col.format);
-            } else if (typeof field === 'string') {
-              return wrapCsvValue(row[field], col.format);
-            } else {
-              return ''; // Handle case where field is undefined
-            }
-          })
-          .join(','),
-      ),
-    )
-    .join('\r\n');
+  if (columns) {
+    const content = [columns.slice(0, -1).map((col) => wrapCsvValue(col.label))]
+      .concat(
+        data.value.map((row?: any) =>
+          columns
+            .map((col) => {
+              const field = col.field;
+              if (typeof field === 'function') {
+                return wrapCsvValue(field(row), col.format);
+              } else if (row && typeof field === 'string') {
+                return wrapCsvValue(row[field], col.format);
+              } else {
+                return ''; // Handle case where field is undefined
+              }
+            })
+            .join(','),
+        ),
+      )
+      .join('\r\n');
 
-  const status = exportFile('History', content, 'text/csv');
-  if (status !== true) {
-    Notify.create({
-      message: 'Browser denied file download...',
-      color: 'negative',
-      icon: 'warning',
-    });
+    const status = exportFile('History', content, 'text/csv');
+    if (status !== true) {
+      Notify.create({
+        message: 'Browser denied file download...',
+        color: 'negative',
+        icon: 'warning',
+      });
+    }
   }
 }
 
@@ -312,9 +304,7 @@ const exportToPdf = (): void => {
     console.error('Content element not found');
     return;
   }
-  console.log(content);
   const element = content.value as HTMLElement;
-  console.log(element);
   // Select sections to omit from the PDF using querySelectorAll
   // const sectionsToOmit = element.querySelectorAll('.omit-from-pdf');
 
