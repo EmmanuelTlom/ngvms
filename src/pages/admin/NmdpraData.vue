@@ -65,7 +65,7 @@
           <template v-slot:body-cell-cng_refueling_stations="props">
             <q-td :props="props">
               <p>
-                <span>{{ vehicle.license_number }}, {{ vehicle.state }}</span>
+                <!-- <span>{{ vehicle.license_number }}, {{ vehicle.state }}</span> -->
               </p>
             </q-td>
           </template>
