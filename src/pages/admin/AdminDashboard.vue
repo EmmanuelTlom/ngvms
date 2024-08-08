@@ -8,14 +8,14 @@
     </div>
 
     <ChartCompVue />
-    <ConversionCompVue />
+    <!-- <ConversionCompVue /> -->
     <!-- <LatestUsersVue /> -->
   </div>
 </template>
 
 <script setup>
 import ChartCompVue from 'src/components/ChartComp.vue';
-import ConversionCompVue from 'src/components/ConversionComp.vue';
+// import ConversionCompVue from 'src/components/ConversionComp.vue';
 import DashBoardCardsVue from 'src/components/DashBoardCards.vue';
 
 let statsArr = [
