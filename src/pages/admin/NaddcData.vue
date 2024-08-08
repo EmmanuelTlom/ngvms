@@ -5,7 +5,7 @@
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="Search" />
+          <input v-model="filter" type="text" placeholder="Search" />
         </div>
       </div>
     </div>
@@ -55,11 +55,9 @@
       <div class="q-mt-md">
         <q-table
           :rows="data"
-          :hide-header="mode === 'grid'"
           :columns="columns"
           class="sort_tables"
           row-key="id"
-          :grid="mode == 'grid'"
           :filter="filter"
           :loading="loading"
           v-model:pagination="pagination"
@@ -153,6 +151,7 @@ import { vehiclesRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 
 const content = ref<HTMLElement | null>(null);
+const filter = ref('');
 
 // let rows = ref([]);
 /* eslint-disable @typescript-eslint/no-explicit-any */
