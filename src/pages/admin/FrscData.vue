@@ -93,7 +93,7 @@
         <q-card class="card_img">
           <div class="q-pa-md">
             <div class="text-h6 text-weight-bold q-mb-sm">Documents</div>
-            <q-list bordered>
+            <!-- <q-list bordered>
               <q-item class="q-my-sm" clickable v-ripple>
                 <q-item-section avatar>
                   <q-avatar color="primary" text-color="white">
@@ -144,7 +144,7 @@
                 </q-item-section>
               </q-item>
               <q-separator />
-            </q-list>
+            </q-list> -->
           </div>
         </q-card>
       </q-dialog>
