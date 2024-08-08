@@ -264,8 +264,12 @@ const columns: QTableProps['columns'] = [
   },
 ];
 
-function wrapCsvValue(val: any, formatFn?: (val: any) => string): string {
-  const formatted = formatFn !== void 0 ? formatFn(val) : val;
+function wrapCsvValue(
+  val: string,
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  formatFn?: (val: any, row: any) => any,
+): string {
+  const formatted = formatFn !== void 0 ? formatFn(val, undefined) : val;
 
   if (formatted === void 0 || formatted === null) {
     return '';
@@ -276,34 +280,35 @@ function wrapCsvValue(val: any, formatFn?: (val: any) => string): string {
   }
 }
 
-console.log(data.value);
 function exportTable(): void {
-  const content = [columns.slice(0, -1).map((col) => wrapCsvValue(col.label))]
-    .concat(
-      data.value.map((row) =>
-        columns
-          .map((col) => {
-            const field = col.field;
-            if (typeof field === 'function') {
-              return wrapCsvValue(field(row), col.format);
-            } else if (typeof field === 'string') {
-              return wrapCsvValue(row[field], col.format);
-            } else {
-              return ''; // Handle case where field is undefined
-            }
-          })
-          .join(','),
-      ),
-    )
-    .join('\r\n');
+  if (columns) {
+    const content = [columns.slice(0, -1).map((col) => wrapCsvValue(col.label))]
+      .concat(
+        data.value.map((row?: any) =>
+          columns
+            .map((col) => {
+              const field = col.field;
+              if (typeof field === 'function') {
+                return wrapCsvValue(field(row), col.format);
+              } else if (row && typeof field === 'string') {
+                return wrapCsvValue(row[field], col.format);
+              } else {
+                return ''; // Handle case where field is undefined
+              }
+            })
+            .join(','),
+        ),
+      )
+      .join('\r\n');
 
-  const status = exportFile('History', content, 'text/csv');
-  if (status !== true) {
-    Notify.create({
-      message: 'Browser denied file download...',
-      color: 'negative',
-      icon: 'warning',
-    });
+    const status = exportFile('History', content, 'text/csv');
+    if (status !== true) {
+      Notify.create({
+        message: 'Browser denied file download...',
+        color: 'negative',
+        icon: 'warning',
+      });
+    }
   }
 }
 
@@ -312,9 +317,7 @@ const exportToPdf = (): void => {
     console.error('Content element not found');
     return;
   }
-  console.log(content);
   const element = content.value as HTMLElement;
-  console.log(element);
   // Select sections to omit from the PDF using querySelectorAll
   // const sectionsToOmit = element.querySelectorAll('.omit-from-pdf');
 

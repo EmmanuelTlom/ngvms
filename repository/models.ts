@@ -127,7 +127,7 @@ export type Configuration = {
 export interface User {
   id: string | number;
   name: string;
-  type?: 'artist' | 'user';
+  type?: 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra';
   about: string;
   email: string,
   phone: string,
@@ -135,11 +135,6 @@ export interface User {
   verified: boolean;
   username: string,
   imageUrl: string;
-  followers: number,
-  following: number,
-  youFollow: boolean;
-  followsYou: boolean;
-  reputation: number,
   permissions?: PriviPerm[];
   fullname: string;
   verifying: string;
