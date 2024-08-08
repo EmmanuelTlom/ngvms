@@ -17,6 +17,7 @@
     "@alova/adapter-axios": "^2.0.4",
     "@quasar/extras": "^1.16.4",
     "alova": "^3.0.4",
+    "apexcharts": "^3.52.0",
     "axios": "^1.7.2",
     "html2pdf-ts": "^1.2.22",
     "html2pdf.js": "^0.10.2",
@@ -38,8 +39,10 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-vue": "^9.0.0",
+    "postcss": "^8.4.41",
     "prettier": "^3.0.3",
     "typescript": "~5.5.3",
+    "vite": "^5.4.0",
     "vite-plugin-checker": "^0.7.2",
     "vue-tsc": "^2.0.29"
   },

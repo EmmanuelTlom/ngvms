@@ -130,14 +130,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  exportFile,
-  QTableProps,
-  date,
-  Loading,
-  Notify,
-  QSpinnerOval,
-} from 'quasar';
+import { exportFile, QTableProps, date, Notify } from 'quasar';
 import { usePagination } from 'alova/client';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
 import { vehiclesRequest } from 'src/data/serviceRequests';
@@ -145,19 +138,6 @@ import html2pdf from 'html2pdf.js';
 
 const content = ref<HTMLElement | null>(null);
 
-let rows = ref([]);
-
-type FormatFunction = (val: any) => string;
-interface Column {
-  label: string;
-  field?: string | ((row: Row) => any);
-  name?: string;
-  format?: FormatFunction;
-}
-
-interface Row {
-  [key: string]: any;
-}
 const pagination = ref({
   rowsPerPage: 30,
 });
