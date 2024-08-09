@@ -2,10 +2,10 @@ import { AlovaAxiosRequestConfig, axiosRequestAdapter } from '@alova/adapter-axi
 import { AlovaGenerics, Method, createAlova } from 'alova';
 import { AxiosError, AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { GenericResponse, ResponseBody, User } from 'repository/models';
+import VueHook, { VueHookType } from 'alova/vue';
 
 import { MutationType } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
-import VueHook from 'alova/vue';
 import { boot } from 'quasar/wrappers';
 import { createClientTokenAuthentication } from 'alova/client';
 import fetchAdapter from 'alova/fetch';
@@ -36,7 +36,7 @@ const clearAuth = async () => {
   });
 }
 
-const { onAuthRequired, onResponseRefreshToken } = createClientTokenAuthentication({
+const { onAuthRequired, onResponseRefreshToken } = createClientTokenAuthentication<VueHookType>({
   refreshToken: {
     isExpired: () => {
       return false;

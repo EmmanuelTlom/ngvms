@@ -45,7 +45,7 @@
     <div ref="content">
       <q-table
         hide-pagination
-        title="History"
+        title="Vehicles"
         class="sort_tables coupon"
         row-key="id"
         :rows="data"
@@ -55,12 +55,8 @@
       >
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
-            <span
-              :class="
-                props.row.status === 'Opened' ? 'verified' : 'notverified '
-              "
-            >
-              {{ props.row.status }}
+            <span :class="props.row.status ? 'verified' : 'notverified '">
+              {{ props.row.status ? 'Approved' : 'Pending ' }}
             </span>
           </q-td>
         </template>
@@ -89,8 +85,8 @@
                     : 'edit'
                 "
                 :to="{
-                  name: 'user.add.data',
-                  params: { data_id: props.value },
+                  name: 'user.add.vehicle',
+                  params: { vehicle_id: props.value },
                 }"
               />
               <ContentRemover
@@ -153,7 +149,6 @@ const { data, page, loading, isLastPage, onSuccess } = usePagination(
     vehiclesRequest({
       page,
       limit,
-      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,certificateCenter,verificationCenter',
     }),
   {
     append: true,
@@ -177,61 +172,51 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'identifier',
+    name: 'registration_number',
     required: true,
-    label: 'UID',
+    label: 'Registration Number',
     align: 'left',
-    field: 'identifier',
+    field: 'registrationNumber',
     sortable: true,
   },
   {
-    name: 'verification_center_id',
+    name: 'chasis_number',
     required: true,
-    label: 'FRSC',
+    label: 'Chasis Number',
     align: 'left',
-    field: (row) => row.verificationCenter.name,
+    field: 'chasisNumber',
     sortable: true,
   },
   {
-    name: 'storage_dealership_id',
+    name: 'color',
     required: true,
-    label: 'SON',
+    label: 'Color',
     align: 'left',
-    field: (row) => row.storageDealership.name,
-    sortable: true,
-  },
-
-  {
-    name: 'financial_service_provider_id',
-    required: true,
-    label: 'Financial Service Provider',
-    align: 'center',
-    field: (row) => row.financialServiceProvider.name,
+    field: 'color',
     sortable: true,
   },
   {
-    name: 'certificate_center_id',
+    name: 'weight',
     required: true,
-    label: 'NMDPRA',
+    label: 'Weight (KG)',
     align: 'left',
-    field: (row) => row.certificateCenter.name,
+    field: 'weight',
     sortable: true,
   },
-  {
-    name: 'filling_outlet_id',
-    required: true,
-    label: 'NADDC',
-    align: 'left',
-    field: (row) => row.fillingOutlet.name,
-    sortable: true,
-  },
-
   {
     name: 'createdAt',
     required: true,
     label: 'Added On',
     align: 'left',
-    field: (row) => date.formatDate(row.createdAt, 'DD MMM YYYY'),
+    field: (row) => date.formatDate(row.createdAt, 'DD/MM/YYYY'),
+    sortable: true,
+  },
+  {
+    name: 'status',
+    required: true,
+    label: 'Status',
+    align: 'center',
+    field: 'status',
     sortable: true,
   },
   {

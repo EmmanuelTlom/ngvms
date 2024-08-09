@@ -30,6 +30,7 @@ const stats = ref<
     numbers: number;
     icon: string;
     data: string;
+    place: string;
     icontype: 'up' | 'down';
     classStyle: 'total' | 'veri' | 'convert' | 'pending';
   }[]
@@ -40,6 +41,7 @@ const stats = ref<
     numbers: 0,
     icon: '/images/users.svg',
     data: '{inc}% {dir} from yesterday',
+    place: '{inc}% {dir} from yesterday',
     icontype: 'up',
     classStyle: 'total',
   },
@@ -49,6 +51,7 @@ const stats = ref<
     numbers: 0,
     icon: '/images/shield.svg',
     data: '{inc}% {dir} from past week',
+    place: '{inc}% {dir} from past week',
     icontype: 'up',
     classStyle: 'veri',
   },
@@ -58,6 +61,7 @@ const stats = ref<
     numbers: 0,
     icon: '/images/graph.svg',
     data: '{inc}% {dir} from yesterday',
+    place: '{inc}% {dir} from yesterday',
     icontype: 'down',
     classStyle: 'convert',
   },
@@ -67,6 +71,7 @@ const stats = ref<
     numbers: 0,
     icon: '/images/circle.svg',
     data: '{inc}% {dir} from yesterday',
+    place: '{inc}% {dir} from yesterday',
     icontype: 'up',
     classStyle: 'pending',
   },
@@ -76,10 +81,37 @@ const stats = ref<
     numbers: 0,
     icon: '/images/circle.svg',
     data: '{inc}% {dir} from yesterday',
+    place: '{inc}% {dir} from yesterday',
+    icontype: 'up',
+    classStyle: 'pending',
+  },
+  {
+    id: 'vehicles',
+    name: 'Registered Vehicles',
+    numbers: 0,
+    icon: '/images/circle.svg',
+    data: '{inc}% {dir} from yesterday',
+    place: '{inc}% {dir} from yesterday',
     icontype: 'up',
     classStyle: 'pending',
   },
 ]);
+
+type KOD = keyof Dashboard;
+const buildStats = (data: Dashboard) => {
+  stats.value.forEach((stat, i) => {
+    if (data[stat.id] !== undefined) {
+      const inc = (data[(stat.id + '_inc') as unknown as KOD] || 0) as number;
+      stats.value[i].numbers = data[stat.id] as number;
+
+      stats.value[i].icontype = inc >= 0 ? 'up' : 'down';
+      stats.value[i].data = stats.value[i].place
+        .replace('{inc}', inc.toString())
+        .replace('{dir}', inc >= 0 ? 'up' : 'down');
+      console.log(stats.value[i].data);
+    }
+  });
+};
 
 const { loading } = useRequest(dashboardRequest({ with: 'everything' }), {
   immediate: true,
@@ -87,20 +119,10 @@ const { loading } = useRequest(dashboardRequest({ with: 'everything' }), {
   if (data.data.everything) {
     useBootstrapStore().setEverything(data.data.everything);
   }
-
-  stats.value.forEach((stat, i) => {
-    if (data.data[stat.id]) {
-      const inc = data.data[
-        (stat.id + '_inc') as unknown as keyof Dashboard
-      ] as number;
-      stats.value[i].numbers = data.data[stat.id] as number;
-      stats.value[i].icontype = inc >= 0 ? 'up' : 'down';
-      stats.value[i].data = stats.value[i].data
-        .replace('{inc}', inc.toString())
-        .replace('{dir}', inc >= 0 ? 'up' : 'down');
-    }
-  });
+  buildStats(data.data);
 });
+
+buildStats(Object.fromEntries([...stats.value.map((e) => [e.id, 0])]));
 </script>
 
 <style lang="scss" scoped></style>

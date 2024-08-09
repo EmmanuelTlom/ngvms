@@ -643,6 +643,26 @@ textarea {
   }
 }
 
+.input_wrap .q-field__marginal,
+.input_wrap .q-field--auto-height .q-field__control,
+.input_wrap .q-field--auto-height .q-field__native {
+  height: 50px;
+  min-height: 50px;
+}
+
+.input_wrap .q-field__control {
+  overflow-y: hidden;
+}
+
+.input_wrap .q-field--outlined .q-field__control:before {
+  border: 0.6px solid #d5d5d5;
+}
+
+.input_wrap .q-field--outlined.q-field--highlighted .q-field__control:after {
+  border-width: 1px;
+  border-color: #c4c2c2;
+}
+
 .admin_auth {
   font-family: 'Nunito Sans', sans-serif !important;
   background: url('/images/shape.png') #19184a;

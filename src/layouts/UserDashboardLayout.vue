@@ -21,23 +21,15 @@
               <li>
                 <router-link
                   class="review_small bold"
-                  :to="{ name: 'user.add.data' }"
+                  :to="{ name: endpoints.add }"
                 >
                   Add New Data
                 </router-link>
               </li>
-              <!-- <li>
-                <router-link
-                  class="review_small bold"
-                  :to="{ name: 'user.history' }"
-                >
-                  Edit Data
-                </router-link>
-              </li> -->
               <li>
                 <router-link
                   class="review_small bold"
-                  :to="{ name: 'user.history' }"
+                  :to="{ name: endpoints.list }"
                 >
                   My History
                 </router-link>
@@ -161,14 +153,14 @@
 
             <q-item-section> Home </q-item-section>
           </q-item>
-          <q-item :to="{ name: 'user.add.data' }" clickable v-ripple>
+          <q-item :to="{ name: 'user.add.vehicle' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-wallet-2-line"></i>
             </q-item-section>
 
             <q-item-section> Add Data </q-item-section>
           </q-item>
-          <q-item :to="{ name: 'user.history' }" clickable v-ripple>
+          <q-item :to="{ name: 'user.stations' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-user-search-line"></i>
             </q-item-section>
@@ -217,6 +209,37 @@ import { timeAgoStamp } from 'src/utils/helpers';
 const user = computed(() => useBootstrapStore().user);
 const notifMenu = ref(false);
 const leftDrawerOpen = ref(false);
+
+user.value.type = 'dealer';
+
+const endpoints = computed(
+  () =>
+    ({
+      son: {
+        add: 'user.add.certificate',
+        list: 'user.certificates',
+      },
+      frsc: {
+        add: 'user.add.vehicle',
+        list: 'user.vehicles',
+      },
+      dealer: {
+        add: 'user.add.kit',
+        list: 'user.kits',
+      },
+      naddc: {
+        add: 'user.add.center',
+        list: 'user.centers',
+      },
+      nmdpra: {
+        add: 'user.add.station',
+        list: 'user.stations',
+      },
+    })[user.value.type as 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra'] || {
+      add: 'user.add.vehicle',
+      list: 'user.vehicles',
+    },
+);
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;

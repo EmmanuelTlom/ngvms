@@ -1,14 +1,5 @@
 <template>
-  <div class="container">
-    <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">NMDPRA's Data</h4>
-      <div class="q-ml-md">
-        <div class="search_inp">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input v-model="filter" type="text" placeholder="Search" />
-        </div>
-      </div>
-    </div>
+  <div class="q-mt-md container">
     <div class="row q-mt-lg justify-end">
       <q-btn-dropdown
         no-caps
@@ -51,134 +42,117 @@
         </q-list>
       </q-btn-dropdown>
     </div>
-    <div ref="content" class="stats_hold q-mt-md">
-      <div class="q-mt-md">
-        <q-table
-          :rows="data"
-          :columns="columns"
-          class="sort_tables"
-          row-key="id"
-          :filter="filter"
-          :loading="loading"
-          v-model:pagination="pagination"
-        >
-          <template v-slot:body-cell-cng_refueling_stations="props">
-            <q-td :props="props">
-              <p>
-                <!-- <span>{{ vehicle.license_number }}, {{ vehicle.state }}</span> -->
-              </p>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-view="props">
-            <q-td :props="props">
+    <div ref="content">
+      <q-table
+        hide-pagination
+        title="Certificates"
+        class="sort_tables coupon"
+        row-key="id"
+        :rows="data"
+        :loading="loading"
+        :columns="columns"
+        v-model:pagination="pagination"
+      >
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props">
+            <span :class="props.row.status ? 'verified' : 'notverified '">
+              {{ props.row.status ? 'Approved' : 'Pending ' }}
+            </span>
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-id="props">
+          <q-td :props="props" v-intersection="onIntersction">
+            <span>
+              {{ props.key }}
+            </span>
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <div class="flex no-wrap q-gutter-x-sm">
               <q-btn
-                no-caps
-                no-wrap
-                @click="viewPictureOrDocument(props.row.picture)"
-              >
-                View picture or document
-              </q-btn>
-            </q-td>
-          </template>
-          <template v-slot:no-data="{ message }">
-            <div class="full-width row flex-center text-negative q-gutter-sm">
-              <span> {{ message }} </span>
+                dense
+                color="primary"
+                :icon="
+                  date.getDateDiff(
+                    new Date(),
+                    new Date(props.row.createdAt),
+                    'hours',
+                  ) > 24
+                    ? 'fas fa-expand'
+                    : 'edit'
+                "
+                :to="{
+                  name: 'user.add.certificate',
+                  params: { station_id: props.value },
+                }"
+              />
+              <ContentRemover
+                dense
+                base-url="/v1/user/certificates"
+                :disable="
+                  date.getDateDiff(
+                    new Date(),
+                    new Date(props.row.createdAt),
+                    'hours',
+                  ) > 24
+                "
+                :id="props.value"
+                :list="data"
+              />
             </div>
-          </template>
-        </q-table>
-      </div>
-      <q-dialog v-model="viewDocumentsDialog">
-        <q-card class="card_img">
-          <div class="q-pa-md">
-            <div class="text-h6 text-weight-bold q-mb-sm">Documents</div>
-            <!-- <q-list bordered>
-              <q-item class="q-my-sm" clickable v-ripple>
-                <q-item-section avatar>
-                  <q-avatar color="primary" text-color="white">
-                    <img
-                      v-if="isImage(viewData.application.passport)"
-                      :src="
-                        viewData.application.passport
-                          ? viewData.application.passport
-                          : '/images/worklogo.png'
-                      "
-                      alt=""
-                    />
-                    <div v-else class="text-white">pdf</div>
-                  </q-avatar>
-                </q-item-section>
+          </q-td>
+        </template>
 
-                <q-item-section>
-                  <q-item-label>Picture / Document</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-btn no-caps no-wrap color="primary">
-                    View
-                    <q-popup-proxy
-                      cover
-                      class="proxy"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <div class="proxy_div">
-                        <template v-if="isImage(viewData.application.passport)">
-                          <img
-                            :src="viewData.application.passport"
-                            alt="Image"
-                          />
-                        </template>
-                        <template v-else>
-                          <iframe
-                            width="100%"
-                            height="500px"
-                            :src="viewData.application.passport"
-                            frameborder="0"
-                          ></iframe>
-                        </template>
-                      </div>
-                    </q-popup-proxy>
-                  </q-btn>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-            </q-list> -->
+        <template v-slot:no-data="{ message }">
+          <div
+            class="full-width q-mt-sm column flex-center text-negative q-gutter-sm"
+          >
+            <img
+              style="width: 78px; height: 78px; opacity: 0.3px"
+              src="/images/coupon.png"
+              class="omit-from-pdf"
+              alt=""
+            />
+            <span class="text-black review_big"> {{ message }} </span>
           </div>
-        </q-card>
-      </q-dialog>
+        </template>
+      </q-table>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { exportFile, QTableProps, Notify } from 'quasar';
+import { exportFile, QTableProps, date, Notify } from 'quasar';
 import { usePagination } from 'alova/client';
-import { vehiclesRequest } from 'src/data/serviceRequests';
+import ContentRemover from 'src/components/utilities/ContentRemover.vue';
+import {
+  certificatesRequest,
+  fillingOutletsRequest,
+} from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 
-const viewPictureOrDocument = (p: string) => p;
-const viewDocumentsDialog = ref(false);
 const content = ref<HTMLElement | null>(null);
-const filter = ref('');
 
-// let rows = ref([]);
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// type FormatFunction = (val: any) => string;
-
-// interface Row {
-//   [key: string]: any;
-// }
 const pagination = ref({
   rowsPerPage: 30,
 });
 
-const { data, loading, onSuccess } = usePagination(
+const onIntersction = (e: IntersectionObserverEntry): boolean => {
+  if (loading.value || isLastPage.value || !e.isIntersecting) return false;
+
+  page.value++;
+  return true;
+};
+const { data, page, loading, isLastPage, onSuccess } = usePagination(
   (page, limit) =>
-    vehiclesRequest({
+    certificatesRequest({
       page,
       limit,
-      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,Certificate,verificationCenter',
+      with: 'dealer',
     }),
   {
     append: true,
@@ -196,45 +170,65 @@ const columns: QTableProps['columns'] = [
   {
     name: 'id',
     required: true,
-    label: 'ID',
+    label: 'S/N',
     align: 'left',
     field: 'id',
-    // field: (row, index) => console.log(row, index),
-    sortable: true,
-  },
-
-  {
-    name: 'document',
-    required: true,
-    label: 'Document',
-    align: 'left',
-    field: 'document',
     sortable: true,
   },
   {
-    name: 'cng_refueling_stations',
+    name: 'kit_serial_number',
     required: true,
-    label: 'CNG refueling stations',
+    label: 'Kit Serial Number',
     align: 'left',
-    field: 'cng_refueling_stations',
+    field: 'kitSerialNumber',
     sortable: true,
   },
   {
-    name: 'inspection_officers',
+    name: 'manufacturer',
     required: true,
-    label: 'Name of inspection officers',
+    label: 'Manufacturer',
     align: 'left',
-    field: 'inspection_officers',
+    field: 'manufacturer',
     sortable: true,
   },
-
   {
-    name: 'view',
+    name: 'dealer',
     required: true,
-    label: 'View Picture',
+    label: 'Delear',
     align: 'left',
-    field: 'view',
-    // field: (row, index) => console.log(row, index),
+    field: (e) => e.dealer?.fullname || 'Unknown',
+    sortable: true,
+  },
+  {
+    name: 'importer',
+    required: true,
+    label: 'Importer',
+    align: 'left',
+    field: 'importer',
+    sortable: true,
+  },
+  {
+    name: 'created_at',
+    required: true,
+    label: 'Added On',
+    align: 'left',
+    field: (row) => date.formatDate(row.createdAt, 'DD/MM/YYYY'),
+    sortable: true,
+  },
+  {
+    name: 'status',
+    required: true,
+    label: 'Status',
+    align: 'center',
+    field: 'status',
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    required: true,
+    label: 'Actions',
+    align: 'left',
+    field: 'id',
     sortable: true,
   },
 ];
@@ -333,4 +327,29 @@ const printPageFCN = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.error {
+  color: red;
+}
+
+.verified {
+  background: rgba(0, 182, 155, 0.3);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0px;
+  color: #00b69b;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-align: center;
+}
+.notverified {
+  background: rgba(239, 56, 38, 0.2);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0px;
+  color: #ef3826;
+  text-align: center;
+}
+</style>

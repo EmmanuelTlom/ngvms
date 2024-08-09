@@ -69,6 +69,8 @@ export type Initialize = {
 
 export type Dashboard = {
   everything?: Everything,
+  vehicles: number,
+  vehicles_inc: number,
   filling_outlets: number,
   filling_outlets_inc: number,
   conversion_centers: number,
@@ -125,7 +127,7 @@ export type Configuration = {
 }
 
 export interface User {
-  id: string | number;
+  id: number;
   name: string;
   type?: 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra';
   about: string;
@@ -151,31 +153,168 @@ export interface User {
   updatedAt: string;
   createdAt: string;
 }
+
+export interface Person {
+  id: number;
+  name: string;
+  email: string,
+  phone: string,
+  lastName: string;
+  firstName: string;
+  imageUrl: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export type PersonForm = {
+  id?: number;
+  image?: File;
+  name: string;
+  email?: string,
+  phone?: string,
+  last_name?: string;
+  first_name?: string;
+} | {
+  id?: number;
+  image?: File;
+  name?: string;
+  email?: string,
+  phone?: string,
+  last_name: string;
+  first_name: string;
+}
+
+export interface Certificate {
+  id: number;
+  user?: User;
+  dealer?: User;
+  status: boolean;
+  imageUrl: string;
+  importer: string;
+  manufacturer: string;
+  kitSerialNumber: string;
+  inspectionOfficers: Person[];
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface CertificateForm {
+  image?: File;
+  status?: boolean | number;
+  dealer_id: number;
+  importer: string;
+  manufacturer: string;
+  kit_serial_number: string;
+  inspection_officers: PersonForm[];
+}
+
+export interface ConversionCenter {
+  id: number;
+  name: string;
+  email: string,
+  phone: string,
+  status: boolean;
+  address: string,
+  user?: User;
+  officer?: Person;
+  licenseNumber: string;
+  imageUrl: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface ConversionCenterForm {
+  image?: File;
+  name: string;
+  email: string;
+  phone: string;
+  status?: boolean;
+  address: string;
+  officer: PersonForm;
+  license_number: string;
+}
+
+export interface ConversionKit {
+  id: number;
+  user?: User;
+  name: string;
+  status: boolean;
+  description: string;
+  manufacturer: string;
+  importer?: Person;
+  serialNumber: string;
+  imageUrl: string;
+  suppliedCenters?: ConversionCenter[];
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface ConversionKitForm {
+  image?: File;
+  name: string;
+  status?: boolean;
+  description: string;
+  manufacturer: string;
+  importer: PersonForm;
+  supplied_centers_ids: number[];
+  serial_number: string;
+}
+
 export interface Vehicle {
   id: number;
   name: string;
   user?: User;
+  type: string;
+  make: string;
+  color: string;
+  status: boolean;
+  weight: string;
   imageUrl: string;
-  identifier: string;
-  fillingOutlet?: EverythingData;
-  conversionCenter?: EverythingData;
-  storageDealership?: EverythingData;
-  certificateCenter?: EverythingData;
-  verificationCenter?: EverythingData;
-  financialServiceProvider?: EverythingData;
+  chasisNumber: string;
+  insurancePolicy: string;
+  registrationNumber: string;
+  inspectionOfficerName: string;
   updatedAt: string;
   createdAt: string;
 }
 
 export interface VehicleForm {
   image?: File;
-  identifier: string;
-  filling_outlet_id: number;
-  conversion_center_id: number;
-  storage_dealership_id: number;
-  certificate_center_id: number;
-  verification_center_id: number;
-  financial_service_provider_id: number;
+  type?: string;
+  make?: string;
+  color?: string;
+  status?: boolean | number;
+  chasis_number?: string;
+  weight?: string;
+  insurance_policy?: string;
+  registration_number?: string;
+  inspection_officer_name?: string;
+}
+
+export interface FillingOutlet {
+  id: number;
+  user?: User;
+  imageUrl: string;
+  lga: string;
+  email: string;
+  phone: string;
+  state: string;
+  address: string;
+  licenseNumber: string;
+  inspectionOfficers: Person[];
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface FillingOutletForm {
+  image?: File;
+  lga: string;
+  email: string;
+  phone: string;
+  state: string;
+  address: string;
+  license_number: string;
+  inspection_officers: PersonForm[];
 }
 
 export type NavigationLink = {

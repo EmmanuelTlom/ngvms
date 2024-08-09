@@ -157,6 +157,8 @@ import { usePagination } from 'alova/client';
 import { vehiclesRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 
+const viewPictureOrDocument = (p: string) => p;
+const viewDocumentsDialog = ref(false);
 const content = ref<HTMLElement | null>(null);
 const filter = ref('');
 
@@ -176,7 +178,7 @@ const { data, loading, onSuccess } = usePagination(
     vehiclesRequest({
       page,
       limit,
-      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,certificateCenter,verificationCenter',
+      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,Certificate,verificationCenter',
     }),
   {
     append: true,

@@ -62,16 +62,56 @@ const routes: RouteRecordRaw[] = [
         name: 'user.dashboard',
       },
       {
-        path: 'add-data/:data_id?',
-        component: () => import('pages/user/AddData.vue'),
-        name: 'user.add.data',
+        path: 'add-refueling-station/:station_id?',
+        component: () => import('pages/user/AddRefuelingStationPage.vue'),
+        name: 'user.add.station',
       },
       {
-        path: 'history',
-        component: () => import('pages/user/HistoryPage.vue'),
-        name: 'user.history',
+        path: 'refueling-stations',
+        component: () => import('src/pages/user/RefuelingStationsPage.vue'),
+        name: 'user.stations',
+      },
+      {
+        path: 'add-vehicle/:vehicle_id?',
+        component: () => import('pages/user/AddVehicle.vue'),
+        name: 'user.add.vehicle',
+      },
+      {
+        path: 'vehicles',
+        component: () => import('pages/user/VehicleListPage.vue'),
+        name: 'user.vehicles',
+      },
+      {
+        path: 'add-certificate/:certificate_id?',
+        component: () => import('pages/user/AddCertificatePage.vue'),
+        name: 'user.add.certificate',
+      },
+      {
+        path: 'certificates',
+        component: () => import('pages/user/CertificatesPage.vue'),
+        name: 'user.certificates',
       },
 
+      {
+        path: 'add-conversion-center/:center_id?',
+        component: () => import('pages/user/AddConversionCenterPage.vue'),
+        name: 'user.add.center',
+      },
+      {
+        path: 'conversion-centers',
+        component: () => import('pages/user/ConversionCenterListPage.vue'),
+        name: 'user.centers',
+      },
+      {
+        path: 'add-conversion-kit/:kit_id?',
+        component: () => import('pages/user/AddConversionKitPage.vue'),
+        name: 'user.add.kit',
+      },
+      {
+        path: 'conversion-kits',
+        component: () => import('pages/user/AddConversionKitPage.vue'),
+        name: 'user.kits',
+      },
       {
         path: 'profile',
         component: () => import('pages/user/ProfilePage.vue'),
