@@ -1,55 +1,106 @@
 <template>
   <q-page class="">
     <section class="hero">
-      <div v-intersection="onIntersection" class="container">
+      <div class="container">
         <div class="grid">
           <div class="left">
             <h1 class="main_text">
               Welcome To NGVMS, Nigeria Gas Vehicle Monitoring System.
             </h1>
 
-            <div style="gap: 1rem" class="row q-my-lg items-center no-wrap">
-              <div class="column items-center text-center">
-                <p class="text-black text-h6">Total Registered Vehicles</p>
-                <h5 class="text-h4 text-weight-bold">
-                  {{ stats.registeredVehicles }}+
-                </h5>
-              </div>
-              <div class="column items-center text-center">
-                <p class="text-black text-h6">Accredited Centers</p>
-                <h5 class="text-h4 text-weight-bold">
-                  {{ stats.accreditedCenters }}+
-                </h5>
-              </div>
-            </div>
-            <div
-              style="gap: 2rem"
-              class="hero_btns row justify-center items-center no-wrap"
-            >
-              <q-btn
-                flat
-                no-caps
-                no-wrap
-                class="started full-width"
-                :to="{ name: 'login' }"
-              >
-                Login
-              </q-btn>
-              <q-btn
-                flat
-                no-wrap
-                no-caps
-                class="watch full-width bg-grey-3"
-                :to="{ name: 'register' }"
-              >
-                Sign up
-              </q-btn>
-            </div>
+            <div v-if="!loading">
+              <div style="gap: 1rem" class="row q-my-lg items-center no-wrap">
+                <div class="column items-center text-center">
+                  <p class="text-black text-h6">Total Registered Vehicles</p>
 
-            <div class="q-mt-lg">
-              <p class="text-weight-bold">
-                {{ stats.registeredMotorCycles }}+ Registered MotorCycles
-              </p>
+                  <h5 class="text-h4 text-weight-bold">
+                    <q-skeleton size="50px" />
+                  </h5>
+                </div>
+                <div class="column items-center text-center">
+                  <p class="text-black text-h6">Accredited Centers</p>
+
+                  <h5 class="text-h4 text-weight-bold">
+                    <q-skeleton size="50px" />
+                  </h5>
+                </div>
+              </div>
+              <div
+                style="gap: 2rem"
+                class="hero_btns row justify-center items-center no-wrap"
+              >
+                <q-btn
+                  flat
+                  no-caps
+                  no-wrap
+                  class="started full-width"
+                  :to="{ name: 'login' }"
+                >
+                  Login
+                </q-btn>
+                <q-btn
+                  flat
+                  no-wrap
+                  no-caps
+                  class="watch full-width bg-grey-3"
+                  :to="{ name: 'register' }"
+                >
+                  Sign up
+                </q-btn>
+              </div>
+
+              <div class="q-mt-lg">
+                <p class="text-weight-bold">
+                  <q-skeleton size="50px" />+ Registered MotorCycles
+                </p>
+              </div>
+            </div>
+            <div v-intersection="onIntersection" v-if="loading">
+              <div style="gap: 1rem" class="row q-my-lg items-center no-wrap">
+                <div class="column items-center text-center">
+                  <p class="text-black text-h6">Total Registered Vehicles</p>
+
+                  <h5 class="text-h4 text-weight-bold">
+                    {{ stats.registeredVehicles }}+
+                  </h5>
+                </div>
+                <div class="column items-center text-center">
+                  <p class="text-black text-h6">Accredited Centers</p>
+
+                  <h5 class="text-h4 text-weight-bold">
+                    {{ stats.accreditedCenters }}+
+                  </h5>
+                </div>
+              </div>
+              <div
+                style="gap: 2rem"
+                class="hero_btns row justify-center items-center no-wrap"
+              >
+                <q-btn
+                  flat
+                  no-caps
+                  no-wrap
+                  class="started full-width"
+                  :to="{ name: 'login' }"
+                >
+                  Login
+                </q-btn>
+                <q-btn
+                  flat
+                  no-wrap
+                  no-caps
+                  class="watch full-width bg-grey-3"
+                  :to="{ name: 'register' }"
+                >
+                  Sign up
+                </q-btn>
+              </div>
+
+              <div class="q-mt-lg">
+                <p class="text-weight-bold">
+                  {{ stats.registeredMotorCycles }}+ Registered MotorCycles
+                </p>
+              </div>
             </div>
           </div>
           <div class="right row justify-end">
@@ -71,15 +122,20 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import axios from 'axios';
+import { computed, onMounted, ref } from 'vue';
 
 let slide = ref(1);
+let loading = ref(false);
 
 let stats = ref({
   registeredVehicles: 0,
   accreditedCenters: 0,
   registeredMotorCycles: 0,
 });
+let statsCountAccreditedCenters = ref(0);
+let statsCountVehicles = ref(0);
+let statsCountMotorcycles = ref(0);
 let counterRef = ref(false);
 
 let visible = computed(() => (counterRef.value ? 'positive' : 'negative'));
@@ -101,7 +157,7 @@ const startCountAnimation = () => {
   const duration = 5000;
   const interval = 70;
   const finalCountVehicles = 17000;
-  const finalCountCenters = 500;
+  const finalCountCenters = statsCountAccreditedCenters.value;
   const finalCountMotorcycles = 40000;
   const incrementVehicles = Math.round(
     finalCountVehicles / (duration / interval) + 1,
@@ -112,47 +168,59 @@ const startCountAnimation = () => {
   const incrementMotorcycles = Math.round(
     finalCountMotorcycles / (duration / interval) + 1,
   );
-  const timer = setInterval(() => {
+  const timerForVehicles = setInterval(() => {
     if (stats.value.registeredVehicles < finalCountVehicles) {
       stats.value.registeredVehicles += incrementVehicles;
     } else {
       stats.value.registeredVehicles = finalCountVehicles;
-      clearInterval(timer);
+      clearInterval(timerForVehicles);
     }
   }, interval);
-  const timerPersonnel = setInterval(() => {
+  const timerForCenters = setInterval(() => {
     if (stats.value.accreditedCenters < finalCountCenters) {
       stats.value.accreditedCenters += incrementCenters;
     } else {
       stats.value.accreditedCenters = finalCountCenters;
-      clearInterval(timerPersonnel);
+      clearInterval(timerForCenters);
     }
   }, interval);
-  const timerFacility = setInterval(() => {
+  const timerForMotocycles = setInterval(() => {
     if (stats.value.registeredMotorCycles < finalCountMotorcycles) {
       stats.value.registeredMotorCycles += incrementMotorcycles;
     } else {
       stats.value.registeredMotorCycles = finalCountMotorcycles;
-      clearInterval(timerFacility);
+      clearInterval(timerForMotocycles);
     }
   }, interval);
 };
 
-// let countFcn = async () => {
-//   try {
-//     const countFacilityResponse = await api.get(`admin/stats`);
-//     // console.log(countFacilityResponse);
-//     statsCountVehicles.value = countFacilityResponse.data.allPersonnels;
-//     statsCountAccreditedCenters.value =
-//       countFacilityResponse.data.allfacilities;
-//     statsCountMotorcycles.value = countFacilityResponse.data.allfoodPersonnels;
-//     loadComplete.value = true;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+let countFcn = async () => {
+  try {
+    const getAccreditedCenterCount = await axios.get(
+      `https://pci.gov.ng/restapi/center-count/`,
+      {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Credentials': 'true',
+          Authorization: 'Bearer ' + '9dfb9104511c37746d3263d132659d3c',
+        },
+      },
+    );
+    // const getCenterCount = await axios.get(
+    //   `https://pci.gov.ng/restapi/center-count/`,
+    // );
+    // statsCountVehicles.value = countFacilityResponse.data.allPersonnels;
+    statsCountAccreditedCenters.value = getAccreditedCenterCount.data.count;
+    // statsCountMotorcycles.value = countFacilityResponse.data.allfoodPersonnels;
+    loading.value = true;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-// onMounted(() => {
-//   countFcn();
-// });
+onMounted(() => {
+  countFcn();
+});
 </script>
