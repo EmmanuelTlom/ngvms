@@ -235,7 +235,12 @@ export const conversionKitCreateRequest = (
 ) => {
   form._method = id ? 'PUT' : 'POST'
 
-  const method = axios.Post<ResponseBody<ConversionKit>>(`/v1/user/conversion-kits${id ? '/' + id : ''}`, form, {
+  const nf = Object.assign({}, form)
+  if (nf.supplied_centers_ids) {
+    nf.supplied_centers_ids = nf.supplied_centers_ids.map(e => typeof e === 'number' ? e : e.id)
+  }
+
+  const method = axios.Post<ResponseBody<ConversionKit>>(`/v1/user/conversion-kits${id ? '/' + id : ''}`, nf, {
     name: 'updateConversionKit',
   });
 

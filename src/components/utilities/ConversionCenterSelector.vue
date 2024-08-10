@@ -1,17 +1,20 @@
 <template>
-  <q-btn dense icon="add" class="cursor-pointer">
-    <q-menu>
+  <q-btn rounded dense color="primary" icon="add" class="cursor-pointer">
+    <q-menu anchor="top right" self="top left">
       <div class="row no-wrap q-pa-md">
         <div class="column">
           <q-select
             multiple
-            emit-value
+            use-input
             map-options
+            hide-selected
             v-bind="$attrs"
-            v-model="modelValue"
+            v-model="value"
+            input-debounce="0"
             option-value="id"
             option-label="name"
             :options="centers.data"
+            @filter="filterFn"
             @focus="hideSelected = true"
             @blur="hideSelected = false"
           >
@@ -31,6 +34,21 @@
               </q-item>
             </template>
           </q-select>
+          <br />
+          <q-btn
+            unelevated
+            v-close-popup
+            color="primary"
+            :disable="!value.length"
+            @click="
+              () => {
+                modelValue = [...new Set([...value, ...modelValue])];
+                value = [];
+              }
+            "
+          >
+            Add Selection ({{ value.length }})
+          </q-btn>
         </div>
       </div>
     </q-menu>
@@ -52,35 +70,44 @@ const params = ref<Params>({});
 
 const hideSelected = ref(false);
 
-const modelValue = defineModel<number[] | ConversionCenter[]>('modelValue');
+const value = ref<ConversionCenter[]>([]);
+const options = ref<ConversionCenter[]>([]);
+const modelValue = defineModel<ConversionCenter[]>('modelValue', {
+  default: [],
+});
 
-const { data: centers, onSuccess } = useWatcher(
+const {
+  data: centers,
+  loading,
+  onSuccess,
+} = useWatcher(
   () => conversionCentersRequest(params.value as GenericData, true),
   [params],
   {
-    initialData: [],
+    force: true,
     immediate: true,
+    initialData: [],
   },
 );
 
 onSuccess(({ data }) => {
+  options.value = data.data;
   if (!modelValue.value || modelValue.value.length < 1) {
-    modelValue.value = [data.data[0].id];
+    modelValue.value = [data.data[0]];
   }
 });
 
 const filterFn = (
   val: string,
   update: (callbackFn: () => void, afterFn?: (ref: QSelect) => void) => void,
-  abort: () => void,
 ) => {
-  if (val !== '') {
-    params.value.search = val;
-    onSuccess(() => {
+  params.value.search = val;
+  if (val) {
+    onSuccess(({ data }) => {
       update(() => {});
     });
   } else {
-    abort();
+    update(() => {});
   }
 };
 </script>

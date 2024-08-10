@@ -256,7 +256,7 @@ export interface ConversionKitForm {
   description: string;
   manufacturer: string;
   importer: PersonForm;
-  supplied_centers_ids: number[];
+  supplied_centers_ids: number[] | ConversionCenter[];
   serial_number: string;
 }
 

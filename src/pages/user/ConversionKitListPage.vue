@@ -45,7 +45,7 @@
     <div ref="content">
       <q-table
         hide-pagination
-        title="Certificates"
+        title="Conversion Kits"
         class="sort_tables coupon"
         row-key="id"
         :rows="data"
@@ -85,13 +85,13 @@
                     : 'edit'
                 "
                 :to="{
-                  name: 'user.add.certificate',
-                  params: { certificate_id: props.value },
+                  name: 'user.add.kit',
+                  params: { kit_id: props.value },
                 }"
               />
               <ContentRemover
                 dense
-                base-url="/v1/user/certificates"
+                base-url="/v1/user/conversion-kits"
                 :disable="
                   date.getDateDiff(
                     new Date(),
@@ -129,10 +129,7 @@ import { ref } from 'vue';
 import { exportFile, QTableProps, date, Notify } from 'quasar';
 import { usePagination } from 'alova/client';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
-import {
-  certificatesRequest,
-  fillingOutletsRequest,
-} from 'src/data/serviceRequests';
+import { conversionKitsRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 
 const content = ref<HTMLElement | null>(null);
@@ -147,12 +144,12 @@ const onIntersction = (e: IntersectionObserverEntry): boolean => {
   page.value++;
   return true;
 };
+
 const { data, page, loading, isLastPage, onSuccess } = usePagination(
   (page, limit) =>
-    certificatesRequest({
+    conversionKitsRequest({
       page,
       limit,
-      with: 'dealer',
     }),
   {
     append: true,
@@ -176,11 +173,19 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'kit_serial_number',
+    name: 'name',
     required: true,
-    label: 'Kit Serial Number',
+    label: 'Name',
     align: 'left',
-    field: 'kitSerialNumber',
+    field: 'name',
+    sortable: true,
+  },
+  {
+    name: 'serial_number',
+    required: true,
+    label: 'Serial Number',
+    align: 'left',
+    field: 'serialNumber',
     sortable: true,
   },
   {
@@ -192,23 +197,7 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'dealer',
-    required: true,
-    label: 'Delear',
-    align: 'left',
-    field: (e) => e.dealer?.fullname || 'Unknown',
-    sortable: true,
-  },
-  {
-    name: 'importer',
-    required: true,
-    label: 'Importer',
-    align: 'left',
-    field: 'importer',
-    sortable: true,
-  },
-  {
-    name: 'created_at',
+    name: 'createdAt',
     required: true,
     label: 'Added On',
     align: 'left',

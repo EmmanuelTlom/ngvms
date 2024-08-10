@@ -129,10 +129,7 @@ import { ref } from 'vue';
 import { exportFile, QTableProps, date, Notify } from 'quasar';
 import { usePagination } from 'alova/client';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
-import {
-  conversionCentersRequest,
-  vehiclesRequest,
-} from 'src/data/serviceRequests';
+import { conversionCentersRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 
 const content = ref<HTMLElement | null>(null);

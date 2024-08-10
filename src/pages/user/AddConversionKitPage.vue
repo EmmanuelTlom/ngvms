@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="q-mt-lg">
-      <h4 class="dashboardmain_text">Add Conversion Center</h4>
+      <h4 class="dashboardmain_text">Add Conversion Kit</h4>
     </div>
 
     <div class="add_manager">
@@ -67,40 +67,21 @@
                 </span>
               </div>
             </div>
-            <div class="grid">
-              <div class="input_wrap">
-                <label for="">Serial Number</label>
-                <div class="input">
-                  <input
-                    required
-                    type="text"
-                    placeholder=""
-                    v-model="form.serial_number"
-                  />
-                </div>
 
-                <span class="error-message" v-if="errors.serial_number">
-                  {{ errors.serial_number }}
-                </span>
-              </div>
-
-              <div class="input_wrap">
-                <label for="">Supplied Centers</label>
-                <ConversionCenterSelector
-                  square
-                  style="padding: 0"
+            <div class="input_wrap">
+              <label for="">Serial Number</label>
+              <div class="input">
+                <input
                   required
-                  outlined
-                  hide-bottom-space
-                  padding="xs"
-                  bg-color="sky-1"
-                  v-model="form.supplied_centers_ids"
+                  type="text"
+                  placeholder=""
+                  v-model="form.serial_number"
                 />
-
-                <span class="error-message" v-if="errors.supplied_centers_ids">
-                  {{ errors.supplied_centers_ids }}
-                </span>
               </div>
+
+              <span class="error-message" v-if="errors.serial_number">
+                {{ errors.serial_number }}
+              </span>
             </div>
 
             <div class="input_wrap">
@@ -117,6 +98,41 @@
               <span class="error-message" v-if="errors.description">
                 {{ errors.description }}
               </span>
+            </div>
+
+            <div
+              class="text-grey-3 q-pa-md input_wrap"
+              style="border: solid 1px"
+            >
+              <label for="">Supplied Centers</label>
+              <div class="input_wrap">
+                <div class="q-gutter-xs row truncate-chip-labels">
+                  <ConversionCenterSelector
+                    required
+                    outlined
+                    hide-bottom-space
+                    padding="none"
+                    bg-color="sky-1"
+                    v-model="form.supplied_centers_ids"
+                  />
+                  <q-chip
+                    dense
+                    square
+                    removable
+                    color="primary"
+                    text-color="white"
+                    :key="i"
+                    :label="isNaN(item) ? item.name : item"
+                    :title="isNaN(item) ? item.name : item"
+                    @update:model-value="form.supplied_centers_ids.splice(i, 1)"
+                    v-for="(item, i) in form.supplied_centers_ids"
+                  />
+                </div>
+
+                <span class="error-message" v-if="errors.supplied_centers_ids">
+                  {{ errors.supplied_centers_ids }}
+                </span>
+              </div>
             </div>
 
             <div
@@ -200,7 +216,11 @@ import {
 import { computed, ref, watch } from 'vue';
 import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
-import { PersonForm, RequestErrors } from 'app/repository/models';
+import {
+  ConversionCenter,
+  PersonForm,
+  RequestErrors,
+} from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
 import { date, QForm } from 'quasar';
 import ConversionCenterSelector from 'src/components/utilities/ConversionCenterSelector.vue';
@@ -230,43 +250,40 @@ const {
   reset,
   updateForm,
   loading: submiting,
-} = useForm(
-  (form) => conversionKitCreateRequest(form, route.params.center_id),
-  {
-    store: {
-      enable: true,
-      serializers: {
-        file: {
-          forward: (data) => (data instanceof File ? data.name : undefined),
-          backward: () => undefined,
-        },
+} = useForm((form) => conversionKitCreateRequest(form, route.params.kit_id), {
+  store: {
+    enable: true,
+    serializers: {
+      file: {
+        forward: (data) => (data instanceof File ? data.name : undefined),
+        backward: () => undefined,
       },
     },
-    initialForm: {
-      image: undefined,
-      name: '',
-      description: '',
-      manufacturer: '',
-      importer: <PersonForm>{},
-      supplied_centers_ids: [],
-      serial_number: '',
-    },
   },
-).onSuccess(({ data }) => {
+  initialForm: {
+    image: undefined,
+    name: '',
+    description: '',
+    manufacturer: '',
+    importer: <PersonForm>{},
+    supplied_centers_ids: <ConversionCenter[] | number[]>[],
+    serial_number: '',
+  },
+}).onSuccess(({ data }) => {
   notify(data.message, data.status);
   router.replace({
     name: route.name,
-    params: { center_id: data.data.id },
+    params: { kit_id: data.data.id },
   });
 });
 
 const { data } = useRequest(
   (id: string) =>
-    conversionKitRequest(id || route.params.center_id, {
-      with: 'officer',
+    conversionKitRequest(id || route.params.kit_id, {
+      with: 'importer',
     }),
   {
-    immediate: !!route.params.center_id,
+    immediate: !!route.params.kit_id,
     initialData: {
       imageUrl: placeholder,
     },
@@ -280,13 +297,13 @@ const { data } = useRequest(
       email: data.importer?.email,
       name: data.importer?.name,
     },
-    supplied_centers_ids: [],
-    serial_number: '',
+    supplied_centers_ids: data.suppliedCenters,
+    serial_number: data.serialNumber,
   });
 });
 
 watch(
-  () => route.params.center_id,
+  () => route.params.kit_id,
   (id, oid) => {
     if (oid && !id) {
       reset();
@@ -295,3 +312,9 @@ watch(
   },
 );
 </script>
+
+<style lang="scss">
+.truncate-chip-labels > .q-chip {
+  max-width: 140px;
+}
+</style>

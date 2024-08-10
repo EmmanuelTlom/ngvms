@@ -109,7 +109,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'conversion-kits',
-        component: () => import('pages/user/AddConversionKitPage.vue'),
+        component: () => import('pages/user/ConversionKitListPage.vue'),
         name: 'user.kits',
       },
       {
