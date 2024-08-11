@@ -1,6 +1,13 @@
-import { Certificate, CertificateForm, ConversionCenter, ConversionCenterForm, ConversionKit, ConversionKitForm, FillingOutlet, FillingOutletForm, GenericData, ResponseBody, Vehicle, VehicleForm } from 'app/repository/models';
+import { Certificate, CertificateForm, ConversionCenter, ConversionCenterForm, ConversionKit, ConversionKitForm, Dashboard, FillingOutlet, FillingOutletForm, GenericData, ResponseBody, User, UserForm, Vehicle, VehicleForm } from 'app/repository/models';
+import { alova, axios } from 'src/boot/alova';
 
-import { axios } from 'src/boot/alova';
+export const dashboardRequest = (
+  params?: GenericData
+) => {
+  return alova.Get<ResponseBody<Dashboard>>('/v1/admin/dashboard', {
+    params
+  });
+};
 
 /**
  * Add new vehicle data
@@ -28,7 +35,7 @@ export const vehicleCreateRequest = (
     _method: id ? 'PUT' : 'POST'
   }
 
-  const method = axios.Post<ResponseBody<Vehicle>>(`/v1/user/vehicles${id ? '/' + id : ''}`, fm, {
+  const method = axios.Post<ResponseBody<Vehicle>>(`/v1/admin/vehicles${id ? '/' + id : ''}`, fm, {
     name: 'updateVehicle',
   });
 
@@ -47,7 +54,7 @@ export const vehicleRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/user/vehicles/${id}`, {
+  return axios.Get(`/v1/admin/vehicles/${id}`, {
     params,
     name: 'getVehicle',
     transform: (e: ResponseBody<Vehicle>) => e.data
@@ -63,7 +70,7 @@ export const vehicleRequest = (
 export const vehiclesRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<Vehicle[]>>('/v1/user/vehicles', {
+  return axios.Get<ResponseBody<Vehicle[]>>('/v1/admin/vehicles', {
     params,
     name: 'getVehicles',
   });
@@ -88,13 +95,14 @@ export const fillingOutletCreateRequest = (
     email: form.email,
     phone: form.phone,
     state: form.state,
+    status: form.status,
     address: form.address,
     license_number: form.license_number,
     inspection_officers: form.inspection_officers,
     _method: id ? 'PUT' : 'POST'
   }
 
-  const method = axios.Post<ResponseBody<FillingOutlet>>(`/v1/user/filling-outlets${id ? '/' + id : ''}`, fm, {
+  const method = axios.Post<ResponseBody<FillingOutlet>>(`/v1/admin/filling-outlets${id ? '/' + id : ''}`, fm, {
     name: 'updateFillingOutlet',
   });
 
@@ -113,7 +121,7 @@ export const fillingOutletRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/user/filling-outlets/${id}`, {
+  return axios.Get(`/v1/admin/filling-outlets/${id}`, {
     params,
     name: 'getFillingOutlet',
     transform: (e: ResponseBody<FillingOutlet>) => e.data
@@ -129,7 +137,7 @@ export const fillingOutletRequest = (
 export const fillingOutletsRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<FillingOutlet[]>>('/v1/user/filling-outlets', {
+  return axios.Get<ResponseBody<FillingOutlet[]>>('/v1/admin/filling-outlets', {
     params,
     name: 'getFillingOutlet',
   });
@@ -150,6 +158,7 @@ export const certificateCreateRequest = (
 
   const fm = {
     image: form.image,
+    status: form.status,
     importer: form.importer,
     dealer_id: form.dealer_id,
     manufacturer: form.manufacturer,
@@ -158,7 +167,7 @@ export const certificateCreateRequest = (
     _method: id ? 'PUT' : 'POST',
   }
 
-  const method = axios.Post<ResponseBody<Certificate>>(`/v1/user/certificates${id ? '/' + id : ''}`, fm, {
+  const method = axios.Post<ResponseBody<Certificate>>(`/v1/admin/certificates${id ? '/' + id : ''}`, fm, {
     name: 'updateCertificate',
   });
 
@@ -177,7 +186,7 @@ export const certificateRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/user/certificates/${id}`, {
+  return axios.Get(`/v1/admin/certificates/${id}`, {
     params,
     name: 'getCertificate',
     transform: (e: ResponseBody<Certificate>) => e.data
@@ -193,7 +202,7 @@ export const certificateRequest = (
 export const certificatesRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<Certificate[]>>('/v1/user/certificates', {
+  return axios.Get<ResponseBody<Certificate[]>>('/v1/admin/certificates', {
     params,
     name: 'getCertificate',
   });
@@ -223,7 +232,7 @@ export const conversionCenterCreateRequest = (
     _method: id ? 'PUT' : 'POST'
   }
 
-  const method = axios.Post<ResponseBody<ConversionCenter>>(`/v1/user/conversion-centers${id ? '/' + id : ''}`, fm, {
+  const method = axios.Post<ResponseBody<ConversionCenter>>(`/v1/admin/conversion-centers${id ? '/' + id : ''}`, fm, {
     name: 'updateConversionCenter',
   });
 
@@ -242,7 +251,7 @@ export const conversionCenterRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/user/conversion-centers/${id}`, {
+  return axios.Get(`/v1/admin/conversion-centers/${id}`, {
     params,
     name: 'getConversionCenter',
     transform: (e: ResponseBody<ConversionCenter>) => e.data
@@ -259,7 +268,7 @@ export const conversionCentersRequest = (
   params?: GenericData,
   guest?: boolean
 ) => {
-  const url = !guest ? '/v1/user/conversion-centers' : '/v1/conversion-centers'
+  const url = !guest ? '/v1/admin/conversion-centers' : '/v1/conversion-centers'
   return axios.Get<ResponseBody<ConversionCenter[]>>(url, {
     params,
     name: 'getConversionCenter',
@@ -290,7 +299,7 @@ export const conversionKitCreateRequest = (
     _method: id ? 'PUT' : 'POST'
   }
 
-  const method = axios.Post<ResponseBody<ConversionKit>>(`/v1/user/conversion-kits${id ? '/' + id : ''}`, fm, {
+  const method = axios.Post<ResponseBody<ConversionKit>>(`/v1/admin/conversion-kits${id ? '/' + id : ''}`, fm, {
     name: 'updateConversionKit',
   });
 
@@ -309,7 +318,7 @@ export const conversionKitRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/user/conversion-kits/${id}`, {
+  return axios.Get(`/v1/admin/conversion-kits/${id}`, {
     params,
     name: 'getConversionKit',
     transform: (e: ResponseBody<ConversionKit>) => e.data
@@ -325,8 +334,78 @@ export const conversionKitRequest = (
 export const conversionKitsRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<ConversionKit[]>>('/v1/user/conversion-kits', {
+  return axios.Get<ResponseBody<ConversionKit[]>>('/v1/admin/conversion-kits', {
     params,
     name: 'getConversionKit',
+  });
+};
+
+/**
+ * Add new Conversion Kit data
+ *
+ * @param form
+ * @param id
+ * @returns
+ */
+export const userCreateRequest = (
+  form: UserForm & { _method?: 'POST' | 'PUT' },
+  id?: string | string[],
+) => {
+
+  const fm = {
+    image: form.image,
+    name: form.name,
+    type: form.type,
+    about: form.about,
+    email: form.email,
+    phone: form.phone,
+    roles: form.roles,
+    verified: form.verified,
+    username: form.username,
+    permissions: form.permissions,
+    lastname: form.lastname,
+    firstname: form.firstname,
+    data: form.data,
+    _method: id ? 'PUT' : 'POST'
+  }
+
+  const method = axios.Post<ResponseBody<User>>(`/v1/admin/users${id ? '/' + id : ''}`, fm, {
+    name: 'updateUser',
+  });
+
+  method.config.headers['Content-Type'] = 'multipart/form-data'
+
+  return method
+};
+
+/**
+ * Fetch a User by the given ID
+ *
+ * @param id
+ * @returns
+ */
+export const userRequest = (
+  id?: string | string[],
+  params?: GenericData
+) => {
+  return axios.Get(`/v1/admin/users/${id}`, {
+    params,
+    name: 'getUser',
+    transform: (e: ResponseBody<User>) => e.data
+  });
+};
+
+/**
+ * Fetch all Users matching provided params
+ *
+ * @param params
+ * @returns
+ */
+export const usersRequest = (
+  params?: GenericData
+) => {
+  return axios.Get<ResponseBody<User[]>>('/v1/admin/users', {
+    params,
+    name: 'getUser',
   });
 };

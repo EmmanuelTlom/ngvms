@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">Dealer's Data</h4>
+      <h4 class="dashboardmain_text">Dealer Data</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -54,6 +54,7 @@
     <div ref="content" class="stats_hold q-mt-md">
       <div class="q-mt-md">
         <q-table
+          hide-pagination
           :rows="data"
           :columns="columns"
           class="sort_tables"
@@ -62,22 +63,96 @@
           :loading="loading"
           v-model:pagination="pagination"
         >
-          <template v-slot:body-cell-cng_refueling_stations="props">
-            <q-td :props="props">
-              <p>
-                <!-- <span>{{ vehicle.license_number }}, {{ vehicle.state }}</span> -->
-              </p>
+          <template v-slot:body-cell-id="props">
+            <q-td :props="props" v-intersection="onIntersction">
+              <span>
+                {{ props.rowIndex + 1 }}
+              </span>
             </q-td>
           </template>
-          <template v-slot:body-cell-view="props">
+
+          <template v-slot:body-cell-status="props">
             <q-td :props="props">
-              <q-btn
-                no-caps
-                no-wrap
-                @click="viewPictureOrDocument(props.row.picture)"
+              <q-chip
+                size="xs"
+                text-color="white"
+                :color="props.row.status ? 'green' : 'red '"
               >
-                View picture or document
-              </q-btn>
+                {{ props.row.status ? 'Approved' : 'Pending ' }}
+              </q-chip>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <div class="flex no-wrap q-gutter-x-sm">
+                <DataViewer
+                  v-model:form="form"
+                  v-model:errors="errors"
+                  v-model:saving="submiting"
+                  v-model:loading="loading"
+                  :exclusions="[
+                    'id',
+                    'user',
+                    'importer',
+                    'imageUrl',
+                    'createdAt',
+                    'updatedAt',
+                    'suppliedCenters',
+                  ]"
+                  @click:save="save"
+                  @dataUpdated="viewData = $event"
+                  @toggleDialog="(e) => updateForm(e)"
+                >
+                  <template #default="{ toggleDialog }">
+                    <q-btn
+                      dense
+                      color="info"
+                      icon="fas fa-expand"
+                      @click="toggleDialog(props.row, 'view')"
+                    />
+                    <q-btn
+                      dense
+                      color="primary"
+                      icon="edit"
+                      @click="toggleDialog(props.row, 'edit')"
+                    />
+                  </template>
+                  <template #list-append="{ viewData }">
+                    <UserCard
+                      title="Imported By:"
+                      :person="viewData.importer"
+                      v-if="viewData.importer"
+                    />
+                    <UserCard
+                      :title="`Submited at ${date.formatDate(viewData.createdAt, 'DD/MM/YYYY')} by:`"
+                      :person="viewData.user"
+                      v-if="viewData.user"
+                    />
+                  </template>
+                  <template #list-after="{ viewData }">
+                    <q-list
+                      bordered
+                      separator
+                      v-if="viewData.suppliedCenters?.length"
+                    >
+                      <q-item-label class="q-py-xs" header>
+                        Supplied To
+                      </q-item-label>
+                      <ConversionCenterCard
+                        :center="center"
+                        :key="center.id"
+                        v-for="center in viewData.suppliedCenters"
+                      />
+                    </q-list>
+                  </template>
+                </DataViewer>
+                <ContentRemover
+                  dense
+                  base-url="/v1/admin/conversion-kits"
+                  :id="props.value"
+                  :list="data"
+                />
+              </div>
             </q-td>
           </template>
           <template v-slot:no-data="{ message }">
@@ -87,98 +162,90 @@
           </template>
         </q-table>
       </div>
-      <q-dialog v-model="viewDocumentsDialog">
-        <q-card class="card_img">
-          <div class="q-pa-md">
-            <div class="text-h6 text-weight-bold q-mb-sm">Documents</div>
-            <!-- <q-list bordered>
-              <q-item class="q-my-sm" clickable v-ripple>
-                <q-item-section avatar>
-                  <q-avatar color="primary" text-color="white">
-                    <img
-                      v-if="isImage(viewData.application.passport)"
-                      :src="
-                        viewData.application.passport
-                          ? viewData.application.passport
-                          : '/images/worklogo.png'
-                      "
-                      alt=""
-                    />
-                    <div v-else class="text-white">pdf</div>
-                  </q-avatar>
-                </q-item-section>
-
-                <q-item-section>
-                  <q-item-label>Picture / Document</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-btn no-caps no-wrap color="primary">
-                    View
-                    <q-popup-proxy
-                      cover
-                      class="proxy"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <div class="proxy_div">
-                        <template v-if="isImage(viewData.application.passport)">
-                          <img
-                            :src="viewData.application.passport"
-                            alt="Image"
-                          />
-                        </template>
-                        <template v-else>
-                          <iframe
-                            width="100%"
-                            height="500px"
-                            :src="viewData.application.passport"
-                            frameborder="0"
-                          ></iframe>
-                        </template>
-                      </div>
-                    </q-popup-proxy>
-                  </q-btn>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-            </q-list> -->
-          </div>
-        </q-card>
-      </q-dialog>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { exportFile, QTableProps, Notify } from 'quasar';
-import { usePagination } from 'alova/client';
-import { vehiclesRequest } from 'src/data/serviceRequests';
+import { computed, ref } from 'vue';
+import { exportFile, QTableProps, Notify, date } from 'quasar';
+import { useForm, usePagination } from 'alova/client';
+import {
+  conversionKitCreateRequest,
+  conversionKitsRequest,
+} from 'src/data/adminRequests';
 import html2pdf from 'html2pdf.js';
+import ContentRemover from 'src/components/utilities/ContentRemover.vue';
+import {
+  ConversionCenter,
+  PersonForm,
+  RequestErrors,
+  ConversionKit,
+} from 'app/repository/models';
+import { notify } from 'src/utils/helpers';
+import DataViewer from 'src/components/utilities/DataViewer.vue';
+import UserCard from 'src/components/utilities/UserCard.vue';
+import ConversionCenterCard from 'src/components/utilities/ConversionCenterCard.vue';
+import { arrayObjectUpdater, printArea } from 'src/utils/proccessor';
 
-const viewPictureOrDocument = (p: string) => p;
-const viewDocumentsDialog = ref(false);
 const content = ref<HTMLElement | null>(null);
+const viewData = ref<ConversionKit>({} as ConversionKit);
 const filter = ref('');
 
-// let rows = ref([]);
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// type FormatFunction = (val: any) => string;
-
-// interface Row {
-//   [key: string]: any;
-// }
 const pagination = ref({
   rowsPerPage: 30,
 });
 
-const { data, loading, onSuccess } = usePagination(
+const onIntersction = (e: IntersectionObserverEntry): boolean => {
+  if (loading.value || isLastPage.value || !e.isIntersecting) return false;
+
+  page.value++;
+  return true;
+};
+
+const errors = computed(
+  () => (error.value as unknown as RequestErrors)?.errors || {},
+);
+
+const {
+  form,
+  send: save,
+  error,
+  updateForm,
+  loading: submiting,
+} = useForm(
+  (form) => conversionKitCreateRequest(form, String(viewData.value.id)),
+  {
+    store: {
+      enable: true,
+      serializers: {
+        file: {
+          forward: (data) => (data instanceof File ? data.name : undefined),
+          backward: () => undefined,
+        },
+      },
+    },
+    initialForm: {
+      image: undefined,
+      name: '',
+      description: '',
+      manufacturer: '',
+      importer: <PersonForm>{},
+      supplied_centers_ids: <ConversionCenter[] | number[]>[],
+      serial_number: '',
+    },
+  },
+).onSuccess(({ data: dat }) => {
+  notify(dat.message, dat.status);
+  arrayObjectUpdater(data.value, dat.data);
+});
+
+const { data, page, loading, isLastPage, onSuccess } = usePagination(
   (page, limit) =>
-    vehiclesRequest({
+    conversionKitsRequest({
       page,
       limit,
-      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,Certificate,verificationCenter',
+      with: 'user,importer',
     }),
   {
     append: true,
@@ -196,69 +263,51 @@ const columns: QTableProps['columns'] = [
   {
     name: 'id',
     required: true,
-    label: 'ID',
+    label: 'S/N',
     align: 'left',
     field: 'id',
-    // field: (row, index) => console.log(row, index),
     sortable: true,
   },
-
   {
-    name: 'document',
+    name: 'name',
     required: true,
-    label: 'Document',
+    label: 'Name',
     align: 'left',
-    field: 'document',
+    field: 'name',
     sortable: true,
   },
   {
     name: 'serial_number',
     required: true,
-    label: 'Kit serial number',
+    label: 'Serial Number',
     align: 'left',
-    field: 'serial_number',
+    field: 'serialNumber',
     sortable: true,
   },
   {
-    name: 'description',
+    name: 'createdAt',
     required: true,
-    label: 'Kit description',
+    label: 'Added On',
     align: 'left',
-    field: 'description',
+    field: (row) => date.formatDate(row.createdAt, 'DD/MM/YYYY'),
     sortable: true,
   },
   {
-    name: 'manufacturers',
+    name: 'status',
     required: true,
-    label: 'Name of manufacturers',
-    align: 'left',
-    field: 'manufacturers',
+    label: 'Status',
+    align: 'center',
+    field: 'status',
     sortable: true,
   },
   {
-    name: 'importer',
+    name: 'actions',
+    classes: 'print-hide',
+    headerClasses: 'print-hide',
     required: true,
-    label: 'Name of importer',
+    label: 'Actions',
     align: 'left',
-    field: 'importer',
-    sortable: true,
-  },
-  {
-    name: 'conversion_centers',
-    required: true,
-    label: 'Conversion centers supplied to',
-    align: 'left',
-    field: 'conversion_centers',
-    sortable: true,
-  },
-
-  {
-    name: 'view',
-    required: true,
-    label: 'View Picture',
-    align: 'left',
-    field: 'view',
-    // field: (row, index) => console.log(row, index),
+    field: 'id',
     sortable: true,
   },
 ];
@@ -316,7 +365,10 @@ const exportToPdf = (): void => {
     console.error('Content element not found');
     return;
   }
-  const element = content.value as HTMLElement;
+  const element = content.value.cloneNode(true) as HTMLElement;
+  element.querySelectorAll('.print-hide').forEach((el) => {
+    (el as HTMLElement).style.display = 'none';
+  });
   // Select sections to omit from the PDF using querySelectorAll
   // const sectionsToOmit = element.querySelectorAll('.omit-from-pdf');
 
@@ -353,8 +405,6 @@ const exportToPdf = (): void => {
     });
 };
 const printPageFCN = () => {
-  window.print();
+  printArea(content.value as HTMLElement);
 };
 </script>
-
-<style lang="scss" scoped></style>

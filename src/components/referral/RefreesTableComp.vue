@@ -14,7 +14,7 @@
       <template v-slot:body-cell-fullname="props">
         <q-td :props="props">
           <span>
-            {{ props.row.fullname }}
+            {{ props.row.fullName }}
           </span>
         </q-td>
       </template>

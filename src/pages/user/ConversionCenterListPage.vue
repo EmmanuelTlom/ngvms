@@ -72,23 +72,54 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <div class="flex no-wrap q-gutter-x-sm">
-              <q-btn
-                dense
-                color="primary"
-                :icon="
-                  date.getDateDiff(
-                    new Date(),
-                    new Date(props.row.createdAt),
-                    'hours',
-                  ) > 24
-                    ? 'fas fa-expand'
-                    : 'edit'
-                "
-                :to="{
-                  name: 'user.add.center',
-                  params: { center_id: props.value },
-                }"
-              />
+              <DataViewer
+                :exclusions="[
+                  'id',
+                  'user',
+                  'officer',
+                  'imageUrl',
+                  'createdAt',
+                  'updatedAt',
+                ]"
+              >
+                <template #default="{ toggleDialog }">
+                  <q-btn
+                    dense
+                    color="info"
+                    icon="fas fa-expand"
+                    @click="toggleDialog(props.row, 'view')"
+                  />
+                </template>
+                <template #list-append="{ viewData }">
+                  <UserCard
+                    title="Approved By:"
+                    :person="viewData.officer"
+                    v-if="viewData.officer"
+                  />
+                </template>
+                <template #list-after>
+                  <div class="flex flex-col justify-center q-mt-md">
+                    <q-btn
+                      dense
+                      color="primary"
+                      label="Edit"
+                      :icon="
+                        date.getDateDiff(
+                          new Date(),
+                          new Date(props.row.createdAt),
+                          'hours',
+                        ) > 24
+                          ? 'fas fa-expand'
+                          : 'edit'
+                      "
+                      :to="{
+                        name: 'user.add.center',
+                        params: { center_id: props.value },
+                      }"
+                    />
+                  </div>
+                </template>
+              </DataViewer>
               <ContentRemover
                 dense
                 base-url="/v1/user/conversion-centers"
@@ -131,6 +162,9 @@ import { usePagination } from 'alova/client';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
 import { conversionCentersRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
+import { printArea } from 'src/utils/proccessor';
+import DataViewer from 'src/components/utilities/DataViewer.vue';
+import UserCard from 'src/components/utilities/UserCard.vue';
 
 const content = ref<HTMLElement | null>(null);
 
@@ -149,6 +183,7 @@ const { data, page, loading, isLastPage, onSuccess } = usePagination(
     conversionCentersRequest({
       page,
       limit,
+      with: 'officer',
     }),
   {
     append: true,
@@ -188,14 +223,6 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'email',
-    required: true,
-    label: 'Email',
-    align: 'left',
-    field: 'email',
-    sortable: true,
-  },
-  {
     name: 'createdAt',
     required: true,
     label: 'Added On',
@@ -213,6 +240,8 @@ const columns: QTableProps['columns'] = [
   },
   {
     name: 'actions',
+    classes: 'print-hide',
+    headerClasses: 'print-hide',
     required: true,
     label: 'Actions',
     align: 'left',
@@ -274,7 +303,10 @@ const exportToPdf = (): void => {
     console.error('Content element not found');
     return;
   }
-  const element = content.value as HTMLElement;
+  const element = content.value.cloneNode(true) as HTMLElement;
+  element.querySelectorAll('.print-hide').forEach((el) => {
+    (el as HTMLElement).style.display = 'none';
+  });
   // Select sections to omit from the PDF using querySelectorAll
   // const sectionsToOmit = element.querySelectorAll('.omit-from-pdf');
 
@@ -311,7 +343,7 @@ const exportToPdf = (): void => {
     });
 };
 const printPageFCN = () => {
-  window.print();
+  printArea(content.value as HTMLElement);
 };
 </script>
 

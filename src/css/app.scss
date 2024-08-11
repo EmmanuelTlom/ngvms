@@ -570,8 +570,10 @@ form .grid {
 
 footer {
   background: #000000;
-  padding: 3rem 2rem;
   color: white;
+  &:not(.mobile) {
+    padding: 3rem 2rem;
+  }
 
   a {
     color: white;
@@ -626,6 +628,9 @@ input:focus {
   }
 }
 .loginPage.loginPage.register {
+  form {
+    max-width: 90vw;
+  }
   .section_paraText {
     margin: 0.5rem 0 0.5rem;
   }
@@ -1320,8 +1325,7 @@ input:focus {
   }
 }
 
-.q-footer {
-  background: transparent;
+.q-footer:not(.mobile) {
   position: absolute;
   bottom: 0;
 }
@@ -1876,7 +1880,9 @@ input:focus {
   }
 
   footer {
-    padding: 3rem 0rem;
+    &:not(.mobile) {
+      padding: 3rem 0rem;
+    }
     .container > .row {
       gap: 2rem;
     }

@@ -42,7 +42,9 @@
             :disable="!value.length"
             @click="
               () => {
-                modelValue = [...new Set([...value, ...modelValue])];
+                modelValue = [
+                  ...new Set([...value, ...modelValue]),
+                ] as ConversionCenter[];
                 value = [];
               }
             "
@@ -72,7 +74,7 @@ const hideSelected = ref(false);
 
 const value = ref<ConversionCenter[]>([]);
 const options = ref<ConversionCenter[]>([]);
-const modelValue = defineModel<ConversionCenter[]>('modelValue', {
+const modelValue = defineModel<ConversionCenter[] | number[]>('modelValue', {
   default: [],
 });
 

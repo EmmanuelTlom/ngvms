@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <q-inner-loading :showing="loading" />
-    <h4 class="dashboardmain_text q-mt-xl">Welcome, {{ user.fullname }}</h4>
+    <h4 class="dashboardmain_text q-mt-xl">Welcome, {{ user.fullName }}</h4>
     <div class="stats_hold">
       <div v-for="(data, index) in stats" :key="index">
         <DashBoardCardsVue :data="data" />
@@ -108,7 +108,6 @@ const buildStats = (data: Dashboard) => {
       stats.value[i].data = stats.value[i].place
         .replace('{inc}', inc.toString())
         .replace('{dir}', inc >= 0 ? 'up' : 'down');
-      console.log(stats.value[i].data);
     }
   });
 };

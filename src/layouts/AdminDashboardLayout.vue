@@ -39,11 +39,13 @@
               <div style="gap: 1rem" class="row items-center no-wrap">
                 <img
                   style="width: 45px; height: 45px"
-                  src="/images/pretty.png"
-                  alt=""
+                  :alt="user.fullName"
+                  :src="user.imageUrl"
                 />
                 <div>
-                  <p class="review_small text text-weight-bold">Marv Joy</p>
+                  <p class="review_small text text-weight-bold">
+                    {{ user.fullName }}
+                  </p>
 
                   <p class="dashsmalltext q-mt-xs">Admin</p>
                 </div>
@@ -51,7 +53,7 @@
             </template>
 
             <q-list>
-              <q-item clickable v-close-popup>
+              <q-item :to="{ name: 'logout' }" clickable v-close-popup>
                 <q-item-section>
                   <q-item-label>Logout</q-item-label>
                 </q-item-section>
@@ -124,7 +126,7 @@
               </div>
             </template>
             <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+              <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
                 <q-item-section> User Accounts </q-item-section>
               </q-item>
               <q-item clickable v-ripple>
@@ -328,13 +330,29 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { useBootstrapStore } from 'src/stores/bootstrap-store';
+import { useGlobalStore } from 'src/stores/global-store';
+import { notify } from 'src/utils/helpers';
+import { computed, ref } from 'vue';
 
+const user = computed(() => useBootstrapStore().user);
 const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+
+useGlobalStore().$subscribe((e, { error }) => {
+  if (error.message) {
+    useGlobalStore().clearError();
+    notify({
+      alert: true,
+      title: 'System Error',
+      status: 'error',
+      message: error.message,
+    });
+  }
+});
 </script>
 
 <style lang="scss" scoped>

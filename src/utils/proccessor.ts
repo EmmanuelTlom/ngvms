@@ -1,7 +1,8 @@
-import { Configuration, Initialize, PriviPerm, ResponseBody, User } from 'repository/models';
+import { Configuration, Initialize, PriviPerm, PriviRole, ResponseBody, User } from 'repository/models';
 import { RouteLocationNormalized, Router } from 'vue-router';
 
 import { alova } from 'src/boot/alova';
+import { finder } from '@medv/finder'
 import { invalidateCache } from 'alova';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 
@@ -155,10 +156,10 @@ export const authValidator = (
 /**
  * Check if a user can do something in an organization
  */
-export const iCan = (ability: PriviPerm) => {
-  const user = useBootstrapStore().user
+export const iCan = (ability?: PriviPerm | PriviRole, user?: User) => {
+  user ??= useBootstrapStore().user
 
-  if (!user.permissions || user.permissions.length < 1) {
+  if ((!user.permissions || user.permissions.length < 1) && (!user.roles || user.roles.length < 1)) {
     return false;
   }
 
@@ -166,5 +167,55 @@ export const iCan = (ability: PriviPerm) => {
     return true;
   }
 
-  return user.permissions.includes(ability) ?? false;
+  return user.permissions?.includes(ability as PriviPerm) ||
+    user.roles?.includes(ability as PriviRole) ||
+    false;
 };
+
+
+export const arrayObjectUpdater = (array: any[], data: any) => {
+  const i = array.findIndex((e: any) => e.id === data.id);
+  array[i] = Object.assign({}, array[i], data);
+}
+
+export const printArea = (el: HTMLElement | string) => {
+  let area = typeof el === 'string' ? document.getElementById("GFG") : el
+
+  const a = window.open('', '', 'height=500, width=500');
+
+  const dumpCSSText = (el: HTMLElement) => {
+    var s = '';
+    var o = getComputedStyle(el);
+    for (var i = 0; i < o.length; i++) {
+      s += o[i] + ': ' + o.getPropertyValue(o[i]) + ';';
+    }
+    return s;
+  }
+
+  let classes = '';
+
+  if (a && area) {
+    area.querySelectorAll('*').forEach(function (node) {
+      const selector = finder(node)
+      classes += `${selector} {${dumpCSSText(node as HTMLElement)}}`
+    });
+
+    area = area.cloneNode(true) as HTMLElement;
+
+    area.querySelectorAll('.print-hide, [aria-hidden=true]').forEach((el) => {
+      (el as HTMLElement).style.display = 'none';
+    });
+
+    a.document.write('<html>');
+    a.document.write(`
+      <head>
+        <style>${classes}.q-table__container,.q-table__middle,.q-table,body > :first-child {width:100%!important}</style>
+      </head>
+    `);
+    a.document.write('<body>');
+    a.document.write(area.innerHTML);
+    a.document.write('</body></head>');
+    a.document.close();
+    a.print();
+  }
+}

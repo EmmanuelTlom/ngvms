@@ -72,64 +72,23 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <div class="flex no-wrap q-gutter-x-sm">
-              <DataViewer
-                :exclusions="[
-                  'id',
-                  'user',
-                  'imageUrl',
-                  'createdAt',
-                  'updatedAt',
-                  'inspectionOfficers',
-                ]"
-              >
-                <template #default="{ toggleDialog }">
-                  <q-btn
-                    dense
-                    color="info"
-                    icon="fas fa-expand"
-                    @click="toggleDialog(props.row, 'view')"
-                  />
-                </template>
-                <template #list-append="{ viewData }">
-                  <UserCard
-                    title="Imported By:"
-                    :person="viewData.importer"
-                    v-if="viewData.importer"
-                  />
-                </template>
-                <template #list-after="{ viewData }">
-                  <q-list bordered separator v-if="viewData.inspectionOfficers">
-                    <q-item-label class="q-py-xs" header>
-                      Inspection Officers
-                    </q-item-label>
-                    <UserCard
-                      :person="officer"
-                      :key="officer.id"
-                      v-for="officer in viewData.inspectionOfficers"
-                    />
-                  </q-list>
-                  <div class="flex flex-col justify-center q-mt-md">
-                    <q-btn
-                      dense
-                      color="primary"
-                      label="Edit"
-                      :icon="
-                        date.getDateDiff(
-                          new Date(),
-                          new Date(props.row.createdAt),
-                          'hours',
-                        ) > 24
-                          ? 'fas fa-expand'
-                          : 'edit'
-                      "
-                      :to="{
-                        name: 'user.add.stations',
-                        params: { station_id: props.value },
-                      }"
-                    />
-                  </div>
-                </template>
-              </DataViewer>
+              <q-btn
+                dense
+                color="primary"
+                :icon="
+                  date.getDateDiff(
+                    new Date(),
+                    new Date(props.row.createdAt),
+                    'hours',
+                  ) > 24
+                    ? 'fas fa-expand'
+                    : 'edit'
+                "
+                :to="{
+                  name: 'user.add.stations',
+                  params: { station_id: props.value },
+                }"
+              />
               <ContentRemover
                 dense
                 base-url="/v1/user/filling-outlets"
@@ -173,8 +132,6 @@ import ContentRemover from 'src/components/utilities/ContentRemover.vue';
 import { fillingOutletsRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 import { printArea } from 'src/utils/proccessor';
-import DataViewer from 'src/components/utilities/DataViewer.vue';
-import UserCard from 'src/components/utilities/UserCard.vue';
 
 const content = ref<HTMLElement | null>(null);
 
@@ -221,6 +178,14 @@ const columns: QTableProps['columns'] = [
     label: 'License Number',
     align: 'left',
     field: 'licenseNumber',
+    sortable: true,
+  },
+  {
+    name: 'lga',
+    required: true,
+    label: 'LGA',
+    align: 'left',
+    field: 'lga',
     sortable: true,
   },
   {

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">NADDC Data</h4>
+      <h4 class="dashboardmain_text">Users</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -71,6 +71,17 @@
             </q-td>
           </template>
 
+          <template v-slot:body-cell-firstname="props">
+            <q-td :props="props">
+              <UserCard
+                hide-phone
+                class="q-px-none"
+                :person="props.row"
+                v-if="props.row"
+              />
+            </q-td>
+          </template>
+
           <template v-slot:body-cell-status="props">
             <q-td :props="props">
               <q-chip
@@ -92,11 +103,18 @@
                   v-model:loading="loading"
                   :exclusions="[
                     'id',
-                    'user',
-                    'officer',
+                    'userData',
                     'imageUrl',
-                    'createdAt',
                     'updatedAt',
+                    'lastAttempt',
+                  ]"
+                  :form-exclusions="[
+                    'type',
+                    'permissions',
+                    'roles',
+                    'createdAt',
+                    'emailVerifiedAt',
+                    'phoneVerifiedAt',
                   ]"
                   @click:save="save"
                   @dataUpdated="viewData = $event"
@@ -118,22 +136,86 @@
                   </template>
                   <template #list-append="{ viewData }">
                     <UserCard
-                      title="Approved By:"
-                      :person="viewData.officer"
-                      v-if="viewData.officer"
-                    />
-                    <UserCard
                       :title="`Submited at ${date.formatDate(viewData.createdAt, 'DD/MM/YYYY')} by:`"
                       :person="viewData.user"
                       v-if="viewData.user"
                     />
                   </template>
+                  <template #form-append="{ form, errors }">
+                    <div class="input_wrap">
+                      <label class="q-mb-xs block"> User Type </label>
+                      <q-select
+                        outlined
+                        hide-bottom-space
+                        padding="none"
+                        bg-color="sky-1"
+                        v-model="form.type"
+                        :option-label="(e: string) => e.toUpperCase()"
+                        :options="[
+                          'dealer',
+                          'son',
+                          'naddc',
+                          'frsc',
+                          'nmdpra',
+                          'finance',
+                          'insurance',
+                        ]"
+                        :error="!!errors.type"
+                        :error-message="errors.type"
+                      />
+                    </div>
+                    <div
+                      class="input_wrap"
+                      :key="option"
+                      v-for="option in ['roles', 'permissions']"
+                    >
+                      <label class="q-mb-xs block">
+                        Admin {{ option.ucfirst() }}
+                      </label>
+                      <q-select
+                        outlined
+                        multiple
+                        hide-bottom-space
+                        padding="none"
+                        bg-color="sky-1"
+                        v-model="form[option]"
+                        :option-label="(e: string) => e.titleCase()"
+                        :options="
+                          option === 'roles' ? adminRoles : adminPermissions
+                        "
+                        :error="!!errors[option]"
+                        :error-message="errors[option]"
+                      >
+                        <template
+                          v-slot:option="{
+                            itemProps,
+                            opt,
+                            selected,
+                            toggleOption,
+                          }"
+                        >
+                          <q-item v-bind="itemProps">
+                            <q-item-section>
+                              <q-item-label>{{ opt.titleCase() }}</q-item-label>
+                            </q-item-section>
+                            <q-item-section side>
+                              <q-checkbox
+                                :model-value="selected"
+                                @update:model-value="toggleOption(opt)"
+                              />
+                            </q-item-section>
+                          </q-item>
+                        </template>
+                      </q-select>
+                    </div>
+                  </template>
                 </DataViewer>
                 <ContentRemover
                   dense
-                  base-url="/v1/admin/conversion-centers"
+                  base-url="/v1/admin/users"
                   :id="props.value"
                   :list="data"
+                  v-if="!iCan(undefined, props.row)"
                 />
               </div>
             </q-td>
@@ -153,24 +235,23 @@
 import { computed, ref } from 'vue';
 import { exportFile, QTableProps, Notify, date } from 'quasar';
 import { useForm, usePagination } from 'alova/client';
-import {
-  conversionCenterCreateRequest,
-  conversionCentersRequest,
-} from 'src/data/adminRequests';
+import { userCreateRequest, usersRequest } from 'src/data/adminRequests';
 import html2pdf from 'html2pdf.js';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
 import {
-  PersonForm,
   RequestErrors,
-  ConversionCenter,
+  UserData,
+  UserType,
+  Vehicle,
 } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
 import UserCard from 'src/components/utilities/UserCard.vue';
 import DataViewer from 'src/components/utilities/DataViewer.vue';
-import { arrayObjectUpdater, printArea } from 'src/utils/proccessor';
+import { arrayObjectUpdater, iCan, printArea } from 'src/utils/proccessor';
+import { adminPermissions, adminRoles } from 'app/repository/configs';
 
 const content = ref<HTMLElement | null>(null);
-const viewData = ref<ConversionCenter>({} as ConversionCenter);
+const viewData = ref<Vehicle>({} as Vehicle);
 const filter = ref('');
 
 const pagination = ref({
@@ -194,39 +275,41 @@ const {
   error,
   updateForm,
   loading: submiting,
-} = useForm(
-  (form) => conversionCenterCreateRequest(form, String(viewData.value.id)),
-  {
-    store: {
-      enable: true,
-      serializers: {
-        file: {
-          forward: (data) => (data instanceof File ? data.name : undefined),
-          backward: () => undefined,
-        },
+} = useForm((form) => userCreateRequest(form, String(viewData.value.id)), {
+  store: {
+    enable: true,
+    serializers: {
+      file: {
+        forward: (data) => (data instanceof File ? data.name : undefined),
+        backward: () => undefined,
       },
     },
-    initialForm: {
-      image: <File | undefined>undefined,
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      license_number: '',
-      officer: <PersonForm>{ name: '', email: '' },
-    },
   },
-).onSuccess(({ data: dat }) => {
+  initialForm: {
+    name: '',
+    type: <UserType>'dealer',
+    about: '',
+    email: '',
+    phone: '',
+    role_ids: [],
+    verified: false,
+    username: '',
+    permission_ids: [],
+    lastname: '',
+    firstname: '',
+    data: <UserData>{},
+  },
+}).onSuccess(({ data: dat }) => {
   notify(dat.message, dat.status);
   arrayObjectUpdater(data.value, dat.data);
 });
 
 const { data, page, loading, isLastPage, onSuccess } = usePagination(
   (page, limit) =>
-    conversionCentersRequest({
+    usersRequest({
       page,
       limit,
-      with: 'user,officer',
+      with: 'permissions,privileges',
     }),
   {
     append: true,
@@ -250,20 +333,21 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'name',
+    name: 'firstname',
     required: true,
-    label: 'Name',
+    label: 'Info',
     align: 'left',
     field: 'name',
     sortable: true,
   },
   {
-    name: 'license_number',
+    name: 'type',
     required: true,
-    label: 'License Number',
+    label: 'Type',
     align: 'left',
-    field: 'licenseNumber',
+    field: 'type',
     sortable: true,
+    classes: 'text-capitalize',
   },
   {
     name: 'createdAt',

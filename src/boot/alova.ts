@@ -12,6 +12,7 @@ import fetchAdapter from 'alova/fetch';
 import { notify } from 'src/utils/helpers';
 import { readEnv } from 'src/utils/helpers';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
+import { useGlobalStore } from 'src/stores/global-store';
 
 // declare module '@vue/runtime-core' {
 //   interface ComponentCustomProperties {
@@ -89,10 +90,12 @@ const responded = async (
   return new Promise((resolve, reject) => {
     if (response.status >= 400) {
       const message = (json.message || response.statusText || 'Unknown error') as string;
-      if (![422, 401, 403].includes(response.status)) {
-        notify(message, json.status || 'error');
-      } else if (response.status === 401) {
+      if (response.status === 401) {
         clearAuth()
+      } else if (response.status === 403) {
+        useGlobalStore().setError({ code: 403, message })
+      } else {
+        notify(message, json.status || 'error');
       }
 
       if (json.errors) {
@@ -133,7 +136,7 @@ const beforeRequest = (method: ResponseMethod, withCredentials?: boolean) => {
 // 1. Create an alova instance
 const alova = createAlova({
   baseURL: readEnv('baseURL'),
-  responded: onResponseRefreshToken(responded),
+  responded: onResponseRefreshToken(responded) as any,
   statesHook: VueHook,
   beforeRequest: onAuthRequired((method) => beforeRequest(method)),
   requestAdapter: fetchAdapter()
@@ -165,10 +168,12 @@ const axios = createAlova({
       if (response.status >= 400) {
         const message =
           response.data.message || response.statusText || 'Unknown error';
-        if (![422, 401, 403].includes(response.status)) {
-          notify(message, response.data.status || 'error');
-        } else if (response.status === 401) {
+        if (response.status === 401) {
           clearAuth()
+        } else if (response.status === 403) {
+          useGlobalStore().setError({ code: 403, message })
+        } else {
+          notify(message, response.data.status || 'error');
         }
       }
       if (response.data?.errors) {
@@ -188,7 +193,7 @@ const axios = createAlova({
         reject(response.data);
       });
     },
-  }),
+  }) as any,
 });
 
 export default boot(async ({ app, router }) => {

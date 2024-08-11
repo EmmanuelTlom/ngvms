@@ -15,7 +15,11 @@ export const loginRequest = (
     password: string,
     remember: boolean
   }) => {
-  const method = alova.Post<ResponseBody<User> & { token: string }>('/v1/auth/login', form);
+  const method = alova.Post<ResponseBody<User> & { token: string }>('/v1/auth/login', form, {
+    params: {
+      with: 'permissions'
+    }
+  });
   method.meta = {
     authRole: 'login'
   };
@@ -26,7 +30,7 @@ export const forgotPasswordRequest = (
   form: {
     email: string,
   }) => {
-  return alova.Post<ResponseBody<User>>('/v1/auth/forgot-password', form);
+  return alova.Post<ResponseBody<User> & { try_at: string }>('/v1/auth/forgot-password', form);
 };
 
 export const resetPasswordRequest = (
@@ -37,7 +41,7 @@ export const resetPasswordRequest = (
   },
   check: boolean = false
 ) => {
-  return alova.Post<ResponseBody<User>>(`/v1/auth/reset-password${check ? '/check-code' : ''}`, form);
+  return alova.Post<ResponseBody<User> & { try_at: string }>(`/v1/auth/reset-password${check ? '/check-code' : ''}`, form);
 };
 
 export const verificationRequest = (
@@ -46,7 +50,7 @@ export const verificationRequest = (
     _method?: 'POST' | 'PUT'
   },
   type: 'email' | 'phone') => {
-  const method = alova.Post<ResponseBody<User> & { reboot: boolean }>(`/v1/verify/with-code/${type}`, form);
+  const method = alova.Post<ResponseBody<User> & { reboot: boolean, try_at: string }>(`/v1/verify/with-code/${type}`, form);
   return method;
 };
 
@@ -59,7 +63,7 @@ export const registerRequest = (
     password: string,
     password_confirmation: string,
   }) => {
-  const method = alova.Post<ResponseBody<User> & { token: string }>('/v1/auth/register', form);
+  const method = alova.Post<ResponseBody<User> & { token: string, try_at: string }>('/v1/auth/register', form);
   method.meta = {
     authRole: 'login'
   };
@@ -101,7 +105,8 @@ type NotifResponseBody<T> = ResponseBody<T> & {
 export const notificationsRequest = (
   params?: GenericData,
 ) => {
-  return alova.Get<NotifResponseBody<Notification>>('/v1/account/notifications', {
+  type NX = Array<Notification>
+  return alova.Get<NotifResponseBody<Notification[]> & NX>('/v1/account/notifications', {
     params,
     cacheFor: 5 * 60
   });

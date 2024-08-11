@@ -18,7 +18,7 @@
                   :ratio="3 / 4"
                   position="center center"
                   :src="dataURL || data.imageUrl"
-                  :alt="form.identifier"
+                  :alt="data.name"
                 />
               </div>
               <q-btn
@@ -174,7 +174,6 @@
 import { useForm, useRequest } from 'alova/client';
 import ImageCropper from 'src/components/utilities/ImageCropper.vue';
 import { vehicleRequest, vehicleCreateRequest } from 'src/data/serviceRequests';
-import { useBootstrapStore } from 'src/stores/bootstrap-store';
 import { computed, ref, watch } from 'vue';
 import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
@@ -185,7 +184,6 @@ import { date, QForm } from 'quasar';
 const route = useRoute();
 const router = useRouter();
 const formRef = ref<QForm>();
-const everything = computed(() => useBootstrapStore().everything);
 
 const errors = computed(
   () => (error.value as unknown as RequestErrors)?.errors || {},
@@ -219,7 +217,7 @@ const {
     },
   },
   initialForm: {
-    image: undefined,
+    image: <File | undefined>undefined,
     type: '',
     make: '',
     color: '',

@@ -123,6 +123,7 @@
 
 <script setup>
 import axios from 'axios';
+import { readEnv } from 'src/utils/helpers';
 import { computed, onMounted, ref } from 'vue';
 
 let slide = ref(1);
@@ -197,23 +198,9 @@ const startCountAnimation = () => {
 let countFcn = async () => {
   try {
     const getAccreditedCenterCount = await axios.get(
-      `https://pci.gov.ng/restapi/center-count/`,
-      {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          Accept: 'application/json',
-          'Content-Type': 'application/json; charset=utf-8',
-          'Access-Control-Allow-Credentials': 'true',
-          Authorization: 'Bearer ' + '9dfb9104511c37746d3263d132659d3c',
-        },
-      },
+      readEnv('baseURL') + `v1/misc/center-count/`,
     );
-    // const getCenterCount = await axios.get(
-    //   `https://pci.gov.ng/restapi/center-count/`,
-    // );
-    // statsCountVehicles.value = countFacilityResponse.data.allPersonnels;
     statsCountAccreditedCenters.value = getAccreditedCenterCount.data.count;
-    // statsCountMotorcycles.value = countFacilityResponse.data.allfoodPersonnels;
     loading.value = true;
   } catch (error) {
     console.error(error);

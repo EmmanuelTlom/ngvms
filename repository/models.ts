@@ -69,8 +69,16 @@ export type Initialize = {
 
 export type Dashboard = {
   everything?: Everything,
+  users: number,
+  users_inc: number,
   vehicles: number,
   vehicles_inc: number,
+  total_conversions: number,
+  total_conversions_inc: number,
+  total_pending: number,
+  total_pending_inc: number,
+  verified_users: number,
+  verified_users_inc: number,
   filling_outlets: number,
   filling_outlets_inc: number,
   conversion_centers: number,
@@ -126,10 +134,20 @@ export type Configuration = {
   previews_on_save: boolean,
 }
 
+export type UserType = 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra' | 'finance' | 'insurance'
+export type UserData = {
+  ip?: string,
+  settings: {
+    notifications: {
+      email: boolean
+    }
+  }
+}
+
 export interface User {
   id: number;
   name: string;
-  type?: 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra';
+  type?: UserType;
   about: string;
   email: string,
   phone: string,
@@ -138,20 +156,31 @@ export interface User {
   username: string,
   imageUrl: string;
   permissions?: PriviPerm[];
-  fullname: string;
+  fullName: string;
+  lastName: string;
+  firstName: string;
   verifying: string;
-  userData: {
-    ip: string,
-    settings: {
-      notifications: {
-        email: boolean
-      }
-    }
-  },
+  userData: UserData,
   emailVerifiedAt: string;
   phoneVerifiedAt: string;
   updatedAt: string;
   createdAt: string;
+}
+
+export interface UserForm {
+  image?: File;
+  name: string;
+  type?: UserType;
+  roles?: string[];
+  about: string;
+  email: string,
+  phone: string,
+  verified: boolean;
+  username: string,
+  lastname?: string;
+  firstname?: string;
+  permissions?: string[];
+  data?: UserData,
 }
 
 export interface Person {
@@ -299,6 +328,7 @@ export interface FillingOutlet {
   email: string;
   phone: string;
   state: string;
+  status?: string;
   address: string;
   licenseNumber: string;
   inspectionOfficers: Person[];
@@ -312,6 +342,7 @@ export interface FillingOutletForm {
   email: string;
   phone: string;
   state: string;
+  status?: string;
   address: string;
   license_number: string;
   inspection_officers: PersonForm[];

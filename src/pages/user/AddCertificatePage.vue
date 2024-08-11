@@ -18,7 +18,6 @@
                   :ratio="3 / 4"
                   position="center center"
                   :src="dataURL || data.imageUrl"
-                  :alt="form.identifier"
                 />
               </div>
               <q-btn
@@ -250,7 +249,7 @@ const {
       },
     },
     initialForm: {
-      image: undefined,
+      image: <File | undefined>undefined,
       importer: '',
       dealer_id: 0,
       manufacturer: '',

@@ -92,13 +92,22 @@
 
                 <div class="input-box last active-grey">
                   <label class="input-label">User Type</label>
-                  <div class="row items-center justify-between no-wrap q-pr-sm">
+                  <div class="row items-center justify-start q-pr-sm">
                     <q-radio
                       v-model="form.type"
                       :key="x"
                       :val="x"
-                      :label="x.toUpperCase()"
-                      v-for="x in ['dealer', 'son', 'naddc', 'frsc', 'nmdpra']"
+                      :label="x.replace(':x', '').toUpperCase()"
+                      :disable="x.includes(':x')"
+                      v-for="x in [
+                        'dealer',
+                        'son',
+                        'naddc',
+                        'frsc',
+                        'nmdpra',
+                        'finance:x',
+                        'insurance:x',
+                      ]"
                     />
                   </div>
                 </div>

@@ -56,7 +56,7 @@
           </div>
 
           <div>
-            <h4 class="review_big">{{ user.fullname }}</h4>
+            <h4 class="review_big">{{ user.fullName }}</h4>
             <p class="transactsmall color">{{ user.email }}</p>
           </div>
         </div>

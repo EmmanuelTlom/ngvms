@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row items-center justify-between">
-      <h4 class="dashboardmain_text">SON's Data</h4>
+      <h4 class="dashboardmain_text">SON Data</h4>
       <div class="q-ml-md">
         <div class="search_inp">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -51,9 +51,10 @@
         </q-list>
       </q-btn-dropdown>
     </div>
-    <div class="stats_hold q-mt-md">
+    <div ref="content" class="stats_hold q-mt-md">
       <div class="q-mt-md">
         <q-table
+          hide-pagination
           :rows="data"
           :columns="columns"
           class="sort_tables"
@@ -62,15 +63,98 @@
           :loading="loading"
           v-model:pagination="pagination"
         >
-          <template v-slot:body-cell-view="props">
+          <template v-slot:body-cell-id="props">
+            <q-td :props="props" v-intersection="onIntersction">
+              <span>
+                {{ props.rowIndex + 1 }}
+              </span>
+            </q-td>
+          </template>
+
+          <template v-slot:body-cell-status="props">
             <q-td :props="props">
-              <q-btn
-                no-caps
-                no-wrap
-                @click="viewPictureOrDocument(props.row.picture)"
+              <q-chip
+                size="xs"
+                text-color="white"
+                :color="props.row.status ? 'green' : 'red '"
               >
-                View picture or document
-              </q-btn>
+                {{ props.row.status ? 'Approved' : 'Pending ' }}
+              </q-chip>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <div class="flex no-wrap q-gutter-x-sm">
+                <DataViewer
+                  v-model:form="form"
+                  v-model:errors="errors"
+                  v-model:saving="submiting"
+                  v-model:loading="loading"
+                  :exclusions="[
+                    'id',
+                    'user',
+                    'dealer',
+                    'imageUrl',
+                    'createdAt',
+                    'updatedAt',
+                    'inspectionOfficers',
+                  ]"
+                  @click:save="save"
+                  @dataUpdated="viewData = $event"
+                  @toggleDialog="
+                    (e) => updateForm({ ...e, dealer_id: e.dealer?.id })
+                  "
+                >
+                  <template #default="{ toggleDialog }">
+                    <q-btn
+                      dense
+                      color="info"
+                      icon="fas fa-expand"
+                      @click="toggleDialog(props.row, 'view')"
+                    />
+                    <q-btn
+                      dense
+                      color="primary"
+                      icon="edit"
+                      @click="toggleDialog(props.row, 'edit')"
+                    />
+                  </template>
+                  <template #list-append="{ viewData }">
+                    <UserCard
+                      title="Dealer"
+                      :person="viewData.dealer"
+                      v-if="viewData.dealer"
+                    />
+                    <UserCard
+                      :title="`Submited at ${date.formatDate(viewData.createdAt, 'DD/MM/YYYY')} by:`"
+                      :person="viewData.user"
+                      v-if="viewData.user"
+                    />
+                  </template>
+                  <template #list-after="{ viewData }">
+                    <q-list
+                      bordered
+                      separator
+                      v-if="viewData.inspectionOfficers"
+                    >
+                      <q-item-label class="q-py-xs" header>
+                        Inspection Officers
+                      </q-item-label>
+                      <UserCard
+                        :person="officer"
+                        :key="officer.id"
+                        v-for="officer in viewData.inspectionOfficers"
+                      />
+                    </q-list>
+                  </template>
+                </DataViewer>
+                <ContentRemover
+                  dense
+                  base-url="/v1/admin/certificates"
+                  :id="props.value"
+                  :list="data"
+                />
+              </div>
             </q-td>
           </template>
           <template v-slot:no-data="{ message }">
@@ -80,98 +164,83 @@
           </template>
         </q-table>
       </div>
-      <q-dialog v-model="viewDocumentsDialog">
-        <q-card class="card_img">
-          <div class="q-pa-md">
-            <div class="text-h6 text-weight-bold q-mb-sm">Documents</div>
-            <!-- <q-list bordered>
-              <q-item class="q-my-sm" clickable v-ripple>
-                <q-item-section avatar>
-                  <q-avatar color="primary" text-color="white">
-                    <img
-                      v-if="isImage(viewData.application.passport)"
-                      :src="
-                        viewData.application.passport
-                          ? viewData.application.passport
-                          : '/images/worklogo.png'
-                      "
-                      alt=""
-                    />
-                    <div v-else class="text-white">pdf</div>
-                  </q-avatar>
-                </q-item-section>
-
-                <q-item-section>
-                  <q-item-label>Picture / Document</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-btn no-caps no-wrap color="primary">
-                    View
-                    <q-popup-proxy
-                      cover
-                      class="proxy"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <div class="proxy_div">
-                        <template v-if="isImage(viewData.application.passport)">
-                          <img
-                            :src="viewData.application.passport"
-                            alt="Image"
-                          />
-                        </template>
-                        <template v-else>
-                          <iframe
-                            width="100%"
-                            height="500px"
-                            :src="viewData.application.passport"
-                            frameborder="0"
-                          ></iframe>
-                        </template>
-                      </div>
-                    </q-popup-proxy>
-                  </q-btn>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-            </q-list> -->
-          </div>
-        </q-card>
-      </q-dialog>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { exportFile, QTableProps, Notify } from 'quasar';
-import { usePagination } from 'alova/client';
-import { vehiclesRequest } from 'src/data/serviceRequests';
+import { computed, ref } from 'vue';
+import { exportFile, QTableProps, Notify, date } from 'quasar';
+import { useForm, usePagination } from 'alova/client';
+import {
+  certificateCreateRequest,
+  certificatesRequest,
+} from 'src/data/adminRequests';
 import html2pdf from 'html2pdf.js';
+import ContentRemover from 'src/components/utilities/ContentRemover.vue';
+import { PersonForm, RequestErrors, Certificate } from 'app/repository/models';
+import { notify } from 'src/utils/helpers';
+import UserCard from 'src/components/utilities/UserCard.vue';
+import DataViewer from 'src/components/utilities/DataViewer.vue';
+import { arrayObjectUpdater, printArea } from 'src/utils/proccessor';
 
-const viewPictureOrDocument = (p: string) => p;
-const viewDocumentsDialog = ref(false);
 const content = ref<HTMLElement | null>(null);
+const viewData = ref<Certificate>({} as Certificate);
 const filter = ref('');
 
-// let rows = ref([]);
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// type FormatFunction = (val: any) => string;
-
-// interface Row {
-//   [key: string]: any;
-// }
 const pagination = ref({
   rowsPerPage: 30,
 });
 
-const { data, loading, onSuccess } = usePagination(
+const onIntersction = (e: IntersectionObserverEntry): boolean => {
+  if (loading.value || isLastPage.value || !e.isIntersecting) return false;
+
+  page.value++;
+  return true;
+};
+
+const errors = computed(
+  () => (error.value as unknown as RequestErrors)?.errors || {},
+);
+
+const {
+  form,
+  send: save,
+  error,
+  updateForm,
+  loading: submiting,
+} = useForm(
+  (form) => certificateCreateRequest(form, String(viewData.value.id)),
+  {
+    store: {
+      enable: true,
+      serializers: {
+        file: {
+          forward: (data) => (data instanceof File ? data.name : undefined),
+          backward: () => undefined,
+        },
+      },
+    },
+    initialForm: {
+      image: undefined,
+      importer: '',
+      dealer_id: 0,
+      manufacturer: '',
+      kit_serial_number: '',
+      inspection_officers: <PersonForm[]>[],
+    },
+  },
+).onSuccess(({ data: dat }) => {
+  notify(dat.message, dat.status);
+  arrayObjectUpdater(data.value, dat.data);
+});
+
+const { data, page, loading, isLastPage, onSuccess } = usePagination(
   (page, limit) =>
-    vehiclesRequest({
+    certificatesRequest({
       page,
       limit,
-      with: 'storageDealership,conversionCenter,fillingOutlet,financialServiceProvider,Certificate,verificationCenter',
+      with: 'dealer,user',
     }),
   {
     append: true,
@@ -189,52 +258,17 @@ const columns: QTableProps['columns'] = [
   {
     name: 'id',
     required: true,
-    label: 'ID',
+    label: 'S/N',
     align: 'left',
     field: 'id',
-    // field: (row, index) => console.log(row, index),
-    sortable: true,
-  },
-
-  {
-    name: 'picture',
-    required: true,
-    label: 'Picture or Document',
-    align: 'left',
-    field: 'picture',
     sortable: true,
   },
   {
-    name: 'kits_serial_number',
+    name: 'kit_serial_number',
     required: true,
-    label: 'Kits serial number',
+    label: 'Kit Serial Number',
     align: 'left',
-    field: 'kits_serial_number',
-    sortable: true,
-  },
-  {
-    name: 'tank_serial_number',
-    required: true,
-    label: 'CNG tank serial number',
-    align: 'left',
-    field: 'tank_serial_number',
-    sortable: true,
-  },
-
-  {
-    name: 'dealer',
-    required: true,
-    label: 'Dealer allocated to',
-    align: 'left',
-    field: 'dealer',
-    sortable: true,
-  },
-  {
-    name: 'importer',
-    required: true,
-    label: 'Importer',
-    align: 'left',
-    field: 'importer',
+    field: 'kitSerialNumber',
     sortable: true,
   },
   {
@@ -246,21 +280,29 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'nameof_inspection_officers',
+    name: 'created_at',
     required: true,
-    label: 'Name of inspection officers',
+    label: 'Added On',
     align: 'left',
-    field: 'nameof_inspection_officers',
+    field: (row) => date.formatDate(row.createdAt, 'DD/MM/YYYY'),
     sortable: true,
   },
-
   {
-    name: 'view',
+    name: 'status',
     required: true,
-    label: 'View Picture',
+    label: 'Status',
+    align: 'center',
+    field: 'status',
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    classes: 'print-hide',
+    headerClasses: 'print-hide',
+    required: true,
+    label: 'Actions',
     align: 'left',
-    field: 'view',
-    // field: (row, index) => console.log(row, index),
+    field: 'id',
     sortable: true,
   },
 ];
@@ -318,7 +360,10 @@ const exportToPdf = (): void => {
     console.error('Content element not found');
     return;
   }
-  const element = content.value as HTMLElement;
+  const element = content.value.cloneNode(true) as HTMLElement;
+  element.querySelectorAll('.print-hide').forEach((el) => {
+    (el as HTMLElement).style.display = 'none';
+  });
   // Select sections to omit from the PDF using querySelectorAll
   // const sectionsToOmit = element.querySelectorAll('.omit-from-pdf');
 
@@ -355,8 +400,19 @@ const exportToPdf = (): void => {
     });
 };
 const printPageFCN = () => {
-  window.print();
+  printArea(content.value as HTMLElement);
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.card_img {
+  min-width: 550px;
+}
+
+.input-box.active-grey {
+  border: 1px solid #d5d5d5;
+  background-color: #f5f6fa;
+  border-radius: 4px;
+  padding: 5px;
+}
+</style>

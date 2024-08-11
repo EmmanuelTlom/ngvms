@@ -1,7 +1,7 @@
 <template>
   <select v-model="modelValue">
     <option :value="data.id" :key="i" v-for="(data, i) in places">
-      {{ data.fullname }}
+      {{ data.fullName }}
     </option>
   </select>
 </template>

@@ -18,7 +18,7 @@
                   :ratio="3 / 4"
                   position="center center"
                   :src="dataURL || data.imageUrl"
-                  :alt="form.identifier"
+                  :alt="data.name"
                 />
               </div>
               <q-btn
@@ -240,7 +240,7 @@ const {
       },
     },
     initialForm: {
-      image: undefined,
+      image: <File | undefined>undefined,
       name: '',
       email: '',
       phone: '',

@@ -45,7 +45,7 @@
     <div ref="content">
       <q-table
         hide-pagination
-        title="Refueling Stations"
+        title="Conversion Kits"
         class="sort_tables coupon"
         row-key="id"
         :rows="data"
@@ -72,67 +72,26 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <div class="flex no-wrap q-gutter-x-sm">
-              <DataViewer
-                :exclusions="[
-                  'id',
-                  'user',
-                  'imageUrl',
-                  'createdAt',
-                  'updatedAt',
-                  'inspectionOfficers',
-                ]"
-              >
-                <template #default="{ toggleDialog }">
-                  <q-btn
-                    dense
-                    color="info"
-                    icon="fas fa-expand"
-                    @click="toggleDialog(props.row, 'view')"
-                  />
-                </template>
-                <template #list-append="{ viewData }">
-                  <UserCard
-                    title="Imported By:"
-                    :person="viewData.importer"
-                    v-if="viewData.importer"
-                  />
-                </template>
-                <template #list-after="{ viewData }">
-                  <q-list bordered separator v-if="viewData.inspectionOfficers">
-                    <q-item-label class="q-py-xs" header>
-                      Inspection Officers
-                    </q-item-label>
-                    <UserCard
-                      :person="officer"
-                      :key="officer.id"
-                      v-for="officer in viewData.inspectionOfficers"
-                    />
-                  </q-list>
-                  <div class="flex flex-col justify-center q-mt-md">
-                    <q-btn
-                      dense
-                      color="primary"
-                      label="Edit"
-                      :icon="
-                        date.getDateDiff(
-                          new Date(),
-                          new Date(props.row.createdAt),
-                          'hours',
-                        ) > 24
-                          ? 'fas fa-expand'
-                          : 'edit'
-                      "
-                      :to="{
-                        name: 'user.add.stations',
-                        params: { station_id: props.value },
-                      }"
-                    />
-                  </div>
-                </template>
-              </DataViewer>
+              <q-btn
+                dense
+                color="primary"
+                :icon="
+                  date.getDateDiff(
+                    new Date(),
+                    new Date(props.row.createdAt),
+                    'hours',
+                  ) > 24
+                    ? 'fas fa-expand'
+                    : 'edit'
+                "
+                :to="{
+                  name: 'user.add.kit',
+                  params: { kit_id: props.value },
+                }"
+              />
               <ContentRemover
                 dense
-                base-url="/v1/user/filling-outlets"
+                base-url="/v1/user/conversion-kits"
                 :disable="
                   date.getDateDiff(
                     new Date(),
@@ -170,11 +129,9 @@ import { ref } from 'vue';
 import { exportFile, QTableProps, date, Notify } from 'quasar';
 import { usePagination } from 'alova/client';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
-import { fillingOutletsRequest } from 'src/data/serviceRequests';
+import { conversionKitsRequest } from 'src/data/serviceRequests';
 import html2pdf from 'html2pdf.js';
 import { printArea } from 'src/utils/proccessor';
-import DataViewer from 'src/components/utilities/DataViewer.vue';
-import UserCard from 'src/components/utilities/UserCard.vue';
 
 const content = ref<HTMLElement | null>(null);
 
@@ -188,9 +145,10 @@ const onIntersction = (e: IntersectionObserverEntry): boolean => {
   page.value++;
   return true;
 };
+
 const { data, page, loading, isLastPage, onSuccess } = usePagination(
   (page, limit) =>
-    fillingOutletsRequest({
+    conversionKitsRequest({
       page,
       limit,
     }),
@@ -216,23 +174,31 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'license_number',
+    name: 'name',
     required: true,
-    label: 'License Number',
+    label: 'Name',
     align: 'left',
-    field: 'licenseNumber',
+    field: 'name',
     sortable: true,
   },
   {
-    name: 'state',
+    name: 'serial_number',
     required: true,
-    label: 'State',
+    label: 'Serial Number',
     align: 'left',
-    field: 'state',
+    field: 'serialNumber',
     sortable: true,
   },
   {
-    name: 'created_at',
+    name: 'manufacturer',
+    required: true,
+    label: 'Manufacturer',
+    align: 'left',
+    field: 'manufacturer',
+    sortable: true,
+  },
+  {
+    name: 'createdAt',
     required: true,
     label: 'Added On',
     align: 'left',

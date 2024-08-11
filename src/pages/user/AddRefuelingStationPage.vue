@@ -15,10 +15,9 @@
             <div class="column justify-center items-center">
               <div style="width: 5em">
                 <q-img
-                  :ratio="3 / 4"
                   position="center center"
+                  :ratio="3 / 4"
                   :src="dataURL || data.imageUrl"
-                  :alt="form.identifier"
                 />
               </div>
               <q-btn
@@ -282,7 +281,7 @@ const {
       },
     },
     initialForm: {
-      image: undefined,
+      image: <File | undefined>undefined,
       lga: '',
       email: '',
       phone: '',

@@ -18,7 +18,7 @@
                   :ratio="3 / 4"
                   position="center center"
                   :src="dataURL || data.imageUrl"
-                  :alt="form.identifier"
+                  :alt="data.name"
                 />
               </div>
               <q-btn
@@ -122,8 +122,8 @@
                     color="primary"
                     text-color="white"
                     :key="i"
-                    :label="isNaN(item) ? item.name : item"
-                    :title="isNaN(item) ? item.name : item"
+                    :label="typeof item !== 'number' ? item.name : item"
+                    :title="typeof item !== 'number' ? item.name : item"
                     @update:model-value="form.supplied_centers_ids.splice(i, 1)"
                     v-for="(item, i) in form.supplied_centers_ids"
                   />
@@ -261,7 +261,7 @@ const {
     },
   },
   initialForm: {
-    image: undefined,
+    image: <File | undefined>undefined,
     name: '',
     description: '',
     manufacturer: '',
