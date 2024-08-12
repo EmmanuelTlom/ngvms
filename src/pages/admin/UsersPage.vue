@@ -82,14 +82,28 @@
             </q-td>
           </template>
 
-          <template v-slot:body-cell-status="props">
+          <template v-slot:body-cell-verified="props">
             <q-td :props="props">
               <q-chip
                 size="xs"
                 text-color="white"
-                :color="props.row.status ? 'green' : 'red '"
+                :color="props.row.verified ? 'green' : 'red '"
               >
-                {{ props.row.status ? 'Approved' : 'Pending ' }}
+                <q-checkbox
+                  dense
+                  size="xs"
+                  :model-value="props.row.verified"
+                  @update:model-value="
+                    () => {
+                      props.row.verified = !props.row.verified;
+                      form = props.row;
+                      viewData = props.row;
+                      save();
+                    }
+                  "
+                />
+                &nbsp;
+                {{ props.row.verified ? 'Verified' : 'Unverified ' }}
               </q-chip>
             </q-td>
           </template>
@@ -238,12 +252,7 @@ import { useForm, usePagination } from 'alova/client';
 import { userCreateRequest, usersRequest } from 'src/data/adminRequests';
 import html2pdf from 'html2pdf.js';
 import ContentRemover from 'src/components/utilities/ContentRemover.vue';
-import {
-  RequestErrors,
-  UserData,
-  UserType,
-  Vehicle,
-} from 'app/repository/models';
+import { RequestErrors, UserData, UserType, User } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
 import UserCard from 'src/components/utilities/UserCard.vue';
 import DataViewer from 'src/components/utilities/DataViewer.vue';
@@ -252,7 +261,7 @@ import { adminPermissions, adminRoles } from 'app/repository/configs';
 
 const filter = ref('');
 const content = ref<HTMLElement | null>(null);
-const viewData = ref<Vehicle>({} as Vehicle);
+const viewData = ref<User>({} as User);
 
 const pagination = ref({
   rowsPerPage: 30,
@@ -360,11 +369,11 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   {
-    name: 'status',
+    name: 'verified',
     required: true,
-    label: 'Status',
+    label: 'Verified',
     align: 'center',
-    field: 'status',
+    field: 'verified',
     sortable: true,
   },
   {

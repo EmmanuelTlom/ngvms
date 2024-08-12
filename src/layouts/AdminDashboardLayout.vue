@@ -280,6 +280,7 @@
               </q-item>
             </q-list>
           </q-expansion-item>
+           -->
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
@@ -300,7 +301,7 @@
               >
                 <q-item-section> Configuration Options </q-item-section>
               </q-item>
-              <q-item :inset-level="0.05" clickable v-ripple>
+              <!-- <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Integration Management </q-item-section>
               </q-item>
               <q-item :inset-level="0.05" clickable v-ripple>
@@ -308,9 +309,9 @@
               </q-item>
               <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Themes and Preferences</q-item-section>
-              </q-item>
+              </q-item> -->
             </q-list>
-          </q-expansion-item> -->
+          </q-expansion-item>
 
           <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>
             <q-item-section avatar>

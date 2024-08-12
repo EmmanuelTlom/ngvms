@@ -361,7 +361,7 @@ export const userCreateRequest = (
     email: form.email,
     phone: form.phone,
     roles: form.roles,
-    verified: form.verified,
+    verified: form.verified ? 1 : 0,
     username: form.username,
     permissions: form.permissions,
     lastname: form.lastname,
@@ -369,7 +369,7 @@ export const userCreateRequest = (
     data: form.data,
     _method: id ? 'PUT' : 'POST'
   }
-
+  console.log(fm)
   const method = axios.Post<ResponseBody<User>>(`/v1/admin/users${id ? '/' + id : ''}`, fm, {
     name: 'updateUser',
   });
