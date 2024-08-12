@@ -10,12 +10,13 @@
             map-options
             hide-selected
             v-bind="$attrs"
-            @update:model-value="emitSelectedValues"
             v-model="value"
             input-debounce="0"
             option-value="id"
             option-label="name"
+            :loading="loading"
             :options="centers.data"
+            @update:model-value="emitSelectedValues"
             @filter="filterFn"
             @focus="hideSelected = true"
             @blur="hideSelected = false"

@@ -35,13 +35,17 @@
           <q-form ref="formRef" @submit.prevent="send">
             <div class="input_wrap">
               <label for="">Dealer</label>
-              <div class="input">
-                <UserSelector required v-model="form.dealer_id" />
-              </div>
-
-              <span class="error-message" v-if="errors.importer">
-                {{ errors.importer }}
-              </span>
+              <UserSelector
+                square
+                required
+                outlined
+                hide-bottom-space
+                padding="none"
+                bg-color="sky-1"
+                v-model="form.dealer_id"
+                :error="!!errors.importer"
+                :error-message="errors.importer"
+              />
             </div>
 
             <div class="grid">
