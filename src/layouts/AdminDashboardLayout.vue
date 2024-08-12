@@ -9,12 +9,12 @@
           >
             <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-            <div class="q-ml-md">
+            <!-- <div class="q-ml-md">
               <div class="search_inp">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search" />
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -149,15 +149,15 @@
               >
                 <q-item-section> User Accounts </q-item-section>
               </q-item>
-              <q-item :inset-level="0.05" clickable v-ripple>
+              <!-- <q-item clickable v-ripple>
                 <q-item-section> Role Management </q-item-section>
               </q-item>
               <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Activity Logs </q-item-section>
-              </q-item>
+              </q-item> -->
             </q-list>
           </q-expansion-item>
-          <q-expansion-item>
+          <!-- <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
@@ -305,7 +305,7 @@
                 <q-item-section> Themes and Preferences</q-item-section>
               </q-item>
             </q-list>
-          </q-expansion-item>
+          </q-expansion-item> -->
 
           <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>
             <q-item-section avatar>
