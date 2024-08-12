@@ -3,7 +3,7 @@
     <div class="q-mt-lg">
       <h4 class="dashboardmain_text">Add Conversion Kit</h4>
     </div>
-
+    <!-- {{ form }} -->
     <div class="add_manager">
       <div class="container">
         <ImageCropper
@@ -99,6 +99,7 @@
                 {{ errors.description }}
               </span>
             </div>
+            <!-- {{ form.supplied_centers_ids.length }} -->
 
             <div
               class="text-grey-3 q-pa-md input_wrap"
