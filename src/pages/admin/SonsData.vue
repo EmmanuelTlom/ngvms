@@ -9,7 +9,18 @@
         </div>
       </div>
     </div>
-    <div class="row q-mt-lg justify-end">
+    <div class="row q-mt-lg justify-end q-gutter-x-sm">
+      <q-btn
+        label="Create New"
+        color="secondary"
+        style="
+          min-height: auto;
+          padding: 5px 10px;
+          border-radius: 8px;
+          border-image-source: none;
+        "
+        :to="{ name: 'admin.add.certificate' }"
+      />
       <q-btn-dropdown
         no-caps
         color="primary"
@@ -55,10 +66,10 @@
       <div class="q-mt-md">
         <q-table
           hide-pagination
-          :rows="data"
-          :columns="columns"
           class="sort_tables"
           row-key="id"
+          :rows="data"
+          :columns="columns"
           :filter="filter"
           :loading="loading"
           v-model:pagination="pagination"
@@ -184,9 +195,9 @@ import UserCard from 'src/components/utilities/UserCard.vue';
 import DataViewer from 'src/components/utilities/DataViewer.vue';
 import { arrayObjectUpdater, printArea } from 'src/utils/proccessor';
 
+const filter = ref('');
 const content = ref<HTMLElement | null>(null);
 const viewData = ref<Certificate>({} as Certificate);
-const filter = ref('');
 
 const pagination = ref({
   rowsPerPage: 30,
@@ -241,12 +252,14 @@ const { data, page, loading, isLastPage, onSuccess } = usePagination(
       page,
       limit,
       with: 'dealer,user',
+      search: filter.value,
     }),
   {
     append: true,
     total: (e) => e?.meta?.total,
     initialData: { data: [] },
     initialPageSize: 30,
+    watchingStates: [filter],
   },
 );
 

@@ -1,6 +1,7 @@
-import { Configuration, Initialize, PriviPerm, PriviRole, ResponseBody, User } from 'repository/models';
+import { Initialize, PriviPerm, PriviRole, ResponseBody, User } from 'repository/models';
 import { RouteLocationNormalized, Router } from 'vue-router';
 
+import { Configuration } from 'app/repository/configs';
 import { alova } from 'src/boot/alova';
 import { finder } from '@medv/finder'
 import { invalidateCache } from 'alova';

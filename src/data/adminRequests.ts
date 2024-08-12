@@ -1,4 +1,5 @@
 import { Certificate, CertificateForm, ConversionCenter, ConversionCenterForm, ConversionKit, ConversionKitForm, Dashboard, FillingOutlet, FillingOutletForm, GenericData, ResponseBody, User, UserForm, Vehicle, VehicleForm } from 'app/repository/models';
+import { Configuration, ConfigurationGroup } from 'app/repository/configs';
 import { alova, axios } from 'src/boot/alova';
 
 export const dashboardRequest = (
@@ -54,7 +55,7 @@ export const vehicleRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/admin/vehicles/${id}`, {
+  return alova.Get(`/v1/admin/vehicles/${id}`, {
     params,
     name: 'getVehicle',
     transform: (e: ResponseBody<Vehicle>) => e.data
@@ -70,7 +71,7 @@ export const vehicleRequest = (
 export const vehiclesRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<Vehicle[]>>('/v1/admin/vehicles', {
+  return alova.Get<ResponseBody<Vehicle[]>>('/v1/admin/vehicles', {
     params,
     name: 'getVehicles',
   });
@@ -121,7 +122,7 @@ export const fillingOutletRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/admin/filling-outlets/${id}`, {
+  return alova.Get(`/v1/admin/filling-outlets/${id}`, {
     params,
     name: 'getFillingOutlet',
     transform: (e: ResponseBody<FillingOutlet>) => e.data
@@ -137,7 +138,7 @@ export const fillingOutletRequest = (
 export const fillingOutletsRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<FillingOutlet[]>>('/v1/admin/filling-outlets', {
+  return alova.Get<ResponseBody<FillingOutlet[]>>('/v1/admin/filling-outlets', {
     params,
     name: 'getFillingOutlet',
   });
@@ -186,7 +187,7 @@ export const certificateRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/admin/certificates/${id}`, {
+  return alova.Get(`/v1/admin/certificates/${id}`, {
     params,
     name: 'getCertificate',
     transform: (e: ResponseBody<Certificate>) => e.data
@@ -202,7 +203,7 @@ export const certificateRequest = (
 export const certificatesRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<Certificate[]>>('/v1/admin/certificates', {
+  return alova.Get<ResponseBody<Certificate[]>>('/v1/admin/certificates', {
     params,
     name: 'getCertificate',
   });
@@ -251,7 +252,7 @@ export const conversionCenterRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/admin/conversion-centers/${id}`, {
+  return alova.Get(`/v1/admin/conversion-centers/${id}`, {
     params,
     name: 'getConversionCenter',
     transform: (e: ResponseBody<ConversionCenter>) => e.data
@@ -269,7 +270,7 @@ export const conversionCentersRequest = (
   guest?: boolean
 ) => {
   const url = !guest ? '/v1/admin/conversion-centers' : '/v1/conversion-centers'
-  return axios.Get<ResponseBody<ConversionCenter[]>>(url, {
+  return alova.Get<ResponseBody<ConversionCenter[]>>(url, {
     params,
     name: 'getConversionCenter',
   });
@@ -318,7 +319,7 @@ export const conversionKitRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/admin/conversion-kits/${id}`, {
+  return alova.Get(`/v1/admin/conversion-kits/${id}`, {
     params,
     name: 'getConversionKit',
     transform: (e: ResponseBody<ConversionKit>) => e.data
@@ -334,7 +335,7 @@ export const conversionKitRequest = (
 export const conversionKitsRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<ConversionKit[]>>('/v1/admin/conversion-kits', {
+  return alova.Get<ResponseBody<ConversionKit[]>>('/v1/admin/conversion-kits', {
     params,
     name: 'getConversionKit',
   });
@@ -388,7 +389,7 @@ export const userRequest = (
   id?: string | string[],
   params?: GenericData
 ) => {
-  return axios.Get(`/v1/admin/users/${id}`, {
+  return alova.Get(`/v1/admin/users/${id}`, {
     params,
     name: 'getUser',
     transform: (e: ResponseBody<User>) => e.data
@@ -404,8 +405,46 @@ export const userRequest = (
 export const usersRequest = (
   params?: GenericData
 ) => {
-  return axios.Get<ResponseBody<User[]>>('/v1/admin/users', {
+  return alova.Get<ResponseBody<User[]>>('/v1/admin/users', {
     params,
     name: 'getUser',
+  });
+};
+
+
+/**
+ * Save configuration
+ *
+ * @param form
+ * @returns
+ */
+export const configSaveRequest = (
+  form: Configuration & { _method?: 'POST' | 'PUT' },
+) => {
+
+  const method = axios.Post<ResponseBody<ConfigurationGroup> & { config: Configuration }>(`/v1/admin/configurations`, form, {
+    name: 'updateConfiguration',
+    params: {
+      group: 1
+    }
+  });
+
+  method.config.headers['Content-Type'] = 'multipart/form-data'
+
+  return method
+};
+
+/**
+ * Fetch all Configuration
+ *
+ * @returns
+ */
+export const configRequest = () => {
+  return alova.Get('/v1/admin/configurations', {
+    name: 'getUser',
+    transform: (e: ResponseBody<ConfigurationGroup>) => e.data,
+    params: {
+      group: 1
+    },
   });
 };

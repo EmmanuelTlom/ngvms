@@ -9,7 +9,18 @@
         </div>
       </div>
     </div>
-    <div class="row q-mt-lg justify-end">
+    <div class="row q-mt-lg justify-end q-gutter-x-sm">
+      <q-btn
+        label="Create New"
+        color="secondary"
+        style="
+          min-height: auto;
+          padding: 5px 10px;
+          border-radius: 8px;
+          border-image-source: none;
+        "
+        :to="{ name: 'admin.add.station' }"
+      />
       <q-btn-dropdown
         no-caps
         color="primary"
@@ -240,12 +251,14 @@ const { data, page, loading, isLastPage, onSuccess } = usePagination(
       page,
       limit,
       with: 'user',
+      search: filter.value,
     }),
   {
     append: true,
     total: (e) => e.meta?.total,
     initialData: { data: [] },
     initialPageSize: 30,
+    watchingStates: [filter],
   },
 );
 

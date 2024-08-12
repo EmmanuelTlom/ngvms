@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="greyBack authLayout" view="lHh lpR fFf">
+  <q-layout class="greyBack authLayout" view="lHh Lpr lff">
     <q-header reveal style="width: auto" class="header bg-white">
       <div class="row justify-between no-wrap">
         <div style="gap: 3rem" class="left row no-wrap items-center">
@@ -69,19 +69,9 @@
       </div>
     </q-header>
 
-    <q-drawer
-      :width="240"
-      v-model="leftDrawerOpen"
-      show-if-above
-      side="left"
-      bordered
-    >
+    <q-drawer :width="240" v-model="leftDrawerOpen" show-if-above side="left">
       <!-- drawer content -->
-      <q-scroll-area class="fit">
-        <div class="logo q-pa-lg row items-center">
-          <img src="/images/logo.svg" alt="" />
-        </div>
-
+      <q-scroll-area style="height: calc(100% - 86px); margin-top: 86px">
         <q-list padding class="menu-list">
           <q-item :to="{ name: 'admin.dashboard' }" clickable v-ripple>
             <q-item-section avatar>
@@ -94,199 +84,241 @@
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-bubble-chart-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2"
                     >Data Management</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item :to="{ name: 'admin.son.data' }" clickable v-ripple>
+            <q-list>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'admin.son.data' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> SON </q-item-section>
               </q-item>
-              <q-item :to="{ name: 'admin.naddc.data' }" clickable v-ripple>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'admin.naddc.data' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> NADDC </q-item-section>
               </q-item>
-              <q-item :to="{ name: 'admin.frsc.data' }" clickable v-ripple>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'admin.frsc.data' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> FRSC </q-item-section>
               </q-item>
-              <q-item :to="{ name: 'admin.nmdpra.data' }" clickable v-ripple>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'admin.nmdpra.data' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> NMDPRA </q-item-section>
               </q-item>
-              <q-item :to="{ name: 'admin.dealer.data' }" clickable v-ripple>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'admin.dealer.data' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> Dealers </q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-group-2-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2"
                     >User Management</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
+            <q-list class="q-px-md">
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'admin.users' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> User Accounts </q-item-section>
               </q-item>
               <!-- <q-item clickable v-ripple>
                 <q-item-section> Role Management </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Activity Logs </q-item-section>
               </q-item> -->
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <!-- <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-car-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2">
                     Vehicle Management</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+            <q-list class="q-px-md">
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Vehicle Registration </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Vehicle Database </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Documentation Management </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Service History </q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-pin-distance-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2">
                     Monitoring and Tracking</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+            <q-list>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Real-Time Tracking </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Route History </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Fuel Consumption </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Emissions Monitoring </q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-alarm-warning-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2">
                     Alerts and Notifications</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+            <q-list>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Service Reminders </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Compliance Alerts </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Emergency Notifications </q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-database-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2">
                     Data Management</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+            <q-list>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Centralized Database </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Search and Filter </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Data Export/Import </q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-questionnaire-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2">
                     Support and Helpdesk</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+            <q-list>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> User Support </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> FAQ and Documentation </q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item>
           <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
-                  <i class="ri-copper-coin-line text-h5"></i>
+                  <i class="ri-settings-line text-h5"></i>
                   <span style="font-size: 14px" class="text-body2">
                     System Settings</span
                   >
                 </div>
               </div>
             </template>
-            <q-card class="q-px-md">
-              <q-item clickable v-ripple>
+            <q-list>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'gen.settings' }"
+                clickable
+                v-ripple
+              >
                 <q-item-section> Configuration Options </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Integration Management </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Widgets and Layouts</q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item :inset-level="0.05" clickable v-ripple>
                 <q-item-section> Themes and Preferences</q-item-section>
               </q-item>
-            </q-card>
+            </q-list>
           </q-expansion-item> -->
 
+          <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>
+            <q-item-section avatar>
+              <i class="ri-user-received-2-line"></i>
+            </q-item-section>
+
+            <q-item-section> User Dashboard </q-item-section>
+          </q-item>
           <!-- <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-layout-grid-line"></i>
@@ -333,6 +365,17 @@
           </q-item>
         </q-list>
       </q-scroll-area>
+      <div class="absolute-top bg-white" style="height: 86px">
+        <div class="absolute-bottom bg-transparent">
+          <!-- <q-avatar size="56px" class="q-mb-sm">
+            <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          </q-avatar> -->
+          <div class="logo q-pa-lg row items-center">
+            <img src="/images/logo.svg" alt="" />
+          </div>
+          <q-separator />
+        </div>
+      </div>
     </q-drawer>
 
     <q-page-container>

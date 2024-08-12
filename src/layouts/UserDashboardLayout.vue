@@ -166,7 +166,6 @@
       v-model="leftDrawerOpen"
       side="left"
       :breakpoint="600"
-      bordered
     >
       <!-- drawer content -->
       <q-scroll-area class="fit">
@@ -183,14 +182,14 @@
           </q-item>
           <q-item :to="{ name: endpoints.add }" clickable v-ripple>
             <q-item-section avatar>
-              <i class="ri-wallet-2-line"></i>
+              <i class="ri-function-add-line"></i>
             </q-item-section>
 
             <q-item-section> Add Data </q-item-section>
           </q-item>
           <q-item :to="{ name: endpoints.list }" clickable v-ripple>
             <q-item-section avatar>
-              <i class="ri-user-search-line"></i>
+              <i class="ri-history-line"></i>
             </q-item-section>
 
             <q-item-section> My History </q-item-section>
@@ -201,6 +200,18 @@
             </q-item-section>
 
             <q-item-section> Profile </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-ripple
+            :to="{ name: 'admin.dashboard' }"
+            v-if="iCan()"
+          >
+            <q-item-section avatar>
+              <i class="ri-dashboard-line"></i>
+            </q-item-section>
+
+            <q-item-section> Admin Dashboard </q-item-section>
           </q-item>
           <q-item :to="{ name: 'user.logout' }" clickable v-ripple>
             <q-item-section avatar>

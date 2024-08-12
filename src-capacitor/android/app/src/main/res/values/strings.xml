@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NGVMS</string>
+    <string name="title_activity_main">NGVMS</string>
+    <string name="package_name">org.lyt24.ngvms.app</string>
+    <string name="custom_url_scheme">org.lyt24.ngvms.app</string>
+</resources>

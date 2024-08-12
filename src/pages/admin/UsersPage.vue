@@ -250,9 +250,9 @@ import DataViewer from 'src/components/utilities/DataViewer.vue';
 import { arrayObjectUpdater, iCan, printArea } from 'src/utils/proccessor';
 import { adminPermissions, adminRoles } from 'app/repository/configs';
 
+const filter = ref('');
 const content = ref<HTMLElement | null>(null);
 const viewData = ref<Vehicle>({} as Vehicle);
-const filter = ref('');
 
 const pagination = ref({
   rowsPerPage: 30,
@@ -310,12 +310,14 @@ const { data, page, loading, isLastPage, onSuccess } = usePagination(
       page,
       limit,
       with: 'permissions,privileges',
+      search: filter.value,
     }),
   {
     append: true,
     total: (e) => e.meta?.total,
     initialData: { data: [] },
     initialPageSize: 30,
+    watchingStates: [filter],
   },
 );
 

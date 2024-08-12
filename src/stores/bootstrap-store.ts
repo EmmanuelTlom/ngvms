@@ -1,6 +1,7 @@
-import { Configuration, Everything, PriviPerm, PriviRole, User } from 'repository/models';
+import { Everything, PriviPerm, PriviRole, User } from 'repository/models';
 import { defineStore } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
+import { Configuration } from 'app/repository/configs';
 
 export const useBootstrapStore = defineStore('bootstrap', {
   state: () => ({
