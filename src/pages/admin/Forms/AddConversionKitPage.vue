@@ -115,7 +115,28 @@
                     bg-color="sky-1"
                     v-model="form.supplied_centers_ids"
                   />
-                  <q-chip
+                  <div
+                    v-if="
+                      supppliedCentersSelectedValues.length &&
+                      supppliedCentersSelectedValues[0] !== null
+                    "
+                  >
+                    <q-chip
+                      dense
+                      square
+                      removable
+                      color="primary"
+                      text-color="white"
+                      :key="i"
+                      :label="typeof item !== 'number' ? item?.name : item"
+                      :title="typeof item !== 'number' ? item?.name : item"
+                      @update:model-value="
+                        supppliedCentersSelectedValues.splice(i, 1)
+                      "
+                      v-for="(item, i) in supppliedCentersSelectedValues"
+                    />
+                  </div>
+                  <!-- <q-chip
                     dense
                     square
                     removable
@@ -126,7 +147,7 @@
                     :title="typeof item !== 'number' ? item?.name : item"
                     @update:model-value="form.supplied_centers_ids.splice(i, 1)"
                     v-for="(item, i) in form.supplied_centers_ids"
-                  />
+                  /> -->
                 </div>
 
                 <span class="error-message" v-if="errors.supplied_centers_ids">
@@ -228,7 +249,11 @@ import ConversionCenterSelector from 'src/components/utilities/ConversionCenterS
 const route = useRoute();
 const router = useRouter();
 const formRef = ref<QForm>();
+const supppliedCentersSelectedValues = ref<Array<ConversionCenter>>([]);
 
+function handleSelectionChange(value: ConversionCenter[]) {
+  supppliedCentersSelectedValues.value = value;
+}
 const errors = computed(
   () => (error.value as unknown as RequestErrors)?.errors || {},
 );
