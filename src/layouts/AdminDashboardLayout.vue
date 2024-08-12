@@ -129,15 +129,15 @@
               <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
                 <q-item-section> User Accounts </q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <!-- <q-item clickable v-ripple>
                 <q-item-section> Role Management </q-item-section>
               </q-item>
               <q-item clickable v-ripple>
                 <q-item-section> Activity Logs </q-item-section>
-              </q-item>
+              </q-item> -->
             </q-card>
           </q-expansion-item>
-          <q-expansion-item>
+          <!-- <q-expansion-item>
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
@@ -280,7 +280,7 @@
                 <q-item-section> Themes and Preferences</q-item-section>
               </q-item>
             </q-card>
-          </q-expansion-item>
+          </q-expansion-item> -->
 
           <!-- <q-item :to="{ name: 'admin.users' }" clickable v-ripple>
             <q-item-section avatar>
