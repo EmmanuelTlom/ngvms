@@ -3,7 +3,7 @@
     <div class="q-mt-lg">
       <h4 class="dashboardmain_text">Add Conversion Kit</h4>
     </div>
-
+    <!-- {{ form }} -->
     <div class="add_manager">
       <div class="container">
         <ImageCropper
@@ -122,8 +122,8 @@
                     color="primary"
                     text-color="white"
                     :key="i"
-                    :label="typeof item !== 'number' ? item.name : item"
-                    :title="typeof item !== 'number' ? item.name : item"
+                    :label="typeof item !== 'number' ? item?.name : item"
+                    :title="typeof item !== 'number' ? item?.name : item"
                     @update:model-value="form.supplied_centers_ids.splice(i, 1)"
                     v-for="(item, i) in form.supplied_centers_ids"
                   />

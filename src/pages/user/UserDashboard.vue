@@ -11,7 +11,7 @@
           <p class="text-green q-mt-lg text-weight-bold">
             Please Remember to Confirm Data Accuracy Before Submission
           </p>
-
+          <!-- {{ endpoints.add }} -->
           <div
             style="gap: 1rem"
             class="hero_btns q-mt-lg row justify-center items-center no-wrap"
