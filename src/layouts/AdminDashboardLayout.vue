@@ -356,13 +356,6 @@
 
             <q-item-section> Conversions </q-item-section>
           </q-item> -->
-          <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>
-            <q-item-section avatar>
-              <i class="ri-table-3"></i>
-            </q-item-section>
-
-            <q-item-section> User Dashboard </q-item-section>
-          </q-item>
         </q-list>
       </q-scroll-area>
       <div class="absolute-top bg-white" style="height: 86px">
