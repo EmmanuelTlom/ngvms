@@ -2,6 +2,7 @@
   <q-btn rounded dense color="primary" icon="add" class="cursor-pointer">
     <q-menu anchor="top right" self="top left">
       <div class="row no-wrap q-pa-md">
+        <!-- {{ value }} -->
         <div class="column">
           <q-select
             multiple
@@ -9,6 +10,7 @@
             map-options
             hide-selected
             v-bind="$attrs"
+            @update:model-value="emitSelectedValues"
             v-model="value"
             input-debounce="0"
             option-value="id"
@@ -21,7 +23,7 @@
             <template
               v-slot:option="{ itemProps, opt, selected, toggleOption }"
             >
-              <q-item v-bind="itemProps">
+              <q-item clickable v-bind="itemProps">
                 <q-item-section>
                   <q-item-label>{{ opt.name }}</q-item-label>
                 </q-item-section>
@@ -77,7 +79,13 @@ const options = ref<ConversionCenter[]>([]);
 const modelValue = defineModel<ConversionCenter[] | number[]>('modelValue', {
   default: [],
 });
+const emit = defineEmits<{
+  (e: 'selectionChanged', value: ConversionCenter[]): void;
+}>();
 
+function emitSelectedValues(newValue: ConversionCenter[]) {
+  emit('selectionChanged', newValue);
+}
 const {
   data: centers,
   loading,
