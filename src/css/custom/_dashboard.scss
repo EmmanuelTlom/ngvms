@@ -588,8 +588,10 @@ textarea {
 .add_manager {
   background: #ffffff;
   border: 0.3px solid #b9b9b9;
-  padding: 2rem 2rem 4rem;
   border-radius: 10px;
+  &:not([class*='q-p']) {
+    padding: 2rem 2rem 4rem;
+  }
 
   input,
   select,
@@ -824,7 +826,9 @@ textarea {
 }
 @media (max-width: 600px) {
   .add_manager {
-    padding: 2rem 0rem 4rem;
+    &:not([class*='q-p']) {
+      padding: 2rem 0rem 4rem;
+    }
     .grid {
       gap: 0rem;
     }

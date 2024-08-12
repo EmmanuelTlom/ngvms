@@ -1,3 +1,4 @@
+import { Configuration } from './configs';
 import { RouteLocationRaw } from 'vue-router';
 
 export type PriviPerm = 'manage-users' | 'manage-admins' | 'manage-configuration'
@@ -117,22 +118,6 @@ export type Everything = {
   verification_centers: EverythingData[],
   financial_service_providers: EverythingData[],
 };
-
-export type Configuration = {
-  app_name: string,
-  app_email: string,
-  app_currency: string,
-  allow_default_images: boolean,
-  prefered_sms_channel: string,
-  prefered_notification_channels: 'mail' | 'sms'[],
-  verify_email: boolean,
-  verify_phone: boolean,
-  token_lifespan: number,
-  paystack_public_key: string,
-  payment_verify_url: string,
-  reference_prefix: string,
-  previews_on_save: boolean,
-}
 
 export type UserType = 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra' | 'finance' | 'insurance'
 export type UserData = {

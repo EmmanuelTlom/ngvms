@@ -7,30 +7,49 @@ export default <RouteRecordRaw[]>[
     component: () => import('layouts/AdminDashboardLayout.vue'),
     children: [
       {
-        path: '/admin/dashboard',
+        path: 'dashboard',
         component: () => import('pages/admin/AdminDashboard.vue'),
         name: 'admin.dashboard',
       },
       {
-        path: '/admin/naddc',
+        path: 'naddc',
         component: () => import('pages/admin/NaddcData.vue'),
         name: 'admin.naddc.data',
       },
-
       {
-        path: '/admin/nmdpra',
+        path: 'add/conversion-center/create/:center_id?',
+        component: () => import('pages/admin/Forms/AddConversionCenterPage.vue'),
+        name: 'admin.add.center',
+      },
+      {
+        path: 'nmdpra',
         component: () => import('pages/admin/NmdpraData.vue'),
         name: 'admin.nmdpra.data',
       },
       {
-        path: '/admin/frsc',
+        path: 'add/refueling-station/:station_id?',
+        component: () => import('pages/admin/Forms/AddRefuelingStationPage.vue'),
+        name: 'admin.add.station',
+      },
+      {
+        path: 'frsc',
         component: () => import('pages/admin/FrscData.vue'),
         name: 'admin.frsc.data',
       },
       {
-        path: '/admin/dealer',
+        path: 'add/vehicle/create/:vehicle_id?',
+        component: () => import('pages/admin/Forms/AddVehicle.vue'),
+        name: 'admin.add.vehicle',
+      },
+      {
+        path: 'dealer',
         component: () => import('pages/admin/DealerData.vue'),
         name: 'admin.dealer.data',
+      },
+      {
+        path: 'add/conversion-kit/:kit_id?',
+        component: () => import('pages/admin/Forms/AddConversionKitPage.vue'),
+        name: 'admin.add.kit',
       },
       {
         path: '/admin/son',
@@ -38,12 +57,15 @@ export default <RouteRecordRaw[]>[
         name: 'admin.son.data',
       },
       {
+        path: 'add/certificate/:certificate_id?',
+        component: () => import('pages/admin/Forms/AddCertificatePage.vue'),
+        name: 'admin.add.certificate',
+      },
+      {
         path: '/admin/users',
         component: () => import('src/pages/admin/UsersPage.vue'),
         name: 'admin.users',
       },
-
-
       {
         path: '/admin/general/settings',
         component: () => import('pages/admin/GenSettings.vue'),

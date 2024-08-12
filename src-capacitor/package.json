@@ -1,0 +1,13 @@
+{
+  "name": "ngvms",
+  "version": "0.0.1",
+  "description": "The NGVMS Monitoring and Database System.",
+  "author": "emmanueltlom <nwabuodafiemmanuel@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}

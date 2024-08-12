@@ -121,8 +121,9 @@
   </q-page>
 </template>
 
-<script setup>
-import axios from 'axios';
+<script setup lang="ts">
+import { ResponseBody } from 'app/repository/models';
+import { alova } from 'src/boot/alova';
 import { readEnv } from 'src/utils/helpers';
 import { computed, onMounted, ref } from 'vue';
 
@@ -135,13 +136,11 @@ let stats = ref({
   registeredMotorCycles: 0,
 });
 let statsCountAccreditedCenters = ref(0);
-let statsCountVehicles = ref(0);
-let statsCountMotorcycles = ref(0);
 let counterRef = ref(false);
 
 let visible = computed(() => (counterRef.value ? 'positive' : 'negative'));
 
-const onIntersection = (entry) => {
+const onIntersection = (entry: IntersectionObserverEntry): boolean => {
   counterRef.value = entry.isIntersecting;
   if (visible.value === 'positive') {
     startCountAnimation();
@@ -152,6 +151,7 @@ const onIntersection = (entry) => {
       registeredMotorCycles: 0,
     };
   }
+  return true;
 };
 
 const startCountAnimation = () => {
@@ -197,14 +197,12 @@ const startCountAnimation = () => {
 
 let countFcn = async () => {
   try {
-    const getAccreditedCenterCount = await axios.get(
-      readEnv('baseURL') + `v1/misc/center-count/`,
-    );
-    statsCountAccreditedCenters.value = getAccreditedCenterCount.data.count;
+    const { count } = await alova
+      .Get<ResponseBody & { count: number }>('v1/misc/center-count')
+      .send();
+    statsCountAccreditedCenters.value = count;
     loading.value = true;
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) {}
 };
 
 onMounted(() => {
