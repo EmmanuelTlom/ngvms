@@ -200,6 +200,7 @@ export default boot(async ({ app, router }) => {
   const boot = useBootstrapStore();
 
   app.config.globalProperties.$alova = alova;
+  app.config.globalProperties.$user = boot.user;
 
   const redirector = (redirect: RouteLocationNormalized | null, cur: RouteLocationNormalized) => {
     if (redirect && cur.name !== redirect.name) {

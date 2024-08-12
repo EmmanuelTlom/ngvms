@@ -184,11 +184,6 @@
                 Submit
               </q-btn>
             </div>
-
-            <p class="text-red q-mt-md text-weight-bold text-center">
-              Data editing can only function within the first 24 hours of data
-              upload
-            </p>
           </q-form>
         </div>
       </div>

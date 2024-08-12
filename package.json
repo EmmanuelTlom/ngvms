@@ -16,6 +16,7 @@
     "icon:cap": "icongenie generate -m capacitor -i ./icon.png -b ./bg.png --skip-trim --theme-color 008225",
     "build:pwa": "quasar build -m pwa",
     "build:ios": "quasar build -m capacitor -T android --ide",
+    "build:apps": "yarn build:android && yarn build:pwa",
     "build:android": "quasar build -m capacitor -T android --ide"
   },
   "dependencies": {

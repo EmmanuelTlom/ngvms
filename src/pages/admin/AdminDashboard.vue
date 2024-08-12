@@ -76,7 +76,7 @@ const stats = ref<
     classStyle: 'pending',
   },
   {
-    id: 'storage_dealerships',
+    id: 'certificates',
     name: 'SON Certified CNG Conversion Kit Supplier',
     numbers: 0,
     icon: '/images/users.svg',
@@ -106,7 +106,7 @@ const stats = ref<
     classStyle: 'convert',
   },
   {
-    id: 'verification_centers',
+    id: 'vehicles',
     name: 'FRSC Vehicle Registration Verification ',
     numbers: 0,
     icon: '/images/circle.svg',
@@ -116,7 +116,7 @@ const stats = ref<
     classStyle: 'pending',
   },
   {
-    id: 'certificate_centers',
+    id: 'conversion_centers',
     name: 'NADDC(Accredited Conversion Centre)',
     numbers: 0,
     icon: '/images/circle.svg',

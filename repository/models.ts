@@ -74,6 +74,8 @@ export type Dashboard = {
   users_inc: number,
   vehicles: number,
   vehicles_inc: number,
+  certificates: number,
+  certificates_inc: number,
   total_conversions: number,
   total_conversions_inc: number,
   total_pending: number,
@@ -84,10 +86,6 @@ export type Dashboard = {
   filling_outlets_inc: number,
   conversion_centers: number,
   conversion_centers_inc: number,
-  certificate_centers: number
-  certificate_centers_inc: number
-  storage_dealerships: number,
-  storage_dealerships_inc: number,
   verification_centers: number,
   verification_centers_inc: number,
   financial_service_providers: number,
@@ -111,9 +109,9 @@ export type EverythingData = {
 };
 
 export type Everything = {
+  certificates: EverythingData[],
   filling_outlets: EverythingData[],
   conversion_centers: EverythingData[],
-  certificate_centers: EverythingData[],
   storage_dealerships: EverythingData[],
   verification_centers: EverythingData[],
   financial_service_providers: EverythingData[],

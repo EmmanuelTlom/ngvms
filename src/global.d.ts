@@ -1,8 +1,10 @@
+import { User } from "app/repository/models";
+
 export { }
 
 declare module 'vue' {
   interface ComponentCustomProperties {
-    $hello: (key: string) => string
+    $user: User
   }
 }
 

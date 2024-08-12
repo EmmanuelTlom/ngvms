@@ -153,7 +153,7 @@
                 no-wrap
                 type="submit"
                 :loading="submiting"
-                :disable="!editable"
+                :disable="!editable || !$user?.verified"
               >
                 Submit
               </q-btn>

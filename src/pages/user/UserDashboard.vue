@@ -16,13 +16,24 @@
             Welcome <br />
             <span class="text-weight-medium text-h4">{{ user.fullName }}</span>
           </h4>
-          <p class="text-green q-mt-lg text-weight-bold">
+          <q-banner
+            class="bg-green q-mt-lg text-white text-justify"
+            style="border: 1px solid #009b25; border-radius: 0.7em"
+            v-if="!user.verified"
+          >
+            You can enter and update data only when your account has been
+            verified, in the meantime your account is pending verification,
+            check back after some time.
+          </q-banner>
+          <p v-else class="text-green q-mt-lg text-weight-bold">
             Please Remember to Confirm Data Accuracy Before Submission
           </p>
           <!-- {{ endpoints.add }} -->
           <div
             style="gap: 1rem; max-width: 400px"
-            class="hero_btns q-mt-lg row justify-center items-center no-wrap"
+            class="hero_btns q-mt-lg row justify-center items-center"
+            :class="{ 'no-wrap': $q.screen.gt.xs }"
+            v-if="user.verified"
           >
             <q-btn
               color="green-10"
@@ -94,7 +105,7 @@ const stats = ref<
   }[]
 >([
   {
-    id: 'storage_dealerships',
+    id: 'certificates',
     name: 'SON Certified CNG Conversion Kit Supplier',
     numbers: 0,
     icon: '/images/users.svg',
@@ -124,7 +135,7 @@ const stats = ref<
     classStyle: 'convert',
   },
   {
-    id: 'verification_centers',
+    id: 'vehicles',
     name: 'FRSC Vehicle Registration Verification ',
     numbers: 0,
     icon: '/images/circle.svg',
@@ -134,7 +145,7 @@ const stats = ref<
     classStyle: 'pending',
   },
   {
-    id: 'certificate_centers',
+    id: 'conversion_centers',
     name: 'NADDC(Accredited Conversion Centre)',
     numbers: 0,
     icon: '/images/circle.svg',

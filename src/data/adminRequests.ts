@@ -369,7 +369,7 @@ export const userCreateRequest = (
     data: form.data,
     _method: id ? 'PUT' : 'POST'
   }
-  console.log(fm)
+
   const method = axios.Post<ResponseBody<User>>(`/v1/admin/users${id ? '/' + id : ''}`, fm, {
     name: 'updateUser',
   });

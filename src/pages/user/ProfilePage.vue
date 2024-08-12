@@ -56,7 +56,17 @@
           </div>
 
           <div>
-            <h4 class="review_big">{{ user.fullName }}</h4>
+            <h4 class="review_big flex items-center">
+              {{ user.fullName }}
+              <q-chip
+                dense
+                size="sm"
+                text-color="white"
+                :color="user.verified ? 'green' : 'red'"
+              >
+                {{ user.verified ? 'Verified' : 'Unverified' }}
+              </q-chip>
+            </h4>
             <p class="transactsmall color">{{ user.email }}</p>
           </div>
         </div>

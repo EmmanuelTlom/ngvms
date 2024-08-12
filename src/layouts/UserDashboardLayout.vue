@@ -17,22 +17,37 @@
                 Home
               </router-link>
             </li>
-            <li>
-              <router-link
-                class="review_small bold"
-                :to="{ name: endpoints.add }"
-              >
-                Add New Data
-              </router-link>
-            </li>
-            <li>
-              <router-link
-                class="review_small bold"
-                :to="{ name: endpoints.list }"
-              >
-                My History
-              </router-link>
-            </li>
+            <template v-if="user.verified">
+              <li>
+                <router-link
+                  class="review_small bold"
+                  :to="{ name: endpoints.add }"
+                >
+                  Add New Data
+                </router-link>
+              </li>
+              <li>
+                <router-link
+                  disable
+                  class="review_small bold"
+                  :to="{ name: endpoints.list }"
+                >
+                  My History
+                </router-link>
+              </li>
+            </template>
+            <template v-else>
+              <li>
+                <a class="review_small text-grey-5 bold cursor-pointer">
+                  Add New Data
+                </a>
+              </li>
+              <li>
+                <a class="review_small text-grey-5 bold cursor-pointer">
+                  My History
+                </a>
+              </li>
+            </template>
             <li v-if="iCan()">
               <router-link
                 class="review_small bold"
@@ -180,20 +195,22 @@
 
             <q-item-section> Home </q-item-section>
           </q-item>
-          <q-item :to="{ name: endpoints.add }" clickable v-ripple>
-            <q-item-section avatar>
-              <i class="ri-function-add-line"></i>
-            </q-item-section>
+          <template v-if="user.verified">
+            <q-item :to="{ name: endpoints.add }" clickable v-ripple>
+              <q-item-section avatar>
+                <i class="ri-function-add-line"></i>
+              </q-item-section>
 
-            <q-item-section> Add Data </q-item-section>
-          </q-item>
-          <q-item :to="{ name: endpoints.list }" clickable v-ripple>
-            <q-item-section avatar>
-              <i class="ri-history-line"></i>
-            </q-item-section>
+              <q-item-section> Add Data </q-item-section>
+            </q-item>
+            <q-item :to="{ name: endpoints.list }" clickable v-ripple>
+              <q-item-section avatar>
+                <i class="ri-history-line"></i>
+              </q-item-section>
 
-            <q-item-section> My History </q-item-section>
-          </q-item>
+              <q-item-section> My History </q-item-section>
+            </q-item>
+          </template>
           <q-item :to="{ name: 'user.profile' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-user-line"></i>
