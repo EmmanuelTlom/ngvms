@@ -25,6 +25,16 @@
             class="hero_btns q-mt-lg row justify-center items-center no-wrap"
           >
             <q-btn
+              color="green-10"
+              no-caps
+              v-if="iCan()"
+              no-wrap
+              class="started full-width"
+              :to="{ name: 'admin.dashboard' }"
+            >
+              Admin Dashboard
+            </q-btn>
+            <q-btn
               color="green"
               no-caps
               no-wrap
@@ -69,7 +79,7 @@ import { Dashboard } from 'app/repository/models';
 import { dashboardRequest } from 'src/data/userRequests';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 import { computed, ref } from 'vue';
-
+import { iCan } from 'src/utils/proccessor';
 const user = computed(() => useBootstrapStore().user);
 const stats = ref<
   {
