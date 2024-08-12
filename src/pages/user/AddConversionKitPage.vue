@@ -116,18 +116,27 @@
                     bg-color="sky-1"
                     v-model="form.supplied_centers_ids"
                   />
-                  <q-chip
-                    dense
-                    square
-                    removable
-                    color="primary"
-                    text-color="white"
-                    :key="i"
-                    :label="typeof item !== 'number' ? item?.name : item"
-                    :title="typeof item !== 'number' ? item?.name : item"
-                    @update:model-value="form.supplied_centers_ids.splice(i, 1)"
-                    v-for="(item, i) in form.supplied_centers_ids"
-                  />
+                  <div
+                    v-if="
+                      form.supplied_centers_ids.length &&
+                      form.supplied_centers_ids[0] !== null
+                    "
+                  >
+                    <q-chip
+                      dense
+                      square
+                      removable
+                      color="primary"
+                      text-color="white"
+                      :key="i"
+                      :label="typeof item !== 'number' ? item?.name : item"
+                      :title="typeof item !== 'number' ? item?.name : item"
+                      @update:model-value="
+                        form.supplied_centers_ids.splice(i, 1)
+                      "
+                      v-for="(item, i) in form.supplied_centers_ids"
+                    />
+                  </div>
                 </div>
 
                 <span class="error-message" v-if="errors.supplied_centers_ids">
