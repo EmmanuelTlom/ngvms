@@ -104,13 +104,7 @@
               <div class="main_div">
                 <div class="row row_top items-center justify-between">
                   <h4 class="dashtext">Notifications</h4>
-                  <q-btn
-                    @click="notifMenu = false"
-                    flat
-                    no-wrap
-                    no-caps
-                    class="q-mr-lg"
-                  >
+                  <q-btn @click="notifMenu = false" flat no-wrap no-caps>
                     Close
                     <img class="q-ml-sm" src="/images/closetur.svg" alt="" />
                   </q-btn>
