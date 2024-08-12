@@ -1,12 +1,52 @@
 <template>
   <div class="container">
     <q-inner-loading :showing="loading" />
-    <h4 class="dashboardmain_text q-mt-xl">Welcome, {{ user.fullName }}</h4>
-    <div class="stats_hold">
+    <div style="border-radius: 10px" class="bg-white q-mt-xl q-pa-md">
+      <div class="grid items-center">
+        <div class="left">
+          <h4 class="text-h4 text-weight-bold q-mt-xl">
+            Welcome <br />
+            <span class="text-weight-medium text-h4">{{ user.fullName }}</span>
+          </h4>
+          <p class="text-green q-mt-lg text-weight-bold">
+            Please Remember to Confirm Data Accuracy Before Submission
+          </p>
+
+          <div
+            style="gap: 1rem"
+            class="hero_btns q-mt-lg row justify-center items-center no-wrap"
+          >
+            <q-btn
+              color="green"
+              no-caps
+              no-wrap
+              class="started full-width"
+              :to="{ name: endpoints.add }"
+            >
+              Add New Data
+            </q-btn>
+
+            <q-btn
+              flat
+              no-wrap
+              no-caps
+              class="full-width text-white bg-blue-8"
+              :to="{ name: endpoints.list }"
+            >
+              My History
+            </q-btn>
+          </div>
+        </div>
+        <div class="right">
+          <img src="/images/dash.png" alt="" />
+        </div>
+      </div>
+    </div>
+    <!-- <div class="stats_hold">
       <div v-for="(data, index) in stats" :key="index">
         <DashBoardCardsVue :data="data" />
       </div>
-    </div>
+    </div> -->
 
     <!-- <ChartCompVue /> -->
     <!-- <ConversionCompVue /> -->
@@ -17,7 +57,7 @@
 <script setup lang="ts">
 import { useRequest } from 'alova/client';
 import { Dashboard } from 'app/repository/models';
-import DashBoardCardsVue from 'src/components/DashBoardCards.vue';
+// import DashBoardCardsVue from 'src/components/DashBoardCards.vue';
 import { dashboardRequest } from 'src/data/userRequests';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 import { computed, ref } from 'vue';
@@ -96,7 +136,34 @@ const stats = ref<
     classStyle: 'pending',
   },
 ]);
-
+const endpoints = computed(
+  () =>
+    ({
+      son: {
+        add: 'user.add.certificate',
+        list: 'user.certificates',
+      },
+      frsc: {
+        add: 'user.add.vehicle',
+        list: 'user.vehicles',
+      },
+      dealer: {
+        add: 'user.add.kit',
+        list: 'user.kits',
+      },
+      naddc: {
+        add: 'user.add.center',
+        list: 'user.centers',
+      },
+      nmdpra: {
+        add: 'user.add.station',
+        list: 'user.stations',
+      },
+    })[user.value.type as 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra'] || {
+      add: 'user.add.vehicle',
+      list: 'user.vehicles',
+    },
+);
 type KOD = keyof Dashboard;
 const buildStats = (data: Dashboard) => {
   stats.value.forEach((stat, i) => {

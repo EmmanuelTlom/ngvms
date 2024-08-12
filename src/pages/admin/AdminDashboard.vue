@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <ChartComp />
+    <!-- <ChartComp /> -->
     <!-- <ConversionCompVue /> -->
     <!-- <LatestUsersVue /> -->
   </div>
