@@ -53,6 +53,11 @@
             </template>
 
             <q-list>
+              <q-item :to="{ name: 'user.dashboard' }" clickable v-close-popup>
+                <q-item-section>
+                  <q-item-label>User Dashboard</q-item-label>
+                </q-item-section>
+              </q-item>
               <q-item :to="{ name: 'logout' }" clickable v-close-popup>
                 <q-item-section>
                   <q-item-label>Logout</q-item-label>
@@ -319,6 +324,13 @@
 
             <q-item-section> Conversions </q-item-section>
           </q-item> -->
+          <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>
+            <q-item-section avatar>
+              <i class="ri-table-3"></i>
+            </q-item-section>
+
+            <q-item-section> User Dashboard </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>

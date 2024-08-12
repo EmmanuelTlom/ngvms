@@ -244,7 +244,7 @@ const { data, page, loading, isLastPage, onSuccess } = usePagination(
     }),
   {
     append: true,
-    total: (e) => e.meta?.total,
+    total: (e) => e?.meta?.total,
     initialData: { data: [] },
     initialPageSize: 30,
   },
