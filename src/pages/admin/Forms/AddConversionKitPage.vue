@@ -111,6 +111,7 @@
                     required
                     outlined
                     hide-bottom-space
+                    @selectionChanged="handleSelectionChange"
                     padding="none"
                     bg-color="sky-1"
                     v-model="form.supplied_centers_ids"
