@@ -9,12 +9,12 @@
           >
             <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-            <div class="q-ml-md">
+            <!-- <div class="q-ml-md">
               <div class="search_inp">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search" />
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
