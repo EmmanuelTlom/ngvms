@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <q-inner-loading :showing="loading" />
-    <div style="border-radius: 10px" class="bg-white q-mt-xl q-pa-md">
+    <div
+      style="
+        border-radius: 10px;
+        max-width: 1000px;
+        height: 100%;
+        margin: 5rem auto;
+      "
+      class="bg-white q-mt-xl q-pa-md"
+    >
       <div class="grid items-center">
         <div class="left">
           <h4 class="text-h4 text-weight-bold q-mt-xl">
@@ -13,7 +21,7 @@
           </p>
           <!-- {{ endpoints.add }} -->
           <div
-            style="gap: 1rem"
+            style="gap: 1rem; max-width: 400px"
             class="hero_btns q-mt-lg row justify-center items-center no-wrap"
           >
             <q-btn
