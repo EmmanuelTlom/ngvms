@@ -114,20 +114,44 @@
                     hide-bottom-space
                     padding="none"
                     bg-color="sky-1"
+                    @selectionChanged="handleSelectionChange"
                     v-model="form.supplied_centers_ids"
                   />
-                  <q-chip
-                    dense
-                    square
-                    removable
-                    color="primary"
-                    text-color="white"
-                    :key="i"
-                    :label="typeof item !== 'number' ? item?.name : item"
-                    :title="typeof item !== 'number' ? item?.name : item"
-                    @update:model-value="form.supplied_centers_ids.splice(i, 1)"
-                    v-for="(item, i) in form.supplied_centers_ids"
-                  />
+                  <div
+                    v-if="
+                      supppliedCentersSelectedValues.length &&
+                      supppliedCentersSelectedValues[0] !== null
+                    "
+                  >
+                    <q-chip
+                      dense
+                      square
+                      removable
+                      color="primary"
+                      text-color="white"
+                      :key="i"
+                      :label="typeof item !== 'number' ? item?.name : item"
+                      :title="typeof item !== 'number' ? item?.name : item"
+                      @update:model-value="
+                        supppliedCentersSelectedValues.splice(i, 1)
+                      "
+                      v-for="(item, i) in supppliedCentersSelectedValues"
+                    />
+                    <!-- <q-chip
+                      dense
+                      square
+                      removable
+                      color="primary"
+                      text-color="white"
+                      :key="i"
+                      :label="typeof item !== 'number' ? item?.name : item"
+                      :title="typeof item !== 'number' ? item?.name : item"
+                      @update:model-value="
+                        form.supplied_centers_ids.splice(i, 1)
+                      "
+                      v-for="(item, i) in form.supplied_centers_ids"
+                    /> -->
+                  </div>
                 </div>
 
                 <span class="error-message" v-if="errors.supplied_centers_ids">
@@ -230,6 +254,17 @@ const route = useRoute();
 const router = useRouter();
 const formRef = ref<QForm>();
 
+const supppliedCentersSelectedValues = ref<Array<ConversionCenter>>([]);
+
+// function handleSelectionChange(value: Array<string | number>) {
+//   selectedValues.value = value;
+//   snapshot.value = `Snapshot taken: ${value.join(', ')}`;
+// }
+function handleSelectionChange(value: ConversionCenter[]) {
+  // form.supplied_centers_ids = value; // Assuming this is what you want.
+  // console.log('Selected Centers:', value);
+  supppliedCentersSelectedValues.value = value;
+}
 const errors = computed(
   () => (error.value as unknown as RequestErrors)?.errors || {},
 );
