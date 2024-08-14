@@ -56,7 +56,7 @@ const params = defineModel('params', {
 });
 
 const query = ref<Params>(params.value);
-const modelValue = defineModel<null | number | User>('modelValue');
+const modelValue = defineModel<number | undefined | User>('modelValue');
 
 const {
   data: users,
@@ -90,7 +90,7 @@ const filterFn = (
 ) => {
   query.value.search = val;
   if (val) {
-    onSuccess(({ data }) => {
+    onSuccess(() => {
       update(() => {});
     });
   } else {

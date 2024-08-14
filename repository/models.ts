@@ -1,8 +1,12 @@
 import { Configuration } from './configs';
 import { RouteLocationRaw } from 'vue-router';
 
-export type PriviPerm = 'manage-users' | 'manage-admins' | 'manage-configuration'
+export type PriviPerm =
+  | 'manage-admins' | 'manage-data' | 'manage-users' | 'manage-tracking'
+  | 'manage-alerts' | 'manage-helpdesk' | 'manage-configuration'
+
 export type PriviRole = 'super-admin' | 'admin' | 'manager' | 'support' | 'user'
+
 export type ResponseStatus = 'success' | 'error' | 'danger' | 'warning' | 'info' | 'notice' | 'alert'
 
 export type BaseOption = {
@@ -118,6 +122,7 @@ export type Everything = {
 };
 
 export type UserType = 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra' | 'finance' | 'insurance'
+
 export type UserData = {
   ip?: string,
   settings: {
@@ -213,8 +218,8 @@ export interface Certificate {
 export interface CertificateForm {
   image?: File;
   status?: boolean | number;
-  dealer_id: number;
   importer: string;
+  dealer_id?: number;
   manufacturer: string;
   kit_serial_number: string;
   inspection_officers: PersonForm[];

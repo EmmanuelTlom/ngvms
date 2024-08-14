@@ -146,6 +146,7 @@
                       color="primary"
                       icon="edit"
                       @click="toggleDialog(props.row, 'edit')"
+                      v-if="iCan('manage-users')"
                     />
                   </template>
                   <template #list-append="{ viewData }">
@@ -181,7 +182,9 @@
                     <div
                       class="input_wrap"
                       :key="option"
-                      v-for="option in ['roles', 'permissions']"
+                      v-for="option in iCan('manage-admins')
+                        ? ['roles', 'permissions']
+                        : []"
                     >
                       <label class="q-mb-xs block">
                         Admin {{ option.ucfirst() }}
@@ -229,7 +232,7 @@
                   base-url="/v1/admin/users"
                   :id="props.value"
                   :list="data"
-                  v-if="!iCan(undefined, props.row)"
+                  v-if="!iCan(undefined, props.row) && iCan('manage-users')"
                 />
               </div>
             </q-td>

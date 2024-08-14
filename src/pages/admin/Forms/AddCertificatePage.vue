@@ -205,7 +205,11 @@ import {
 import { computed, ref, watch } from 'vue';
 import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
-import { PersonForm, RequestErrors } from 'app/repository/models';
+import {
+  CertificateForm,
+  PersonForm,
+  RequestErrors,
+} from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
 import { date, QForm } from 'quasar';
 import UserSelector from 'src/components/utilities/UserSelector.vue';
@@ -247,13 +251,13 @@ const {
         },
       },
     },
-    initialForm: {
+    initialForm: <CertificateForm>{
       image: <File | undefined>undefined,
       importer: '',
-      dealer_id: null,
       manufacturer: '',
       kit_serial_number: '',
       inspection_officers: <PersonForm[]>[],
+      dealer_id: undefined,
     },
   },
 ).onSuccess(({ data }) => {
