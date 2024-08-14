@@ -245,6 +245,7 @@
         <q-route-tab
           :name="endpoints.add"
           class="q-py-sm"
+          no-caps
           exact-active-class="text-teal-7 text-weight-bold"
           :to="{ name: endpoints.add }"
         >
@@ -253,6 +254,7 @@
         </q-route-tab>
         <q-route-tab
           name="home"
+          no-caps
           class="q-py-sm"
           exact-active-class="text-teal-7 text-weight-bold"
           :to="{ name: 'user.dashboard' }"
@@ -262,6 +264,7 @@
         </q-route-tab>
         <q-route-tab
           name="history"
+          no-caps
           class="q-py-sm"
           exact-active-class="text-teal-7 text-weight-bold"
           :to="{ name: endpoints.list }"
@@ -271,6 +274,7 @@
         </q-route-tab>
         <q-route-tab
           name="profile"
+          no-caps
           class="q-py-sm"
           exact-active-class="text-teal-7 text-weight-bold"
           :to="{ name: 'user.profile' }"
