@@ -80,7 +80,7 @@
 
             <q-item-section> Dashboard Overview </q-item-section>
           </q-item>
-          <q-expansion-item>
+          <q-expansion-item v-if="iCan('manage-data')">
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
@@ -134,7 +134,7 @@
               </q-item>
             </q-list>
           </q-expansion-item>
-          <q-expansion-item>
+          <q-expansion-item v-if="iCan('manage-users')">
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
@@ -281,7 +281,7 @@
             </q-list>
           </q-expansion-item>
            -->
-          <q-expansion-item>
+          <q-expansion-item v-if="iCan('manage-configuration')">
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
                 <div style="gap: 0.6rem" class="row no-wrap items-center">
@@ -382,6 +382,7 @@
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 import { useGlobalStore } from 'src/stores/global-store';
 import { notify } from 'src/utils/helpers';
+import { iCan } from 'src/utils/proccessor';
 import { computed, ref } from 'vue';
 
 const user = computed(() => useBootstrapStore().user);

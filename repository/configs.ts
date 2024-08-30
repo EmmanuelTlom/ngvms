@@ -1,3 +1,4 @@
+import { PriviPerm, PriviRole } from './models';
 
 export type ConfigGroup = 'access' | 'main' | 'misc';
 
@@ -37,14 +38,14 @@ export interface ConfigurationRaw {
 
 export type ConfigurationGroup = Record<ConfigGroup, ConfigurationRaw[]>
 
-export const adminRoles = [
+export const adminRoles: PriviRole[] = [
   'admin',
   'manager',
   'support',
   'super-admin',
 ]
 
-export const adminPermissions = [
+export const adminPermissions: PriviPerm[] = [
   'manage-users',
   'manage-admins',
   'manage-data',

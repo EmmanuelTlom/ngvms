@@ -83,6 +83,8 @@ const { data: places, onSuccess } = useWatcher(
 );
 
 onSuccess(({ data }) => {
-  modelValue.value = data[0].id;
+  if (!modelValue.value) {
+    modelValue.value = data[0].id;
+  }
 });
 </script>
