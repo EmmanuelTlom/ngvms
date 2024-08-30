@@ -5,7 +5,11 @@
         <div style="gap: 3rem" class="left row no-wrap items-center">
           <router-link :to="{ name: 'user.dashboard' }"
             ><div class="logo row items-center">
-              <img src="/images/logo.svg" alt="" /></div
+              <img
+                style="max-width: 200px"
+                src="/images/logo.png"
+                alt=""
+              /></div
           ></router-link>
           <q-separator vertical />
           <ul style="gap: 1.5rem" class="row items-center no-wrap">
@@ -179,7 +183,7 @@
       <!-- drawer content -->
       <q-scroll-area class="fit">
         <div class="logo q-pa-lg row items-center">
-          <img src="/images/logo.svg" alt="" />
+          <img style="max-width: 200px" src="/images/logo.png" alt="" />
         </div>
         <q-list padding class="menu-list">
           <q-item :to="{ name: 'user.dashboard' }" clickable v-ripple>

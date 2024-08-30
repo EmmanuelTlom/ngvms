@@ -365,7 +365,7 @@
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar> -->
           <div class="logo q-pa-lg row items-center">
-            <img src="/images/logo.svg" alt="" />
+      <img style="max-width: 200px" src="/images/logo.png" alt="" />
           </div>
           <q-separator />
         </div>

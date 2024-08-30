@@ -66,7 +66,7 @@
               <img
                 style="width: 80px; height: 80px; object-fit: contain"
                 v-if="!profile_imageValue"
-                src="/images/logo.svg"
+                src="/images/logo.png"
               />
               <img
                 style="width: 80px; height: 80px; object-fit: contain"

@@ -10,7 +10,11 @@
           <div style="gap: 3rem" class="left row no-wrap items-center">
             <router-link :to="{ name: 'home' }"
               ><div class="logo row items-center">
-                <img src="/images/logo.svg" alt="" /></div
+                <img
+                  style="max-width: 200px"
+                  src="/images/logo.png"
+                  alt=""
+                /></div
             ></router-link>
           </div>
         </div>
