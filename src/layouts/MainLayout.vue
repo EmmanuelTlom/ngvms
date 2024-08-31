@@ -1,6 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <header class="header bg-white" v-if="!$q.platform.is.capacitor">
+    <!-- v-if="!$q.platform.is.capacitor" -->
+    <header class="header bg-white">
       <div class="container">
         <div class="row justify-between">
           <div style="gap: 3rem" class="left row no-wrap items-center">

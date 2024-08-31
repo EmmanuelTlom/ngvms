@@ -5,7 +5,7 @@
         <div class="grid">
           <div class="left">
             <h1 class="main_text">
-              Welcome To NGVMS, Nigeria Gas Vehicle Monitoring System.
+              Welcome To NGVMS, Nigeria's Gas Mobility Safety System.
             </h1>
 
             <div v-if="!loading">
