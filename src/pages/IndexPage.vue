@@ -1,7 +1,7 @@
 <template>
   <q-page class="">
     <section class="hero">
-      <div class="container">
+      <div class="container q-pt-lg">
         <div class="grid">
           <div class="left">
             <h1 class="main_text">
