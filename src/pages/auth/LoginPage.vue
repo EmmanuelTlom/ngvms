@@ -90,7 +90,7 @@
 import { useForm } from 'alova/client';
 import { RequestErrors } from 'app/repository/models';
 import { loginRequest } from 'src/data/userRequests';
-import { reboot } from 'src/utils/proccessor';
+import { reboot, refreshUser } from 'src/utils/proccessor';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -114,6 +114,7 @@ onSuccess(() => {
   loading.value = true;
   reboot().then(() => {
     loading.value = false;
+    refreshUser();
     router.replace({ name: 'user.dashboard' });
   });
 });

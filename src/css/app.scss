@@ -1546,6 +1546,12 @@ input:focus {
     line-height: 50px;
   }
 }
+
+@media (min-width: 700px) {
+  .q-dialog__inner--minimized > .q-card.add_manager {
+    min-width: 700px;
+  }
+}
 @media (max-width: 1300px) {
   .purchase .grid .right img {
     width: 120px;

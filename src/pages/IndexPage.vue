@@ -124,6 +124,7 @@
 <script setup lang="ts">
 import { ResponseBody } from 'app/repository/models';
 import { alova } from 'src/boot/alova';
+import axios from 'axios';
 import { readEnv } from 'src/utils/helpers';
 import { computed, onMounted, ref } from 'vue';
 
@@ -136,6 +137,7 @@ let stats = ref({
   registeredMotorCycles: 0,
 });
 let statsCountAccreditedCenters = ref(0);
+let registeredVehicles = ref(0);
 let counterRef = ref(false);
 
 let visible = computed(() => (counterRef.value ? 'positive' : 'negative'));
@@ -157,7 +159,7 @@ const onIntersection = (entry: IntersectionObserverEntry): boolean => {
 const startCountAnimation = () => {
   const duration = 5000;
   const interval = 70;
-  const finalCountVehicles = 17000;
+  const finalCountVehicles = registeredVehicles.value;
   const finalCountCenters = statsCountAccreditedCenters.value;
   const finalCountMotorcycles = 40000;
   const incrementVehicles = Math.round(
@@ -169,6 +171,7 @@ const startCountAnimation = () => {
   const incrementMotorcycles = Math.round(
     finalCountMotorcycles / (duration / interval) + 1,
   );
+
   const timerForVehicles = setInterval(() => {
     if (stats.value.registeredVehicles < finalCountVehicles) {
       stats.value.registeredVehicles += incrementVehicles;
@@ -195,12 +198,25 @@ const startCountAnimation = () => {
   }, interval);
 };
 
+// let countFcn = async () => {
+//   try {
+//     const { count } = await alova
+//       .Get<ResponseBody & { count: number }>('v1/misc/center-count')
+//       .send();
+//     statsCountAccreditedCenters.value = count;
+//     loading.value = true;
+//   } catch (error) {}
+// };
 let countFcn = async () => {
   try {
-    const { count } = await alova
-      .Get<ResponseBody & { count: number }>('v1/misc/center-count')
-      .send();
-    statsCountAccreditedCenters.value = count;
+    const res = await axios.get('https://pcngi.com.ng/api/v1/stats', {
+      headers: {
+        'X-Api-Key': 'gDE18hO2nHbu651Jle8yYieUbP5nGfpI9HiOiLxWRMX58w',
+      },
+    });
+    console.log(res);
+    statsCountAccreditedCenters.value = res.data.data.conversion_centers;
+    registeredVehicles.value = res.data.data.bookings;
     loading.value = true;
   } catch (error) {}
 };

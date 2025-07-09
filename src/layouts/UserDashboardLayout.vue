@@ -22,7 +22,7 @@
               </router-link>
             </li>
             <template v-if="user.verified">
-              <li>
+              <li v-if="user.type !== 'conversion'">
                 <router-link
                   class="review_small bold"
                   :to="{ name: endpoints.add }"
@@ -30,7 +30,7 @@
                   Add New Data
                 </router-link>
               </li>
-              <li>
+              <li v-if="user.type !== 'conversion'">
                 <router-link
                   disable
                   class="review_small bold"
@@ -39,14 +39,22 @@
                   My History
                 </router-link>
               </li>
+              <li v-if="user.type === 'conversion'">
+                <router-link
+                  class="review_small bold"
+                  :to="{ name: 'add.conversion' }"
+                >
+                  Add conversion
+                </router-link>
+              </li>
             </template>
             <template v-else>
-              <li>
+              <li v-if="user.type !== 'conversion'">
                 <a class="review_small text-grey-5 bold cursor-pointer">
                   Add New Data
                 </a>
               </li>
-              <li>
+              <li v-if="user.type !== 'conversion'">
                 <a class="review_small text-grey-5 bold cursor-pointer">
                   My History
                 </a>
@@ -194,14 +202,24 @@
             <q-item-section> Home </q-item-section>
           </q-item>
           <template v-if="user.verified">
-            <q-item :to="{ name: endpoints.add }" clickable v-ripple>
+            <q-item
+              v-if="user.type !== 'conversion'"
+              :to="{ name: endpoints.add }"
+              clickable
+              v-ripple
+            >
               <q-item-section avatar>
                 <i class="ri-function-add-line"></i>
               </q-item-section>
 
               <q-item-section> Add Data </q-item-section>
             </q-item>
-            <q-item :to="{ name: endpoints.list }" clickable v-ripple>
+            <q-item
+              v-if="user.type !== 'conversion'"
+              :to="{ name: endpoints.list }"
+              clickable
+              v-ripple
+            >
               <q-item-section avatar>
                 <i class="ri-history-line"></i>
               </q-item-section>
@@ -209,6 +227,13 @@
               <q-item-section> My History </q-item-section>
             </q-item>
           </template>
+          <q-item :to="{ name: 'add.conversion' }" clickable v-ripple>
+            <q-item-section avatar>
+              <i class="ri-user-line"></i>
+            </q-item-section>
+
+            <q-item-section> Add conversion </q-item-section>
+          </q-item>
           <q-item :to="{ name: 'user.profile' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-user-line"></i>
@@ -228,7 +253,7 @@
 
             <q-item-section> Admin Dashboard </q-item-section>
           </q-item>
-          <q-item :to="{ name: 'user.logout' }" clickable v-ripple>
+          <q-item :to="{ name: 'logout' }" clickable v-ripple>
             <q-item-section avatar>
               <i class="ri-shut-down-line"></i>
             </q-item-section>
@@ -249,6 +274,7 @@
         <q-route-tab
           :name="endpoints.add"
           class="q-py-sm"
+          v-if="user.type !== 'conversion'"
           no-caps
           exact-active-class="text-teal-7 text-weight-bold"
           :to="{ name: endpoints.add }"
@@ -270,8 +296,20 @@
           name="history"
           no-caps
           class="q-py-sm"
+          v-if="user.type !== 'conversion'"
           exact-active-class="text-teal-7 text-weight-bold"
           :to="{ name: endpoints.list }"
+        >
+          <q-icon size="sm" name="history" />
+          History
+        </q-route-tab>
+        <q-route-tab
+          name="history"
+          no-caps
+          class="q-py-sm"
+          v-if="user.type === 'conversion'"
+          exact-active-class="text-teal-7 text-weight-bold"
+          :to="{ name: 'add.conversion' }"
         >
           <q-icon size="sm" name="history" />
           History

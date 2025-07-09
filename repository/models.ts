@@ -2,105 +2,125 @@ import { Configuration } from './configs';
 import { RouteLocationRaw } from 'vue-router';
 
 export type PriviPerm =
-  | 'manage-admins' | 'manage-data' | 'manage-users' | 'manage-tracking'
-  | 'manage-alerts' | 'manage-helpdesk' | 'manage-configuration'
+  | 'manage-admins'
+  | 'manage-data'
+  | 'manage-users'
+  | 'manage-tracking'
+  | 'manage-alerts'
+  | 'manage-helpdesk'
+  | 'manage-configuration';
 
-export type PriviRole = 'super-admin' | 'admin' | 'manager' | 'support' | 'user'
+export type PriviRole =
+  | 'super-admin'
+  | 'admin'
+  | 'manager'
+  | 'support'
+  | 'user';
 
-export type ResponseStatus = 'success' | 'error' | 'danger' | 'warning' | 'info' | 'notice' | 'alert'
+export type ResponseStatus =
+  | 'success'
+  | 'error'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'notice'
+  | 'alert';
 
 export type BaseOption = {
   value: string;
   label: string;
-}
+};
 
 export type Partial<X> = {
-  [K in keyof X]?: X[K]
-}
+  [K in keyof X]?: X[K];
+};
 
-export type GenericData = Record<string, string | number | boolean | Record<string, string>>
+export type GenericData = Record<
+  string,
+  string | number | boolean | Record<string, string>
+>;
 export type RequestErrors = {
-  errors: GenericData
-}
+  errors: GenericData;
+};
 
 export type GenericResponse<X> = {
-  data: ResponseBody<X>,
-  status: number,
-  statusText: string,
-}
+  data: ResponseBody<X>;
+  status: number;
+  statusText: string;
+};
 
 export interface HTMLInputEvent extends Event {
-  target: HTMLInputElement & EventTarget
+  target: HTMLInputElement & EventTarget;
 }
 
 type PageLinks = {
-  first: string,
-  last: string,
-  next: string,
-  prev: string,
-}
+  first: string;
+  last: string;
+  next: string;
+  prev: string;
+};
 
 export type PageMeta = {
-  current_page: number,
-  last_page: number,
-  per_page: number,
-  total: number,
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
   links: {
-    active: boolean,
-    label: string,
-    url: string,
-  }[],
-  from: number,
-  path: string,
-  to: number,
-}
+    active: boolean;
+    label: string;
+    url: string;
+  }[];
+  from: number;
+  path: string;
+  to: number;
+};
 
 export type ResponseBody<X = undefined, Y = Record<string, string>> = {
-  data: X,
-  meta?: PageMeta,
-  links?: PageLinks,
-  token?: string,
-  status: ResponseStatus,
-  try_at?: string,
-  errors?: Y,
-  message: string,
-  time_left?: string,
-  status_code: number,
-}
+  data: X;
+  meta?: PageMeta;
+  links?: PageLinks;
+  token?: string;
+  status: ResponseStatus;
+  try_at?: string;
+  errors?: Y;
+  message: string;
+  time_left?: string;
+  status_code: number;
+};
 
 export type Initialize = {
   configuration: Configuration;
 };
 
 export type Dashboard = {
-  everything?: Everything,
-  users: number,
-  users_inc: number,
-  vehicles: number,
-  vehicles_inc: number,
-  certificates: number,
-  certificates_inc: number,
-  total_conversions: number,
-  total_conversions_inc: number,
-  total_pending: number,
-  total_pending_inc: number,
-  verified_users: number,
-  verified_users_inc: number,
-  filling_outlets: number,
-  filling_outlets_inc: number,
-  conversion_centers: number,
-  conversion_centers_inc: number,
-  verification_centers: number,
-  verification_centers_inc: number,
-  financial_service_providers: number,
-  financial_service_providers_inc: number,
-}
+  everything?: Everything;
+  users: number;
+  users_inc: number;
+  vehicles: number;
+  vehicles_inc: number;
+  certificates: number;
+  certificates_inc: number;
+  total_conversions: number;
+  total_conversions_inc: number;
+  total_pending: number;
+  total_pending_inc: number;
+  verified_users: number;
+  verified_users_inc: number;
+  filling_outlets: number;
+  filling_outlets_inc: number;
+  conversion_centers: number;
+  conversion_centers_inc: number;
+  verification_centers: number;
+  verification_centers_inc: number;
+  financial_service_providers: number;
+  financial_service_providers_inc: number;
+};
 
 export type Notification = {
   id: string;
   title: string;
   message: string;
-  important: boolean,
+  important: boolean;
   readAt: string;
   createdAt: string;
 };
@@ -113,42 +133,50 @@ export type EverythingData = {
 };
 
 export type Everything = {
-  certificates: EverythingData[],
-  filling_outlets: EverythingData[],
-  conversion_centers: EverythingData[],
-  storage_dealerships: EverythingData[],
-  verification_centers: EverythingData[],
-  financial_service_providers: EverythingData[],
+  certificates: EverythingData[];
+  filling_outlets: EverythingData[];
+  conversion_centers: EverythingData[];
+  storage_dealerships: EverythingData[];
+  verification_centers: EverythingData[];
+  financial_service_providers: EverythingData[];
 };
 
-export type UserType = 'dealer' | 'son' | 'naddc' | 'frsc' | 'nmdpra' | 'finance' | 'insurance'
+export type UserType =
+  | 'dealer'
+  | 'son'
+  | 'naddc'
+  | 'frsc'
+  | 'nmdpra'
+  | 'finance'
+  | 'insurance'
+  | 'conversion';
 
 export type UserData = {
-  ip?: string,
+  ip?: string;
   settings: {
     notifications: {
-      email: boolean
-    }
-  }
-}
+      email: boolean;
+    };
+  };
+};
 
 export interface User {
   id: number;
   name: string;
   type?: UserType;
   about: string;
-  email: string,
-  phone: string,
+  email: string;
+  phone: string;
   roles?: PriviRole[];
   verified: boolean;
-  username: string,
+  username: string;
   imageUrl: string;
   permissions?: PriviPerm[];
   fullName: string;
   lastName: string;
   firstName: string;
   verifying: string;
-  userData: UserData,
+  userData: UserData;
   emailVerifiedAt: string;
   phoneVerifiedAt: string;
   updatedAt: string;
@@ -161,21 +189,21 @@ export interface UserForm {
   type?: UserType;
   roles?: string[];
   about: string;
-  email: string,
-  phone: string,
+  email: string;
+  phone: string;
   verified: boolean;
-  username: string,
+  username: string;
   lastname?: string;
   firstname?: string;
   permissions?: string[];
-  data?: UserData,
+  data?: UserData;
 }
 
 export interface Person {
   id: number;
   name: string;
-  email: string,
-  phone: string,
+  email: string;
+  phone: string;
   lastName: string;
   firstName: string;
   imageUrl: string;
@@ -183,23 +211,25 @@ export interface Person {
   createdAt: string;
 }
 
-export type PersonForm = {
-  id?: number;
-  image?: File;
-  name: string;
-  email?: string,
-  phone?: string,
-  last_name?: string;
-  first_name?: string;
-} | {
-  id?: number;
-  image?: File;
-  name?: string;
-  email?: string,
-  phone?: string,
-  last_name: string;
-  first_name: string;
-}
+export type PersonForm =
+  | {
+      id?: number;
+      image?: File;
+      name: string;
+      email?: string;
+      phone?: string;
+      last_name?: string;
+      first_name?: string;
+    }
+  | {
+      id?: number;
+      image?: File;
+      name?: string;
+      email?: string;
+      phone?: string;
+      last_name: string;
+      first_name: string;
+    };
 
 export interface Certificate {
   id: number;
@@ -228,10 +258,10 @@ export interface CertificateForm {
 export interface ConversionCenter {
   id: number;
   name: string;
-  email: string,
-  phone: string,
+  email: string;
+  phone: string;
   status: boolean;
-  address: string,
+  address: string;
   user?: User;
   officer?: Person;
   licenseNumber: string;
@@ -337,17 +367,19 @@ export interface FillingOutletForm {
 }
 
 export type NavigationLink = {
-  to?: RouteLocationRaw,
-  icon: string,
-  title: string,
-  group?: string,
-  params?: GenericData,
-  separator?: boolean,
-  requiresAuth?: boolean,
+  to?: RouteLocationRaw;
+  icon: string;
+  title: string;
+  group?: string;
+  params?: GenericData;
+  separator?: boolean;
+  requiresAuth?: boolean;
   button?: {
-    icon: string,
-    action: RouteLocationRaw | ((param: string | number | Record<string, string>) => void)
-  }
+    icon: string;
+    action:
+      | RouteLocationRaw
+      | ((param: string | number | Record<string, string>) => void);
+  };
 };
 
 export type Link = {

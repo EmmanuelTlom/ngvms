@@ -1,9 +1,15 @@
-import { Initialize, PriviPerm, PriviRole, ResponseBody, User } from 'repository/models';
+import {
+  Initialize,
+  PriviPerm,
+  PriviRole,
+  ResponseBody,
+  User,
+} from 'repository/models';
 import { RouteLocationNormalized, Router } from 'vue-router';
 
 import { Configuration } from 'app/repository/configs';
 import { alova } from 'src/boot/alova';
-import { finder } from '@medv/finder'
+import { finder } from '@medv/finder';
 import { invalidateCache } from 'alova';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
 
@@ -39,13 +45,17 @@ export const refreshUser = (router?: Router) => {
   });
 };
 
-export const reboot = (done?: () => void, router?: Router, reloadUser: boolean | number = false) => {
+export const reboot = (
+  done?: () => void,
+  router?: Router,
+  reloadUser: boolean | number = false,
+) => {
   invalidateCache();
 
   return new Promise<{
-    init: { configuration: Configuration },
-    user: User,
-    error?: Record<string, string>
+    init: { configuration: Configuration };
+    user: User;
+    error?: Record<string, string>;
   }>((resolve) => {
     const boot = useBootstrapStore();
     const method = alova.Get<ResponseBody<Initialize>>('v1/initialize');
@@ -67,22 +77,29 @@ export const reboot = (done?: () => void, router?: Router, reloadUser: boolean |
 
           resolve({ init: data, user });
         } else {
-          resolve({ init: { configuration: boot.configuration }, user: boot.user });
+          resolve({
+            init: { configuration: boot.configuration },
+            user: boot.user,
+          });
         }
       })
       .catch((error) => {
-        resolve({ init: { configuration: boot.configuration }, user: boot.user, error });
+        resolve({
+          init: { configuration: boot.configuration },
+          user: boot.user,
+          error,
+        });
       });
   });
 };
 
 export const authValidator = (
-  { to, from }: { to: RouteLocationNormalized, from?: RouteLocationNormalized },
+  { to, from }: { to: RouteLocationNormalized; from?: RouteLocationNormalized },
   router: Router,
   usr?: User,
 ) => {
   if (!to) {
-    return false
+    return false;
   }
 
   // Initialize the bootstrap store
@@ -91,7 +108,11 @@ export const authValidator = (
   const user = usr ? usr : boot.user;
 
   // Check if user is logged in when requesting a page that requires authentication
-  if (!boot.token && (to.meta.requireAuth || to.meta.requireAdmin) && to.name !== 'login') {
+  if (
+    !boot.token &&
+    (to.meta.requireAuth || to.meta.requireAdmin) &&
+    to.name !== 'login'
+  ) {
     // Redirect to Login if login required
     return router.replace({ name: 'login' });
   } else if (boot.token) {
@@ -112,8 +133,7 @@ export const authValidator = (
         !isVerified &&
         to.name !== 'logout'
       ) {
-        if (to.name == 'auth.verify')
-          return true;
+        if (to.name == 'auth.verify') return true;
 
         const type = user.verifying || 'email';
         if (!user.emailVerifiedAt && config.verify_email) {
@@ -142,7 +162,7 @@ export const authValidator = (
 
       if (isVerified || !needVerify) {
         if (to.name == 'register' && from?.query.reference) {
-          return true
+          return true;
         }
         return router.replace({ name: 'user.dashboard' });
       } else {
@@ -158,9 +178,12 @@ export const authValidator = (
  * Check if a user can do something in an organization
  */
 export const iCan = (ability?: PriviPerm | PriviRole, user?: User) => {
-  user ??= useBootstrapStore().user
+  user ??= useBootstrapStore().user;
 
-  if ((!user.permissions || user.permissions.length < 1) && (!user.roles || user.roles.length < 1)) {
+  if (
+    (!user.permissions || user.permissions.length < 1) &&
+    (!user.roles || user.roles.length < 1)
+  ) {
     return false;
   }
 
@@ -168,19 +191,20 @@ export const iCan = (ability?: PriviPerm | PriviRole, user?: User) => {
     return true;
   }
 
-  return user.permissions?.includes(ability as PriviPerm) ||
+  return (
+    user.permissions?.includes(ability as PriviPerm) ||
     user.roles?.includes(ability as PriviRole) ||
-    false;
+    false
+  );
 };
-
 
 export const arrayObjectUpdater = (array: any[], data: any) => {
   const i = array.findIndex((e: any) => e.id === data.id);
   array[i] = Object.assign({}, array[i], data);
-}
+};
 
 export const printArea = (el: HTMLElement | string) => {
-  let area = typeof el === 'string' ? document.getElementById("GFG") : el
+  let area = typeof el === 'string' ? document.getElementById('GFG') : el;
 
   const a = window.open('', '', 'height=500, width=500');
 
@@ -191,14 +215,14 @@ export const printArea = (el: HTMLElement | string) => {
       s += o[i] + ': ' + o.getPropertyValue(o[i]) + ';';
     }
     return s;
-  }
+  };
 
   let classes = '';
 
   if (a && area) {
     area.querySelectorAll('*').forEach(function (node) {
-      const selector = finder(node)
-      classes += `${selector} {${dumpCSSText(node as HTMLElement)}}`
+      const selector = finder(node);
+      classes += `${selector} {${dumpCSSText(node as HTMLElement)}}`;
     });
 
     area = area.cloneNode(true) as HTMLElement;
@@ -219,4 +243,4 @@ export const printArea = (el: HTMLElement | string) => {
     a.document.close();
     a.print();
   }
-}
+};

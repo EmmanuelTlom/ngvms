@@ -13,7 +13,7 @@ export default configure((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['alova', 'main', 'prototypes'],
+    boot: ['alova', 'main', 'prototypes', 'axios'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -55,8 +55,8 @@ export default configure((ctx) => {
       // polyfillModulePreload: true,
       // distDir
 
-      extendViteConf (viteConf) {
-        viteConf.envPrefix = 'v_'
+      extendViteConf(viteConf) {
+        viteConf.envPrefix = 'v_';
       },
       // viteVuePluginOptions: {},
 
@@ -80,7 +80,7 @@ export default configure((ctx) => {
     devServer: {
       // https: true
       open: true, // opens browser window automatically
-      port: ctx.modeName === 'ssr' ? 9101 : 9001
+      port: ctx.modeName === 'ssr' ? 9101 : 9001,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

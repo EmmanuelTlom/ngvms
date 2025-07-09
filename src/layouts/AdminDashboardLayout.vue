@@ -365,7 +365,7 @@
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar> -->
           <div class="logo q-pa-lg row items-center">
-      <img style="max-width: 200px" src="/images/logo.png" alt="" />
+            <img style="max-width: 200px" src="/images/logo.png" alt="" />
           </div>
           <q-separator />
         </div>
@@ -420,7 +420,7 @@ useGlobalStore().$subscribe((e, { error }) => {
 }
 
 .logo {
-  padding: 1.8rem 2rem;
+  padding: 1.8rem 2rem 0;
 }
 
 .review_small.text {

@@ -15,14 +15,10 @@ import { boot } from 'quasar/wrappers';
 // axios.defaults.headers.common["Accept"] = "application/json";
 // axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 const api = axios.create({
-  // baseURL: "/api/v1/",
+  baseURL: 'https://ngvms-api.devchukwuebuka.com.ng/api/v1/',
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
     Accept: 'application/json',
-    apiKey:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjQwZjQwZjQwMzQwMjQwMzQwMjQwZiIsImlhdCI6MTYxNjYwNjQwM30.1',
-    'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Credentials': 'true',
   },
 });
 
@@ -35,8 +31,8 @@ export default boot(({ app, store, router }) => {
 
   app.config.globalProperties.$api = api;
 
-  let auth = store.state.value.ngvms;
-  // console.log(auth);
+  let auth = store.state.value.bootstrap;
+  console.log(auth);
   api.interceptors.response.use(
     function (response) {
       return response;
@@ -121,29 +117,16 @@ export default boot(({ app, store, router }) => {
     return config;
   });
 
-  router.beforeEach((to, from, next) => {
-    //  if (to.path === "/") {
-    //    if (Platform.is.mobile && to.path !== "/login") {
-    //      next("/login");
-    //    } else if (!Platform.is.mobile && to.name !== "home") {
-    //      next({ name: "home" });
-    //    } else {
-    //      next();
-    //    }
-    // } else
-    if (to.name === 'logout') {
-      store.state.value.ngvms.token = '';
-      store.state.value.ngvms.userdetails = {};
-      router.replace({ name: 'login' });
-    } else if (to.name === 'login' && store.state.value.ngvms.token) {
-      router.replace({ name: 'user.dashboard' });
-    } else {
-      next();
-    }
-  });
-
-  //   // Continue with the navigation as is
-  //   next();
+  // router.beforeEach((to, from, next) => {
+  //   if (to.name === 'logout') {
+  //     store.state.value.ngvms.token = '';
+  //     store.state.value.ngvms.userdetails = {};
+  //     router.replace({ name: 'login' });
+  //   } else if (to.name === 'login' && store.state.value.ngvms.token) {
+  //     router.replace({ name: 'user.dashboard' });
+  //   } else {
+  //     next();
+  //   }
   // });
 
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)

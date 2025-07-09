@@ -164,6 +164,7 @@
             </div>
 
             <div class="row q-mt-lg justify-center items-center">
+              <!-- :disable="!editable || !$user?.verified" -->
               <q-btn
                 class="bg-secondary text-white q-px-xl"
                 flat
@@ -171,7 +172,7 @@
                 no-wrap
                 type="submit"
                 :loading="submiting"
-                :disable="!editable || !$user?.verified"
+                :disable="!editable"
               >
                 Submit
               </q-btn>

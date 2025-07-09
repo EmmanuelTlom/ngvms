@@ -78,7 +78,7 @@
             <div class="left">
               <div>
                 <p class="transactsmall color2">Username</p>
-                <!-- <p class="transactsmall color2">First Name</p> -->
+                <!-- <p clolass="transactsmall color2">First Name</p> -->
                 <h4 class="review_big">{{ user.username }}</h4>
               </div>
               <div>

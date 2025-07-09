@@ -1,4 +1,7 @@
-import { AlovaAxiosRequestConfig, axiosRequestAdapter } from '@alova/adapter-axios';
+import {
+  AlovaAxiosRequestConfig,
+  axiosRequestAdapter,
+} from '@alova/adapter-axios';
 import { AlovaGenerics, Method, createAlova } from 'alova';
 import { AxiosError, AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { GenericResponse, ResponseBody, User } from 'repository/models';
@@ -8,7 +11,9 @@ import { MutationType } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
 import { boot } from 'quasar/wrappers';
 import { createClientTokenAuthentication } from 'alova/client';
-import fetchAdapter from 'alova/fetch';
+// import fetchAdapter from 'alova/fetch';
+import fetchAdapter, { FetchRequestInit } from 'alova/fetch';
+
 import { notify } from 'src/utils/helpers';
 import { readEnv } from 'src/utils/helpers';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
@@ -22,11 +27,40 @@ import { useGlobalStore } from 'src/stores/global-store';
 // }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type ResponseMethod =
-  Method<AlovaGenerics<any, any, fetchAdapter.FetchRequestInit, Response, Headers, any, any, any>> |
-  Method<AlovaGenerics<any, any, AlovaAxiosRequestConfig, AxiosResponse<any, any>, AxiosResponseHeaders, any, any, any>>
+// type ResponseMethod =
+//   Method<AlovaGenerics<any, any, fetchAdapter.FetchRequestInit, Response, Headers, any, any, any>> |
+//   Method<AlovaGenerics<any, any, AlovaAxiosRequestConfig, AxiosResponse<any, any>, AxiosResponseHeaders, any, any, any>>
 
-function isAxios (useAxios: boolean, response: AxiosResponse | Response): response is AxiosResponse {
+type ResponseMethod =
+  | Method<
+      AlovaGenerics<
+        any,
+        any,
+        FetchRequestInit,
+        Response,
+        Headers,
+        any,
+        any,
+        any
+      >
+    >
+  | Method<
+      AlovaGenerics<
+        any,
+        any,
+        AlovaAxiosRequestConfig,
+        AxiosResponse<any, any>,
+        AxiosResponseHeaders,
+        any,
+        any,
+        any
+      >
+    >;
+
+function isAxios(
+  useAxios: boolean,
+  response: AxiosResponse | Response,
+): response is AxiosResponse {
   return useAxios === true;
 }
 
@@ -35,45 +69,48 @@ const clearAuth = async () => {
   await boot.clearAuth().then(() => {
     boot.redirectTo({ name: 'login' } as RouteLocationNormalized);
   });
-}
+};
 
-const { onAuthRequired, onResponseRefreshToken } = createClientTokenAuthentication<VueHookType>({
-  refreshToken: {
-    isExpired: () => {
-      return false;
+const { onAuthRequired, onResponseRefreshToken } =
+  createClientTokenAuthentication<VueHookType>({
+    refreshToken: {
+      isExpired: () => {
+        return false;
+      },
+      handler: clearAuth,
     },
-    handler: clearAuth
-  },
-  assignToken: method => {
-    const boot = useBootstrapStore();
-    method.config.headers.Authorization = 'Bearer ' + boot.token;
-  },
-  login (response, method) {
-    method.promise?.then((data: ResponseBody<User>) => {
+    assignToken: (method) => {
       const boot = useBootstrapStore();
-      boot.saveAuthUser(data.data, data.token)
-    })
-  },
-  async logout () {
-    await useBootstrapStore().clearAuth()
-  },
-});
-
-const { onAuthRequired: onAuthRequiredAxios, onResponseRefreshToken: onResponseRefreshTokenAxios } = createClientTokenAuthentication<
-  typeof VueHook,
-  typeof axiosRequestAdapter
->({
-  refreshToken: {
-    isExpired: () => {
-      return false;
+      method.config.headers.Authorization = 'Bearer ' + boot.token;
     },
-    handler: clearAuth
+    login(response, method) {
+      method.promise?.then((data: ResponseBody<User>) => {
+        const boot = useBootstrapStore();
+        boot.saveAuthUser(data.data, data.token);
+      });
+    },
+    async logout() {
+      await useBootstrapStore().clearAuth();
+    },
+  });
+
+const {
+  onAuthRequired: onAuthRequiredAxios,
+  onResponseRefreshToken: onResponseRefreshTokenAxios,
+} = createClientTokenAuthentication<typeof VueHook, typeof axiosRequestAdapter>(
+  {
+    refreshToken: {
+      isExpired: () => {
+        return false;
+      },
+      handler: clearAuth,
+    },
+    assignToken: (method) => {
+      const boot = useBootstrapStore();
+      method.config.headers.Authorization = 'Bearer ' + boot.token;
+    },
   },
-  assignToken: method => {
-    const boot = useBootstrapStore();
-    method.config.headers.Authorization = 'Bearer ' + boot.token;
-  }
-});
+);
 
 /**
  *
@@ -81,7 +118,7 @@ const { onAuthRequired: onAuthRequiredAxios, onResponseRefreshToken: onResponseR
 const responded = async (
   response: AxiosResponse | Response,
   method: ResponseMethod,
-  useAxios: boolean = false
+  useAxios: boolean = false,
 ) => {
   const json = (isAxios(useAxios, response)
     ? await response.data
@@ -89,11 +126,13 @@ const responded = async (
 
   return new Promise((resolve, reject) => {
     if (response.status >= 400) {
-      const message = (json.message || response.statusText || 'Unknown error') as string;
+      const message = (json.message ||
+        response.statusText ||
+        'Unknown error') as string;
       if (response.status === 401) {
-        clearAuth()
+        clearAuth();
       } else if (response.status === 403) {
-        useGlobalStore().setError({ code: 403, message })
+        useGlobalStore().setError({ code: 403, message });
       } else {
         notify(message, json.status || 'error');
       }
@@ -112,26 +151,28 @@ const responded = async (
       }
       reject(json);
     } else {
-      resolve(json)
+      resolve(json);
     }
   });
 };
 
 const beforeRequest = (method: ResponseMethod, withCredentials?: boolean) => {
   // Set headers
-  method.config.headers['Access-Control-Allow-Credentials'] = 'true'
-  method.config.headers['X-Requested-With'] = 'XMLHttpRequest'
-  method.config.headers['Accept'] = 'application/json'
+  method.config.headers['Access-Control-Allow-Credentials'] = 'true';
+  method.config.headers['X-Requested-With'] = 'XMLHttpRequest';
+  method.config.headers['Accept'] = 'application/json';
 
   if (withCredentials) {
-    method.config.headers.withCredentials = 'true'
+    method.config.headers.withCredentials = 'true';
   }
 
-  const noContentType = !method.meta?.noContentType && method.config.headers['Content-Type'] !== 'multipart/form-data'
+  const noContentType =
+    !method.meta?.noContentType &&
+    method.config.headers['Content-Type'] !== 'multipart/form-data';
   if (noContentType) {
     method.config.headers['Content-Type'] = 'application/json; charset=utf-8';
   }
-}
+};
 
 // 1. Create an alova instance
 const alova = createAlova({
@@ -139,7 +180,7 @@ const alova = createAlova({
   responded: onResponseRefreshToken(responded) as any,
   statesHook: VueHook,
   beforeRequest: onAuthRequired((method) => beforeRequest(method)),
-  requestAdapter: fetchAdapter()
+  requestAdapter: fetchAdapter(),
 });
 
 // 2. Create an alova instance for axios
@@ -149,18 +190,16 @@ const axios = createAlova({
   beforeRequest: onAuthRequiredAxios((method) => beforeRequest(method, true)),
   requestAdapter: axiosRequestAdapter(),
   responded: onResponseRefreshTokenAxios({
-    onSuccess (
-      response: AxiosResponse,
-      method
-
-    ) {
+    onSuccess(response: AxiosResponse, method) {
       return responded(response, method, true);
     },
     /**
      *
      */
-    onError (err: AxiosError) {
-      const response = err.response as unknown as GenericResponse<Record<string, string | number>>;
+    onError(err: AxiosError) {
+      const response = err.response as unknown as GenericResponse<
+        Record<string, string | number>
+      >;
       if (!response) {
         return;
       }
@@ -169,9 +208,9 @@ const axios = createAlova({
         const message =
           response.data.message || response.statusText || 'Unknown error';
         if (response.status === 401) {
-          clearAuth()
+          clearAuth();
         } else if (response.status === 403) {
-          useGlobalStore().setError({ code: 403, message })
+          useGlobalStore().setError({ code: 403, message });
         } else {
           notify(message, response.data.status || 'error');
         }
@@ -202,20 +241,23 @@ export default boot(async ({ app, router }) => {
   app.config.globalProperties.$alova = alova;
   app.config.globalProperties.$user = boot.user;
 
-  const redirector = (redirect: RouteLocationNormalized | null, cur: RouteLocationNormalized) => {
+  const redirector = (
+    redirect: RouteLocationNormalized | null,
+    cur: RouteLocationNormalized,
+  ) => {
     if (redirect && cur.name !== redirect.name) {
       router.replace(redirect);
       boot.redirect = null;
     }
-  }
+  };
 
   router.beforeResolve(async (to) => {
     boot.$subscribe((e, i) => {
       if (e.type === MutationType.patchFunction && i.redirect) {
-        redirector(i.redirect, to)
+        redirector(i.redirect, to);
       }
-    })
-    redirector(boot.redirect, to)
+    });
+    redirector(boot.redirect, to);
   });
 });
 

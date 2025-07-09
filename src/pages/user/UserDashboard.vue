@@ -48,17 +48,29 @@
             <q-btn
               color="green"
               no-caps
+              v-if="user.type !== 'conversion'"
               no-wrap
               class="started full-width"
               :to="{ name: endpoints.add }"
             >
               Add New Data
             </q-btn>
+            <q-btn
+              color="yellow-7"
+              no-caps
+              no-wrap
+              v-if="user.type === 'conversion'"
+              class="started full-width"
+              :to="{ name: 'add.conversion' }"
+            >
+              Add Conversions
+            </q-btn>
 
             <q-btn
               flat
               no-wrap
               no-caps
+              v-if="user.type !== 'conversion'"
               class="full-width text-white bg-blue-8"
               :to="{ name: endpoints.list }"
             >
@@ -89,9 +101,11 @@ import { Dashboard } from 'app/repository/models';
 // import DashBoardCardsVue from 'src/components/DashBoardCards.vue';
 import { dashboardRequest } from 'src/data/userRequests';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
-import { computed, ref } from 'vue';
-import { iCan } from 'src/utils/proccessor';
+import { computed, onMounted, ref } from 'vue';
+import { iCan, refreshUser } from 'src/utils/proccessor';
 const user = computed(() => useBootstrapStore().user);
+
+console.log(user.value);
 const stats = ref<
   {
     id: keyof Dashboard;
@@ -218,6 +232,10 @@ const { loading } = useRequest(dashboardRequest({ with: 'everything' }), {
 });
 
 buildStats(Object.fromEntries([...stats.value.map((e) => [e.id, 0])]));
+
+onMounted(() => {
+  refreshUser();
+});
 </script>
 
 <style lang="scss" scoped></style>

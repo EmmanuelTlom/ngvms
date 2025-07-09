@@ -67,6 +67,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/user/AddRefuelingStationPage.vue'),
         name: 'user.add.station',
       },
+
+      {
+        path: 'add-conversion',
+        component: () => import('src/pages/user/AddConversion.vue'),
+        name: 'add.conversion',
+      },
+      // {
+      //   path: 'create-conversion',
+      //   component: () => import('src/pages/user/CreateConversions.vue'),
+      //   name: 'create.conversion',
+      // },
+
       {
         path: 'refueling-stations',
         component: () => import('src/pages/user/RefuelingStationsPage.vue'),

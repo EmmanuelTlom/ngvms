@@ -107,6 +107,7 @@
                         'nmdpra',
                         'finance:x',
                         'insurance:x',
+                        'conversion',
                       ]"
                     />
                   </div>
