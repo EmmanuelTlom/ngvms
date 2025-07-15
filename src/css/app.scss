@@ -1789,9 +1789,18 @@ input:focus {
     min-height: fit-content;
   }
 }
+.q-field--standard .q-field__control:after,
+.q-field--standard .q-field__control:before {
+  display: none;
+}
 @media (max-width: 764px) {
   .hero {
     height: 100%;
+  }
+
+  .auth .input-box .input-1 {
+    height: 50px;
+    padding: 0px 20px;
   }
 
   .reviews .big_quotes {

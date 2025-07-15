@@ -110,6 +110,14 @@
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <div class="flex no-wrap q-gutter-x-sm">
+                <q-btn
+                  v-if="props?.row?.conversion_metadata?.cac_certificate"
+                  color="green-7"
+                  no-caps
+                  no-wrap
+                  @click="setCCData(props?.row)"
+                  label="View Conversion center detail"
+                />
                 <DataViewer
                   v-model:form="form"
                   v-model:errors="errors"
@@ -245,6 +253,190 @@
         </q-table>
       </div>
     </div>
+
+    <q-dialog v-model="viewDocumentsDialog">
+      <q-card class="card_img">
+        <div class="q-pa-md">
+          <div class="text-h6 text-weight-bold q-mb-sm">Documents</div>
+          <q-list bordered>
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Name of conversion center:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.name_of_conversion_center }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Full address:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.full_address }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Contact number:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.contact_number }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>CAC number:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.cac_number }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>TIN number:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.tin }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>State:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.state }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>LGA:</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                {{ conversionMetaData.lga }}
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section avatar>
+                <q-avatar color="primary" text-color="white">
+                  <img
+                    v-if="isImage(conversionMetaData.cac_certificate)"
+                    :src="
+                      conversionMetaData.cac_certificate
+                        ? `https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.cac_certificate}`
+                        : '/images/bg.png'
+                    "
+                    alt=""
+                  />
+                  <div v-else>pdf</div>
+                </q-avatar>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>CAC Certificate</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                <q-btn no-caps no-wrap color="primary">
+                  View
+                  <q-popup-proxy
+                    cover
+                    class="proxy"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <div class="proxy_div">
+                      <template
+                        v-if="isImage(conversionMetaData.cac_certificate)"
+                      >
+                        <img
+                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.cac_certificate}`"
+                          alt="Image"
+                        />
+                      </template>
+                      <template v-else>
+                        <iframe
+                          width="100%"
+                          height="500px"
+                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.cac_certificate}`"
+                          frameborder="0"
+                        ></iframe>
+                      </template>
+                    </div>
+                  </q-popup-proxy>
+                </q-btn>
+              </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item class="q-my-sm" clickable v-ripple>
+              <q-item-section avatar>
+                <q-avatar color="primary" text-color="white">
+                  <img
+                    v-if="isImage(conversionMetaData.naddc_certificate)"
+                    :src="
+                      conversionMetaData.naddc_certificate
+                        ? `https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.naddc_certificate}`
+                        : '/images/bg.png'
+                    "
+                    alt=""
+                  />
+                  <div v-else>pdf</div>
+                </q-avatar>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>NADDC Certificate</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                <q-btn no-caps no-wrap color="primary">
+                  View
+                  <q-popup-proxy
+                    cover
+                    class="proxy"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <div class="proxy_div">
+                      <template
+                        v-if="isImage(conversionMetaData.naddc_certificate)"
+                      >
+                        <img
+                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.naddc_certificate}`"
+                          alt="Image"
+                        />
+                      </template>
+                      <template v-else>
+                        <iframe
+                          width="100%"
+                          height="500px"
+                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.naddc_certificate}`"
+                          frameborder="0"
+                        ></iframe>
+                      </template>
+                    </div>
+                  </q-popup-proxy>
+                </q-btn>
+              </q-item-section>
+            </q-item>
+            <q-separator />
+          </q-list>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -265,10 +457,23 @@ import { adminPermissions, adminRoles } from 'app/repository/configs';
 const filter = ref('');
 const content = ref<HTMLElement | null>(null);
 const viewData = ref<User>({} as User);
+const viewDocumentsDialog = ref(false);
+const conversionMetaData = ref<any>({});
 
 const pagination = ref({
   rowsPerPage: 30,
 });
+
+const isImage = (link: any) => {
+  const extension = link.split('.').pop().toLowerCase();
+  return ['jpg', 'jpeg', 'png'].includes(extension);
+};
+
+const setCCData = (data: any) => {
+  console.log(data);
+  conversionMetaData.value = data?.conversion_metadata;
+  viewDocumentsDialog.value = true;
+};
 
 const onIntersction = (e: IntersectionObserverEntry): boolean => {
   if (loading.value || isLastPage.value || !e.isIntersecting) return false;

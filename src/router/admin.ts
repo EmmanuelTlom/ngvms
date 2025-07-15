@@ -18,7 +18,8 @@ export default <RouteRecordRaw[]>[
       },
       {
         path: 'add/conversion-center/create/:center_id?',
-        component: () => import('pages/admin/Forms/AddConversionCenterPage.vue'),
+        component: () =>
+          import('pages/admin/Forms/AddConversionCenterPage.vue'),
         name: 'admin.add.center',
       },
       {
@@ -28,7 +29,8 @@ export default <RouteRecordRaw[]>[
       },
       {
         path: 'add/refueling-station/:station_id?',
-        component: () => import('pages/admin/Forms/AddRefuelingStationPage.vue'),
+        component: () =>
+          import('pages/admin/Forms/AddRefuelingStationPage.vue'),
         name: 'admin.add.station',
       },
       {
@@ -71,6 +73,16 @@ export default <RouteRecordRaw[]>[
         component: () => import('pages/admin/GenSettings.vue'),
         name: 'gen.settings',
       },
+      {
+        path: '/admin/mangage/conversion-centers',
+        component: () => import('pages/admin/ManageCcs.vue'),
+        name: 'mangage.conversionC',
+      },
+      {
+        path: '/admin/mangage/fuel-pumpers',
+        component: () => import('pages/admin/ManageFuelPumpers.vue'),
+        name: 'mangage.fuel.pumpers',
+      },
     ],
   },
 
@@ -86,4 +98,4 @@ export default <RouteRecordRaw[]>[
     component: () => import('pages/admin/auth/RegisterPage.vue'),
     name: 'admin.register',
   },
-]
+];

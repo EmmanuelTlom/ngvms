@@ -134,6 +134,24 @@
               </q-item>
             </q-list>
           </q-expansion-item>
+          <q-item
+            :inset-level="0.05"
+            :to="{ name: 'mangage.conversionC' }"
+            clickable
+            v-ripple
+          >
+            <q-item-section>
+              Manage Conversion Centers conversions
+            </q-item-section>
+          </q-item>
+          <q-item
+            :inset-level="0.05"
+            :to="{ name: 'mangage.fuel.pumpers' }"
+            clickable
+            v-ripple
+          >
+            <q-item-section> Manage Fuel Pumpers </q-item-section>
+          </q-item>
           <q-expansion-item v-if="iCan('manage-users')">
             <template v-slot:header>
               <div class="row full-width items-center justify-between">
