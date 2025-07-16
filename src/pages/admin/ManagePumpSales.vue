@@ -6,7 +6,7 @@
           :rows="rows"
           :columns="columns"
           row-key="id"
-          title=" Pumpers"
+          title="Pump Sales"
           :filter="filter"
           :loading="loading"
           @request="onRequest"
@@ -14,7 +14,7 @@
           class="my-sticky-last-column-table sort_tables"
         >
           <template v-slot:top-right="props">
-            <q-btn
+            <!-- <q-btn
               no-caps
               no-wrap
               outline
@@ -22,7 +22,7 @@
               @click="createFuelPumpersModal = !createFuelPumpersModal"
             >
               Create Pumper
-            </q-btn>
+            </q-btn> -->
             <!-- <q-btn
               class="q-mr-sm"
               no-caps
@@ -85,7 +85,7 @@
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <div>
-                <q-btn
+                <!-- <q-btn
                   round
                   dense
                   color="negative"
@@ -103,7 +103,7 @@
                   icon="edit"
                   @click="toggleEditPumper(props.row)"
                 >
-                </q-btn>
+                </q-btn> -->
               </div>
             </q-td>
           </template>
@@ -144,12 +144,12 @@
                   required
                   type="text"
                   placeholder=""
-                  v-model="form.name"
+                  v-model="form.pumpers_name"
                 />
               </div>
 
-              <span class="error-message" v-if="errors.name">
-                {{ errors.name }}
+              <span class="error-message" v-if="errors.pumpers_name">
+                {{ errors.pumpers_name }}
               </span>
             </div>
 
@@ -160,12 +160,12 @@
                   required
                   type="text"
                   placeholder=""
-                  v-model="form.phone"
+                  v-model="form.phone_number"
                 />
               </div>
 
-              <span class="error-message" v-if="errors.phone">
-                {{ errors.phone }}
+              <span class="error-message" v-if="errors.phone_number">
+                {{ errors.phone_number }}
               </span>
             </div>
           </div>
@@ -198,21 +198,6 @@
                   class="input-1"
                   autocomplete="current-password"
                   :type="togglePassword ? 'password' : 'text'"
-                />
-                <q-btn @click="togglePassword = !togglePassword" flat>
-                  <i class="fa-regular fa-eye-slash"></i>
-                </q-btn>
-              </div>
-            </div>
-
-            <div class="input-box last active-grey">
-              <label class="input-label">Confirm Password</label>
-              <div class="row items-center justify-between no-wrap">
-                <input
-                  v-model="form.password_confirmation"
-                  :type="togglePassword ? 'password' : 'text'"
-                  class="input-1"
-                  autocomplete="new-password"
                 />
                 <q-btn @click="togglePassword = !togglePassword" flat>
                   <i class="fa-regular fa-eye-slash"></i>
@@ -280,16 +265,9 @@ const bookings = ref([]);
 
 const columns = [
   {
-    name: 'fullName',
+    name: 'pumpers_name',
     label: 'Pumpers name',
-    field: 'fullName',
-    align: 'left',
-    sortable: true,
-  },
-  {
-    name: 'phone',
-    label: 'Phone number',
-    field: 'phone',
+    field: 'pumpers_name',
     align: 'left',
     sortable: true,
   },
@@ -300,7 +278,13 @@ const columns = [
     align: 'left',
     sortable: true,
   },
-
+  {
+    name: 'phone_number',
+    label: 'Phone number',
+    field: 'phone_number',
+    align: 'left',
+    sortable: true,
+  },
   {
     name: 'email',
     label: 'Email',
@@ -356,11 +340,11 @@ const filterFn = (val, update) => {
 const refreshPage = () => {
   loading.value = true;
   api
-    .get('admin/users')
+    .get('admin/pump-sales')
     .then(({ data }) => {
       console.log(data);
       loading.value = false;
-      rows.value = data.data.filter((pumper) => pumper.type === 'fuel pumper');
+      rows.value = data.data;
     })
     .catch(({ response }) => {
       console.log(response);
@@ -392,7 +376,7 @@ const deletePumper = (category) => {
   }).onOk(() => {
     loading.value = true;
     api
-      .delete(`admin/users/${category.id}`)
+      .delete(`admin/pump-sales/${category.id}`)
       .then((response) => {
         console.log(response);
         loading.value = false;
@@ -414,14 +398,13 @@ const addPumper = () => {
     formData.append('email', form.value.email);
     formData.append('phone', form.value.phone);
     formData.append('password', form.value.password);
-    formData.append('password_confirmation', form.value.password_confirmation);
 
-    formData.append('type', 'fuel pumper');
+    formData.append('type', 'dealer');
     formData.append('accept', 1);
     formData.append(`pump_metadata[nin]`, form.value.nin);
     loadingSubmit.value = true;
     api
-      .put(`admin/users/${editID.value}`, formData)
+      .put(`admin/pump-sales/${editID.value}`, formData)
       .then((response) => {
         console.log(response);
         Notify.create({
@@ -455,12 +438,12 @@ const addPumper = () => {
     formData.append('email', form.value.email);
     formData.append('phone', form.value.phone);
     formData.append('password', form.value.password);
-    formData.append('password_confirmation', form.value.password_confirmation);
-    formData.append('type', 'fuel pumper');
+
+    formData.append('type', 'dealer');
     formData.append('accept', 1);
     formData.append(`pump_metadata[nin]`, form.value.nin);
     api
-      .post(`admin/users`, formData)
+      .post(`admin/pump-sales`, formData)
       .then((response) => {
         console.log(response);
         Notify.create({
@@ -490,11 +473,11 @@ const addPumper = () => {
 const onRequest = (page) => {
   loading.value = true;
   api
-    .get('admin/users')
+    .get('admin/pump-sales')
     .then(({ data }) => {
       loading.value = false;
       console.log(data);
-      rows.value = data.data.filter((pumper) => pumper.type === 'fuel pumper');
+      rows.value = data.data;
     })
     .catch(({ response }) => {
       // console.log(response);

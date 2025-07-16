@@ -150,7 +150,15 @@
             clickable
             v-ripple
           >
-            <q-item-section> Manage Fuel Pumpers </q-item-section>
+            <q-item-section> Manage Pumpers </q-item-section>
+          </q-item>
+          <q-item
+            :inset-level="0.05"
+            :to="{ name: 'mangage.pumper.sales' }"
+            clickable
+            v-ripple
+          >
+            <q-item-section> Manage Pump Sales </q-item-section>
           </q-item>
           <q-expansion-item v-if="iCan('manage-users')">
             <template v-slot:header>

@@ -209,11 +209,15 @@ const startCountAnimation = () => {
 // };
 let countFcn = async () => {
   try {
-    const res = await axios.get('https://pcngi.com.ng/api/v1/stats', {
-      headers: {
-        'X-Api-Key': 'gDE18hO2nHbu651Jle8yYieUbP5nGfpI9HiOiLxWRMX58w',
+    const res = await axios.get(
+      'https://pcngi.com.ng/api/v1/stats',
+      // 'https://pcngi.com.ng/api/v1/conversion-centers?limit=50',
+      {
+        headers: {
+          'X-Api-Key': 'gDE18hO2nHbu651Jle8yYieUbP5nGfpI9HiOiLxWRMX58w',
+        },
       },
-    });
+    );
     console.log(res);
     statsCountAccreditedCenters.value = res.data.data.conversion_centers;
     registeredVehicles.value = res.data.data.bookings;

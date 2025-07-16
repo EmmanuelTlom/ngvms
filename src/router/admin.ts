@@ -79,9 +79,14 @@ export default <RouteRecordRaw[]>[
         name: 'mangage.conversionC',
       },
       {
-        path: '/admin/mangage/fuel-pumpers',
+        path: '/admin/mangage/pumpers',
         component: () => import('pages/admin/ManageFuelPumpers.vue'),
         name: 'mangage.fuel.pumpers',
+      },
+      {
+        path: '/admin/mangage/pump-sales',
+        component: () => import('pages/admin/ManagePumpSales.vue'),
+        name: 'mangage.pumper.sales',
       },
     ],
   },
