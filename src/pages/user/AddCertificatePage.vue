@@ -35,7 +35,18 @@
           <q-form ref="formRef" @submit.prevent="send">
             <div class="input_wrap">
               <label for="">Dealer</label>
-              <UserSelector
+              <div class="input">
+                <select v-model="form.dealer_id">
+                  <option
+                    v-for="(user, index) in usersArr"
+                    :key="index"
+                    :value="user.id"
+                  >
+                    {{ user.fullName }}
+                  </option>
+                </select>
+              </div>
+              <!-- <UserSelector
                 square
                 required
                 outlined
@@ -45,7 +56,7 @@
                 v-model="form.dealer_id"
                 :error="!!errors.importer"
                 :error-message="errors.importer"
-              />
+              /> -->
             </div>
 
             <div class="grid">
@@ -202,17 +213,19 @@ import {
   certificateCreateRequest,
   certificateRequest,
 } from 'src/data/serviceRequests';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
 import { PersonForm, RequestErrors } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
 import { date, QForm } from 'quasar';
 import UserSelector from 'src/components/utilities/UserSelector.vue';
+import { api } from 'src/boot/axios';
 
 const route = useRoute();
 const router = useRouter();
 const formRef = ref<QForm>();
+const usersArr = ref<any>([]);
 
 const errors = computed(
   () => (error.value as unknown as RequestErrors)?.errors || {},
@@ -226,6 +239,20 @@ const editable = computed(
 
 const setFile = ({ file }: { file: File }) => {
   form.value.image = file;
+};
+
+const getUsers = () => {
+  api
+    .get('admin/users')
+    .then((response) => {
+      console.log(response);
+      usersArr.value = response.data.data.filter(
+        (user: any) => user.type === 'dealer',
+      );
+    })
+    .catch(({ response }) => {
+      // console.log(response);
+    });
 };
 
 const {
@@ -299,4 +326,8 @@ watch(
     }
   },
 );
+
+onMounted(() => {
+  getUsers();
+});
 </script>

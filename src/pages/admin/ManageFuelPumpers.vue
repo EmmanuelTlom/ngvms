@@ -170,7 +170,7 @@
             </div>
           </div>
           <div class="input_wrap">
-            <label for="">NIN</label>
+            <label for="">Company Name</label>
             <div class="input">
               <input required type="text" placeholder="" v-model="form.nin" />
             </div>

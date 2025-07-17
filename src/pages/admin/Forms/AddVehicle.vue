@@ -69,7 +69,7 @@
                 </span>
               </div>
               <div class="input_wrap">
-                <label for="">Chases Number</label>
+                <label for="">Chasis Number</label>
                 <div class="input">
                   <input
                     type="text"

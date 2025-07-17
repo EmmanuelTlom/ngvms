@@ -51,28 +51,36 @@
 
             <div class="grid">
               <div class="input_wrap">
-                <label for="">State</label>
+                <label class="">State</label>
                 <div class="input">
-                  <PlaceSelector required v-model="form.state" />
+                  <select v-model="form.state" required class="">
+                    <option value="" disabled>Select state</option>
+                    <option
+                      v-for="state in nigeriaStates"
+                      :key="state.name"
+                      :value="state.name"
+                    >
+                      {{ state.name }}
+                    </option>
+                  </select>
                 </div>
-
-                <span class="error-message" v-if="errors.state">
-                  {{ errors.state }}
-                </span>
               </div>
               <div class="input_wrap">
-                <label for="">LGA</label>
+                <label class="">LGA</label>
                 <div class="input">
-                  <PlaceSelector
-                    required
-                    v-model="form.lga"
-                    :params="{ states: form.state, lgas: true }"
-                  />
+                  <select v-model="form.lga" required class="">
+                    <option value="" disabled>Select LGA</option>
+                    <option
+                      v-for="lga in nigeriaStates.find(
+                        (s) => s.name === form.state,
+                      )?.lgas || []"
+                      :key="lga"
+                      :value="lga"
+                    >
+                      {{ lga }}
+                    </option>
+                  </select>
                 </div>
-
-                <span class="error-message" v-if="errors.lga">
-                  {{ errors.lga }}
-                </span>
               </div>
             </div>
 
@@ -242,6 +250,7 @@ import { PersonForm, RequestErrors } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
 import { date, QForm } from 'quasar';
 import PlaceSelector from 'src/components/utilities/PlaceSelector.vue';
+import nigeriaStates from 'src/utils/stateHelper';
 
 const route = useRoute();
 const router = useRouter();

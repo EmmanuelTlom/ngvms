@@ -265,30 +265,37 @@ const bookings = ref([]);
 
 const columns = [
   {
-    name: 'pumpers_name',
-    label: 'Pumpers name',
-    field: 'pumpers_name',
+    name: 'amount',
+    label: 'Amount',
+    field: 'amount',
     align: 'left',
     sortable: true,
   },
   {
-    name: 'nin',
-    label: 'NIN',
-    field: 'nin',
+    name: 'quantity',
+    label: 'Quantity',
+    field: (row) => `${row.quantity} KG`,
     align: 'left',
     sortable: true,
   },
   {
-    name: 'phone_number',
-    label: 'Phone number',
-    field: 'phone_number',
+    name: 'user',
+    label: 'Pumpers Name',
+    field: (row) => `${row?.user?.name}`,
     align: 'left',
     sortable: true,
   },
   {
-    name: 'email',
-    label: 'Email',
-    field: 'email',
+    name: 'user',
+    label: 'Pumpers Email',
+    field: (row) => `${row?.user?.email}`,
+    align: 'left',
+    sortable: true,
+  },
+  {
+    name: 'user',
+    label: 'Pumpers Phone',
+    field: (row) => `${row?.user?.phone}`,
     align: 'left',
     sortable: true,
   },
@@ -306,13 +313,13 @@ const columns = [
     sortable: true,
   },
 
-  {
-    name: 'action',
-    label: 'Action',
-    field: 'action',
-    align: 'left',
-    sortable: true,
-  },
+  // {
+  //   name: 'action',
+  //   label: 'Action',
+  //   field: 'action',
+  //   align: 'left',
+  //   sortable: true,
+  // },
 ];
 
 let rows = ref([]);
@@ -473,7 +480,7 @@ const addPumper = () => {
 const onRequest = (page) => {
   loading.value = true;
   api
-    .get('admin/pump-sales')
+    .get('admin/pump-sales?with=user')
     .then(({ data }) => {
       loading.value = false;
       console.log(data);
