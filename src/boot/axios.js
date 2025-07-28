@@ -15,7 +15,8 @@ import { boot } from 'quasar/wrappers';
 // axios.defaults.headers.common["Accept"] = "application/json";
 // axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 const api = axios.create({
-  baseURL: 'https://ngvms-api.devchukwuebuka.com.ng/api/v1/',
+  baseURL: 'https://prod.pci-ngvms.org.ng/api/v1/',
+  // baseURL: 'https://ngvms-api.devchukwuebuka.com.ng/api/v1/',
   // http://api.pci-ngvms.org.ng/api/v1/'
   headers: {
     'X-Requested-With': 'XMLHttpRequest',

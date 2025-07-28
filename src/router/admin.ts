@@ -88,6 +88,16 @@ export default <RouteRecordRaw[]>[
         component: () => import('pages/admin/ManagePumpSales.vue'),
         name: 'mangage.pumper.sales',
       },
+      {
+        path: '/admin/mangage/naddc-conversion-centers',
+        component: () => import('pages/admin/ManageNaddcCCs.vue'),
+        name: 'mangage.naddc.conversion',
+      },
+      {
+        path: '/admin/mangage/cip-conversion-centers',
+        component: () => import('pages/admin/ManageCIPCCs.vue'),
+        name: 'mangage.cip.conversion',
+      },
     ],
   },
 

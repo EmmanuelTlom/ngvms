@@ -97,6 +97,8 @@ export type Dashboard = {
   users: number;
   users_inc: number;
   vehicles: number;
+  cip_conversion_centers: number;
+  conversions: number;
   vehicles_inc: number;
   certificates: number;
   certificates_inc: number;

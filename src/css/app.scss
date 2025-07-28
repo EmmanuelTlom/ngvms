@@ -1497,6 +1497,11 @@ input:focus {
     }
   }
 }
+
+.bottom_mover {
+  position: sticky;
+  bottom: 1%;
+}
 .funding_input_wrap {
   border: 2px solid#008225;
   border-radius: 24px;

@@ -222,7 +222,7 @@ import {
   RequestErrors,
 } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
-import { date, QForm } from 'quasar';
+import { date, Dialog, QForm } from 'quasar';
 import UserSelector from 'src/components/utilities/UserSelector.vue';
 import { api } from 'src/boot/axios';
 
@@ -289,9 +289,23 @@ const {
   },
 ).onSuccess(({ data }) => {
   notify(data.message, data.status);
-  router.replace({
-    name: route.name,
-    params: { certificate_id: data.data.id },
+
+  // router.replace({
+  //   name: route.name,
+  //   params: { certificate_id: data.data.id },
+  // });
+  reset();
+  Dialog.create({
+    title: 'Submission Successful',
+    message: `You have successfully added this data.`,
+    cancel: true,
+    ok: {
+      push: true,
+      label: 'Okay',
+      color: 'green',
+    },
+
+    persistent: true,
   });
 });
 

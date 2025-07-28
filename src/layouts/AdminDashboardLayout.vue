@@ -110,6 +110,22 @@
               </q-item>
               <q-item
                 :inset-level="0.05"
+                :to="{ name: 'mangage.naddc.conversion' }"
+                clickable
+                v-ripple
+              >
+                <q-item-section> NADDC Conversion centers</q-item-section>
+              </q-item>
+              <q-item
+                :inset-level="0.05"
+                :to="{ name: 'mangage.cip.conversion' }"
+                clickable
+                v-ripple
+              >
+                <q-item-section> CIP Conversion centers</q-item-section>
+              </q-item>
+              <q-item
+                :inset-level="0.05"
                 :to="{ name: 'admin.frsc.data' }"
                 clickable
                 v-ripple

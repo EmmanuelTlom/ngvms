@@ -36,7 +36,7 @@
           <q-form ref="formRef" @submit.prevent="send">
             <div class="grid">
               <div class="input_wrap">
-                <label for="">Name</label>
+                <label for="">Name of conversion center</label>
                 <div class="input">
                   <input
                     required
@@ -195,7 +195,7 @@ import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
 import { PersonForm, RequestErrors } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
-import { date, QForm } from 'quasar';
+import { date, Dialog, QForm } from 'quasar';
 
 const route = useRoute();
 const router = useRouter();
@@ -246,9 +246,22 @@ const {
   },
 ).onSuccess(({ data }) => {
   notify(data.message, data.status);
-  router.replace({
-    name: route.name,
-    params: { center_id: data.data.id },
+  // router.replace({
+  //   name: route.name,
+  //   params: { center_id: data.data.id },
+  // });
+  reset();
+  Dialog.create({
+    title: 'Submission Successful',
+    message: `You have successfully added this data.`,
+    cancel: true,
+    ok: {
+      push: true,
+      label: 'Okay',
+      color: 'green',
+    },
+
+    persistent: true,
   });
 });
 

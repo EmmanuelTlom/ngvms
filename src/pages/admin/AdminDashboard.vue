@@ -16,11 +16,13 @@
 <script setup lang="ts">
 import { useRequest } from 'alova/client';
 import { Dashboard } from 'app/repository/models';
+import axios from 'axios';
+import { stat } from 'fs';
 import ChartComp from 'src/components/ChartComp.vue';
 import DashBoardCardsVue from 'src/components/DashBoardCards.vue';
 import { dashboardRequest } from 'src/data/adminRequests';
 import { useBootstrapStore } from 'src/stores/bootstrap-store';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const user = computed(() => useBootstrapStore().user);
 const stats = ref<
@@ -56,8 +58,18 @@ const stats = ref<
     classStyle: 'veri',
   },
   {
-    id: 'total_conversions',
-    name: 'Total Conversions',
+    id: 'conversion_centers',
+    name: 'NADDC(Accredited Conversion Centres)',
+    numbers: 200,
+    icon: '/images/graph.svg',
+    data: '{inc}% {dir} from yesterday',
+    place: '{inc}% {dir} from yesterday',
+    icontype: 'down',
+    classStyle: 'convert',
+  },
+  {
+    id: 'cip_conversion_centers',
+    name: 'CIP Conversion Centers',
     numbers: 200,
     icon: '/images/graph.svg',
     data: '{inc}% {dir} from yesterday',
@@ -116,8 +128,8 @@ const stats = ref<
     classStyle: 'pending',
   },
   {
-    id: 'conversion_centers',
-    name: 'NADDC(Accredited Conversion Centre)',
+    id: 'conversions',
+    name: 'Conversions',
     numbers: 0,
     icon: '/images/circle.svg',
     data: '{inc}% {dir} from yesterday',
@@ -152,6 +164,25 @@ const buildStats = (data: Dashboard) => {
   });
 };
 
+const onRequest = (page: number) => {
+  loading.value = true;
+  axios
+    .get(`https://pcngi.com.ng/api/v1/stats`, {
+      headers: {
+        'X-Api-Key': `HMOTryUhlqjqqVECjs2KUE83x0GccP3LgdSsYsaz0DrQy7`,
+      },
+    })
+    .then((response: any) => {
+      loading.value = false;
+      console.log(response);
+      stats.value[3].numbers = response.data.data.conversion_centers;
+    })
+    .catch((response: any) => {
+      // console.log(response);
+      loading.value = false;
+    });
+};
+
 const { loading } = useRequest(dashboardRequest({ with: 'everything' }), {
   immediate: true,
 }).onSuccess(({ data }) => {
@@ -162,4 +193,8 @@ const { loading } = useRequest(dashboardRequest({ with: 'everything' }), {
 });
 
 buildStats(Object.fromEntries([...stats.value.map((e) => [e.id, 0])]));
+
+onMounted(() => {
+  onRequest(1);
+});
 </script>
