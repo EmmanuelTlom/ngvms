@@ -308,7 +308,14 @@ const {
     },
 
     persistent: true,
-  });
+  })
+    .onOk(() => {})
+    .onCancel(() => {
+      router.go(-1);
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    });
 });
 
 const { data } = useRequest(

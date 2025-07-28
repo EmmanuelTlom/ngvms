@@ -334,11 +334,7 @@
                 <q-avatar color="primary" text-color="white">
                   <img
                     v-if="isImage(conversionMetaData.cac_certificate)"
-                    :src="
-                      conversionMetaData.cac_certificate
-                        ? `https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.cac_certificate}`
-                        : '/images/bg.png'
-                    "
+                    :src="conversionMetaData.cac_certificate"
                     alt=""
                   />
                   <div v-else>pdf</div>
@@ -363,7 +359,7 @@
                         v-if="isImage(conversionMetaData.cac_certificate)"
                       >
                         <img
-                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.cac_certificate}`"
+                          :src="conversionMetaData.cac_certificate"
                           alt="Image"
                         />
                       </template>
@@ -371,7 +367,7 @@
                         <iframe
                           width="100%"
                           height="500px"
-                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.cac_certificate}`"
+                          :src="conversionMetaData.cac_certificate"
                           frameborder="0"
                         ></iframe>
                       </template>
@@ -386,11 +382,7 @@
                 <q-avatar color="primary" text-color="white">
                   <img
                     v-if="isImage(conversionMetaData.naddc_certificate)"
-                    :src="
-                      conversionMetaData.naddc_certificate
-                        ? `https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.naddc_certificate}`
-                        : '/images/bg.png'
-                    "
+                    :src="conversionMetaData.naddc_certificate"
                     alt=""
                   />
                   <div v-else>pdf</div>
@@ -415,7 +407,7 @@
                         v-if="isImage(conversionMetaData.naddc_certificate)"
                       >
                         <img
-                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.naddc_certificate}`"
+                          :src="conversionMetaData.naddc_certificate"
                           alt="Image"
                         />
                       </template>
@@ -423,7 +415,7 @@
                         <iframe
                           width="100%"
                           height="500px"
-                          :src="`https://ngvms-api.devchukwuebuka.com.ng${conversionMetaData.naddc_certificate}`"
+                          :src="conversionMetaData.naddc_certificate"
                           frameborder="0"
                         ></iframe>
                       </template>

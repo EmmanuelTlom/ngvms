@@ -218,7 +218,7 @@ import placeholder from 'src/assets/image.png';
 import { useRoute, useRouter } from 'vue-router';
 import { PersonForm, RequestErrors } from 'app/repository/models';
 import { notify } from 'src/utils/helpers';
-import { date, QForm } from 'quasar';
+import { date, Dialog, QForm } from 'quasar';
 import UserSelector from 'src/components/utilities/UserSelector.vue';
 import { api } from 'src/boot/axios';
 
@@ -243,7 +243,7 @@ const setFile = ({ file }: { file: File }) => {
 
 const getUsers = () => {
   api
-    .get('admin/users')
+    .get('users')
     .then((response) => {
       console.log(response);
       usersArr.value = response.data.data.filter(
@@ -285,10 +285,30 @@ const {
   },
 ).onSuccess(({ data }) => {
   notify(data.message, data.status);
-  router.replace({
-    name: route.name,
-    params: { certificate_id: data.data.id },
-  });
+  // router.replace({
+  //   name: route.name,
+  //   params: { certificate_id: data.data.id },
+  // });
+  reset();
+  Dialog.create({
+    title: 'Submission Successful',
+    message: `You have successfully added this data.`,
+    cancel: true,
+    ok: {
+      push: true,
+      label: 'Okay',
+      color: 'green',
+    },
+
+    persistent: true,
+  })
+    .onOk(() => {})
+    .onCancel(() => {
+      router.go(-1);
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    });
 });
 
 const { data } = useRequest(

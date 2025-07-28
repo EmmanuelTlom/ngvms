@@ -247,7 +247,7 @@ const setFile = ({ file }: { file: File }) => {
 
 const getUsers = () => {
   api
-    .get('admin/users')
+    .get('users')
     .then((response) => {
       console.log(response);
       usersArr.value = response.data.data.filter(
@@ -306,7 +306,14 @@ const {
     },
 
     persistent: true,
-  });
+  })
+    .onOk(() => {})
+    .onCancel(() => {
+      router.go(-1);
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    });
 });
 
 const { data } = useRequest(
