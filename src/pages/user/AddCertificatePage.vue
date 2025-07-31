@@ -5,6 +5,16 @@
     </div>
 
     <div class="add_manager">
+      <div class="q-my-lg row items-center justify-end">
+        <q-btn
+          no-caps
+          no-wrap
+          color="primary"
+          @click="addDealerDialog = !addDealerDialog"
+        >
+          Add New Dealer
+        </q-btn>
+      </div>
       <div class="container">
         <ImageCropper
           :aspect-ratio="3 / 4"
@@ -46,6 +56,10 @@
                   </option>
                 </select>
               </div>
+              <small class="text-red">
+                If you do not find the right dealer for your data entry please
+                click the add dealer button to add the dealer.
+              </small>
               <!-- <UserSelector
                 square
                 required
@@ -203,6 +217,111 @@
         </div>
       </div>
     </div>
+    <q-dialog v-model="addDealerDialog">
+      <q-card class="add_manager">
+        <h4 class="text-weight-bold">Add Dealer</h4>
+        <div class="dash_inputs">
+          <form @submit.prevent="addDealer">
+            <div class="grid">
+              <div class="input_wrap">
+                <label for="">Name</label>
+                <div class="input">
+                  <input
+                    required
+                    type="text"
+                    placeholder=""
+                    v-model="dealerData.name"
+                  />
+                </div>
+
+                <span class="error-message" v-if="reqErrors.name">
+                  {{ reqErrors.name[0] }}
+                </span>
+              </div>
+              <div class="input_wrap">
+                <label for="">Email</label>
+                <div class="input">
+                  <input
+                    required
+                    type="email"
+                    placeholder=""
+                    v-model="dealerData.email"
+                  />
+                </div>
+
+                <span class="error-message" v-if="reqErrors.email">
+                  {{ reqErrors.email[0] }}
+                </span>
+              </div>
+            </div>
+
+            <div class="input_wrap">
+              <label for="">Phone</label>
+              <div class="input">
+                <input
+                  required
+                  type="text"
+                  placeholder=""
+                  v-model="dealerData.phone"
+                />
+              </div>
+
+              <span class="error-message" v-if="reqErrors.phone">
+                {{ reqErrors.phone[0] }}
+              </span>
+            </div>
+            <div class="grid">
+              <div class="input_wrap">
+                <label for="">Password</label>
+                <div class="input">
+                  <input
+                    required
+                    type="password"
+                    placeholder=""
+                    v-model="dealerData.password"
+                  />
+                </div>
+
+                <span class="error-message" v-if="reqErrors.password">
+                  {{ reqErrors.password[0] }}
+                </span>
+              </div>
+
+              <div class="input_wrap">
+                <label for="">Password Confirmation</label>
+                <div class="input">
+                  <input
+                    required
+                    type="password"
+                    placeholder=""
+                    v-model="dealerData.password_confirmation"
+                  />
+                </div>
+
+                <span
+                  class="error-message"
+                  v-if="reqErrors.password_confirmation"
+                >
+                  {{ reqErrors.password_confirmation[0] }}
+                </span>
+              </div>
+            </div>
+            <div class="submit_btn row justify-center q-mt-lg q-mb-lg">
+              <q-btn
+                no-caps
+                no-wrap
+                type="submit"
+                :loading="loading"
+                flat
+                class="full-width bg-secondary review_small bold text-white"
+              >
+                Submit
+              </q-btn>
+            </div>
+          </form>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -226,6 +345,10 @@ const route = useRoute();
 const router = useRouter();
 const formRef = ref<QForm>();
 const usersArr = ref<any>([]);
+let addDealerDialog = ref<boolean>(false);
+let loading = ref<boolean>(false);
+const dealerData = ref<any>({});
+let reqErrors = ref<any>({});
 
 const errors = computed(
   () => (error.value as unknown as RequestErrors)?.errors || {},
@@ -336,6 +459,47 @@ const { data } = useRequest(
     })),
   });
 });
+
+const addDealer = async () => {
+  try {
+    loading.value = true;
+    const res = await api.post('user/dealer', {
+      ...dealerData.value,
+      accept: 1,
+      type: 'dealer',
+    });
+    console.log(res);
+    loading.value = false;
+    dealerData.value = {};
+    Dialog.create({
+      title: 'Dealer Added Successfully',
+      message: `Dealer data successfully added.`,
+      cancel: true,
+      ok: {
+        push: true,
+        label: 'Okay',
+        color: 'green',
+      },
+
+      persistent: true,
+    })
+      .onOk(() => {
+        addDealerDialog.value = false;
+        getUsers();
+      })
+      .onCancel(() => {
+        addDealerDialog.value = false;
+        getUsers();
+      })
+      .onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      });
+  } catch (errors: any) {
+    console.log(errors);
+    loading.value = false;
+    reqErrors.value = errors.response.data.errors;
+  }
+};
 
 watch(
   () => route.params.certificate_id,

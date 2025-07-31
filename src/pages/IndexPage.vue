@@ -127,6 +127,7 @@ import { alova } from 'src/boot/alova';
 import axios from 'axios';
 import { readEnv } from 'src/utils/helpers';
 import { computed, onMounted, ref } from 'vue';
+import { api } from 'src/boot/axios';
 
 let slide = ref(1);
 let loading = ref(false);
@@ -224,8 +225,23 @@ let countFcn = async () => {
     loading.value = true;
   } catch (error) {}
 };
+let testsearh = async () => {
+  try {
+    const res = await api.get(
+      `vehicle-details?search=ECE 948 JJ`,
+
+      {
+        headers: {
+          'X-Api-Key': 'Y9FDY8PBMHs7g8ktVeaolLraozJfKjlE9Gu2d4Rj5KWYuP',
+        },
+      },
+    );
+    console.log(res);
+  } catch (error) {}
+};
 
 onMounted(() => {
   countFcn();
+  // testsearh();
 });
 </script>
