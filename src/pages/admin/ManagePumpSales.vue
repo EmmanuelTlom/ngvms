@@ -82,9 +82,17 @@
             </q-td>
           </template>
 
-          <template v-slot:body-cell-actions="props">
+          <template v-slot:body-cell-action="props">
             <q-td :props="props">
               <div>
+                <q-btn
+                  @click="viewImage(props.row)"
+                  color="yellow-10"
+                  label="View Image"
+                  class="q-mr-sm"
+                  no-caps
+                  no-wrap
+                />
                 <!-- <q-btn
                   round
                   dense
@@ -218,7 +226,13 @@
             </q-btn>
           </div>
         </form>
-      </div>
+      </div> </q-dialog
+    ><q-dialog v-model="viewDocumentsDialog">
+      <q-card class="card_img">
+        <div class="q-pa-md">
+          <q-img class="full-width full-height" :src="imageViewd"> </q-img>
+        </div>
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -256,10 +270,18 @@ let selectedStatus = ref('All');
 const currentPage = ref(1);
 const rowsPerPage = 50; // Or whatever your backend returns
 const totalRows = ref(0);
+const viewDocumentsDialog = ref(false);
+let imageViewd = ref('');
 const togglePassword = ref(true);
 const totalPages = computed(() =>
   Math.ceil(totalRows.value / pagination.value.rowsPerPage),
 );
+const viewImage = (data) => {
+  console.log(data.image);
+  imageViewd.value = `https://prod.pci-ngvms.org.ng/media/document/${data?.image}`;
+  console.log(imageViewd.value);
+  viewDocumentsDialog.value = true;
+};
 
 const bookings = ref([]);
 
@@ -313,13 +335,13 @@ const columns = [
     sortable: true,
   },
 
-  // {
-  //   name: 'action',
-  //   label: 'Action',
-  //   field: 'action',
-  //   align: 'left',
-  //   sortable: true,
-  // },
+  {
+    name: 'action',
+    label: 'Action',
+    field: 'action',
+    align: 'left',
+    sortable: true,
+  },
 ];
 
 let rows = ref([]);

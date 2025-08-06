@@ -82,9 +82,10 @@
             </q-td>
           </template>
 
-          <template v-slot:body-cell-actions="props">
+          <template v-slot:body-cell-action="props">
             <q-td :props="props">
               <div>
+
                 <q-btn
                   round
                   dense
@@ -233,7 +234,13 @@
             </q-btn>
           </div>
         </form>
-      </div>
+      </div> </q-dialog
+    ><q-dialog v-model="viewDocumentsDialog">
+      <q-card class="card_img">
+        <div class="q-pa-md">
+          <q-img class="full-width full-height" :src="imageViewd"> </q-img>
+        </div>
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -245,6 +252,7 @@ import { api } from 'src/boot/axios';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 let router = useRouter();
+
 let pagination = ref({
   sortBy: 'id',
   descending: false,
@@ -275,6 +283,7 @@ const togglePassword = ref(true);
 const totalPages = computed(() =>
   Math.ceil(totalRows.value / pagination.value.rowsPerPage),
 );
+
 
 const bookings = ref([]);
 

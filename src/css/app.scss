@@ -1502,6 +1502,13 @@ input:focus {
   position: sticky;
   bottom: 1%;
 }
+.q-dialog {
+  .q-card {
+    border-radius: 20px;
+    min-width: 600px;
+  }
+}
+
 .funding_input_wrap {
   border: 2px solid#008225;
   border-radius: 24px;
@@ -1828,6 +1835,11 @@ input:focus {
       i {
         font-size: 1.4rem;
       }
+    }
+  }
+  .q-dialog {
+    .q-card {
+      min-width: 100%;
     }
   }
   .main_text {
